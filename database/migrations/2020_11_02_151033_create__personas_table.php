@@ -29,9 +29,9 @@ class CreatePersonasTable extends Migration
             $table->integer('GradoEstudiosId');
             $table->integer('ColoniaId');
             $table->string('Calle');
-            $table->integer('Manzana');
-            $table->integer('NoExt');
-            $table->integer('NoInt');
+            $table->string('Manzana');
+            $table->string('NoExt');
+            $table->string('NoInt');
             $table->integer('EstadoId');
             $table->integer('MunicipioId');
             $table->integer('LocalidadId');

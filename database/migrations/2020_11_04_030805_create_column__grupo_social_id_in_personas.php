@@ -14,7 +14,7 @@ class CreateColumnGrupoSocialIdInPersonas extends Migration
     public function up()
     {
         Schema::table('personas', function (Blueprint $table) {
-            $table->text('GrupoSocialId');
+            $table->int('GrupoSocialId');
         });
     }
 

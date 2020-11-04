@@ -27,7 +27,6 @@
         <p>{{ $pregunta->Descripcion }}</p>
     @endforeach --}}
 
-<br><br>
     <div class="container">
         <div class="row">
             <div class="col-sm-12 col-md-12">
@@ -37,7 +36,7 @@
     </div>
     <!--Datos Personales-->
     <br><br>
-    <form action="/cuestionario" method="POST">
+    <form id="cuestionario" action="" method="">
         @csrf
         <div class="card">
             <div class="card-body">
@@ -1320,9 +1319,9 @@
         <!--fin de instrumentos de factores de riesgo-->
         <br><br>
 
-        <button type="submit" name="submit" class="btn btn-primary"><strong>Enviar</strong></button>
-        {{-- <button type="submit" value="salir" name="Accion" id="action" onclick="window.location.href='index.html'" 
-            class="btn btn-default">Declinar</button>--}}
+            <button type="submit" name="send" class="btn btn-success"><strong>Enviar</strong></button>
+            <button style="display: none;" type="button" name="accion" class="btn btn-primary" id="action" onclick="printHTML()">Imprimir</button>
+            <a style="display: none;" href="/" name="rel" class="btn btn-info" role="button" aria-pressed="true">Recargar Formulario</a>
         </div>
     </form>
     <!--FIN  FACTORES DE RIESGO-->

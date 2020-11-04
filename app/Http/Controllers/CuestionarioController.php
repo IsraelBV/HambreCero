@@ -274,7 +274,8 @@ class CuestionarioController extends Controller
         $encuesta->EncuestadorId = 0;
         $encuesta->save();
 
-        return redirect('/saved');
+        // return redirect('/saved');
+        return 'Datos Guardados';
     }
 
     /**
