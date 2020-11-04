@@ -208,15 +208,15 @@
                 <div class="form-row">
                     <div class="form-group col-md-4">
                         <label>{{ $preguntas[22]['Descripcion'] }}</label>
-                        <input type="text" class="form-control" name="tel_cel">
+                        <input type="number" class="form-control" name="tel_cel">
                     </div>
                     <div class="form-group col-md-4">
                         <label>{{ $preguntas[23]['Descripcion'] }}</label>
-                        <input type="text" class="form-control" name="tel_casa">
+                        <input type="number" class="form-control" name="tel_casa">
                     </div>
                     <div class="form-group col-md-4">
                         <label>{{ $preguntas[24]['Descripcion'] }}</label>
-                        <input type="text" class="form-control" name="correo_ele">
+                        <input type="email" class="form-control" name="correo_ele">
                     </div>
                 </div>
                 <!-- FIN DE FILA 7-->
