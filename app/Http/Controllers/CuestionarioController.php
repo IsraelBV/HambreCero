@@ -190,7 +190,7 @@ class CuestionarioController extends Controller
         // echo $pregunta97;
         // echo "------------------------";
         // var_dump($request->input());
-        echo"</pre>";
+        // echo"</pre>";
 
         $encuesta = new Encuesta();
         $encuesta->Pregunta_26 = $request->get('cuenta_apoyo_dependencia');
