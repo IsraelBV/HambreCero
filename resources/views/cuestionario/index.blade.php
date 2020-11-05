@@ -1257,7 +1257,7 @@
                     <div class="col-sm-2">
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">Si</label>
-                            <input class="form-check-input" type="radio" id="" name="saber_tema" value="1">
+                            <input class="form-check-input" type="radio" id="" name="saber_tema" value="1" required="">
                         </div>
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">No</label>
