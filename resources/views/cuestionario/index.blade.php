@@ -155,19 +155,19 @@
                     </div>
                     <div class="form-group col-md-2">
                         <label>{{ $preguntas[14]['Descripcion'] }}</label><br>
-                        <input type="text" name="manzana" class="form-control" onkeyup="mayusculas(this);" /><br>
+                        <input type="text" name="manzana" class="form-control" onkeyup="mayusculas(this);"; /><br>
                     </div>
                     <div class="form-group col-md-2">
                         <label>{{ $preguntas[15]['Descripcion'] }}</label><br>
-                        <input type="tex" name="lote" class="form-control" onkeyup="mayusculas(this);/><br>
+                        <input type="tex" name="lote" class="form-control" onkeyup="mayusculas(this);"/><br>
                     </div>
                     <div class="form-group col-md-2">
                         <label>{{ $preguntas[16]['Descripcion'] }}</label><br>
-                        <input type="text" name="num_exterior" class="form-control" onkeyup="mayusculas(this);/><br>
+                        <input type="text" name="num_exterior" class="form-control" onkeyup="mayusculas(this);";/><br>
                     </div>
                     <div class="form-group col-md-2">
                         <label>{{ $preguntas[17]['Descripcion'] }}</label><br>
-                        <input type="tex" name="num_interior" class="form-control" onkeyup="mayusculas(this);/><br>
+                        <input type="tex" name="num_interior" class="form-control" onkeyup="mayusculas(this);"/><br>
                     </div>
                 </div>
                 <!--fin fila 5-->
