@@ -82,7 +82,7 @@
                         $("[name='accion']").show();
                         $("[name='rel']").show();
                         setTimeout(function() { 
-                            $("#sccs").alert('close')
+                            $("#sccs").alert('close');
                         }, 3000);                        
                     }
                 });

@@ -85,7 +85,7 @@
                     <div class="form-group col-md-5">
                         <label>Grupo Social</label>
                         <select id="sexo" class="form-control" name="gruposocial">
-                            <option selected>Seleccione</option>
+                            <option value="" selected>Seleccione una opcion</option>
                             @foreach ($gruposociales as $gruposocial)
                                 <option value="{{$gruposocial->id}}">{{$gruposocial->Descripcion}}</option>
                             @endforeach
@@ -97,7 +97,7 @@
                     <div class="form-group col-md-4">
                         <label>{{ $preguntas[7]['Descripcion'] }}</label>
                         <select id="sexo" class="form-control" name="sexo">
-                            <option selected>Seleccione</option>
+                            <option value="" selected>Seleccione una opcion</option>
                             <option value="M">MASCULINO</option>
                             <option value="F">FEMENINO</option>
                         </select>
@@ -110,7 +110,7 @@
                     <div class="form-group col-md-4">
                         <label>{{ $preguntas[9]['Descripcion'] }}</label>
                         <select id="estado_nac" class="form-control" name="estado_nac">
-                            <option selected>Seleccione una opcion</option>
+                            <option value="" selected>Seleccione una opcion</option>
                             @foreach ($estados as $estado)
                                 <option value="{{$estado->id}}">{{$estado->Descripcion}}</option>
                             @endforeach
@@ -127,8 +127,8 @@
                     </div>
                     <div class="form-group col-md-4">
                         <label for="inputState">{{ $preguntas[11]['Descripcion'] }}</label>
-                        <select id="grado_estudios" class="form-control" name="grado_estudios">
-                            <option selected>Seleccione una opcion</option>
+                        <select value="" id="grado_estudios" class="form-control" name="grado_estudios">
+                            <option value="" selected>Seleccione una opcion</option>
                             @foreach ($estudios as $estudio)
                                 <option value="{{$estudio->id}}">{{$estudio->Descripcion}}</option>
                             @endforeach
@@ -137,7 +137,7 @@
                     <div class="form-group col-md-4">
                         <label>{{ $preguntas[12]['Descripcion'] }}</label><br>
                         <select for id="colonia" class="form-control" name="colonia">
-                            <option selected>Seleccione una opcion</option>
+                            <option value="" selected>Seleccione una opcion</option>
                             @foreach ($colonias as $colonia)
                                 <option value="{{$colonia->id}}">{{$colonia->Descripcion}}</option>
                             @endforeach
@@ -182,7 +182,7 @@
                         <label>{{ $preguntas[19]['Descripcion'] }}</label>
                         {{-- <input type="text" class="form-control" name="municipio"> --}}
                         <select for id="municipio" class="form-control" name="municipio">
-                            <option selected>Seleccione una opcion</option>
+                            <option value="" selected>Seleccione una opcion</option>
                             @foreach ($municipios as $municipio)
                                 <option value="{{$municipio->id}}">{{$municipio->Descripcion}}</option>
                             @endforeach
@@ -192,7 +192,7 @@
                         <label>{{ $preguntas[20]['Descripcion'] }}</label>
                         {{-- <input type="text" class="form-control" name="localidad"> --}}
                         <select for id="localidad" class="form-control" name="localidad">
-                            <option selected>Seleccione una opcion</option>
+                            <option value="" selected>Seleccione una opcion</option>
                             @foreach ($localidades as $localidad)
                                 <option value="{{$localidad->id}}">{{$localidad->Descripcion}}</option>
                             @endforeach
@@ -663,7 +663,7 @@
                         <label for="">{{ $preguntas[61]['Descripcion'] }}</label>
                         {{-- <input type="text" class="form-control" id="" name="institucion"> --}}
                         <select for id="institucion" class="form-control" name="institucion">
-                            <option selected>Seleccione una opcion</option>
+                            <option value="" selected>Seleccione una opcion</option>
                             @foreach ($ss as $s)
                                 <option value="{{$s->id}}">{{$s->Descripcion}}</option>
                             @endforeach
