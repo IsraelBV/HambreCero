@@ -45,13 +45,11 @@
                 <div class="form-row">
                     <div class="form-group col-md-4">
                         <label>{{ $preguntas[0]['Descripcion'] }}</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" onkeyup="mayusculas(this);"
-                            required="">
+                        <input type="text" class="form-control" id="nombre" name="nombre" onkeyup="mayusculas(this);"required="">
                     </div>
                     <div class="form-group col-md-4">
                         <label>{{ $preguntas[1]['Descripcion'] }}</label>
-                        <input type="text" class="form-control" id="" name="apellido_p" onkeyup="mayusculas(this);"
-                            required="">
+                        <input type="text" class="form-control" id="" name="apellido_p" onkeyup="mayusculas(this);" required="">
                     </div>
                     <div class="form-group col-md-4">
                         <label>{{ $preguntas[2]['Descripcion'] }}</label>
@@ -63,8 +61,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-4">
                         <label>{{ $preguntas[3]['Descripcion'] }}</label>
-                        <input type="tex" class="form-control" id="curp" name="curp" onkeyup="mayusculas(this);"
-                            required="">
+                        <input type="tex" class="form-control" id="curp" name="curp" onkeyup="mayusculas(this);" required="">
                     </div>
                     <div class="form-group col-md-4">
                         <label>{{ $preguntas[4]['Descripcion'] }}</label>
@@ -228,7 +225,7 @@
                         </div>
                         <div class="col-md-12 row justify-content-center">
                             <div class="form-check  form-check-inline">
-                                <input class="form-check-input" type="radio" name="cuenta_apoyo_dependencia" id="" value="1" required="">
+                                <input class="form-check-input" type="radio" name="cuenta_apoyo_dependencia" id="" value="1" > {{-- required=""> --}}
                                 <label class="form-check-label" for="">Si</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -263,7 +260,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="casa_propia" id="" value="1" required="">
+                                <input class="form-check-input" type="radio" name="casa_propia" id="" value="1" > {{-- required=""> --}}
                                 <label class="form-check-label" for="">Si</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -278,7 +275,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="paga_renta" value="1" required="">
+                                <input class="form-check-input" type="radio" name="paga_renta" value="1" > {{-- required=""> --}}
                                 <label class="form-check-label" for="">Si</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -302,7 +299,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="casa_credito" value="1" required="">
+                                <input class="form-check-input" type="radio" name="casa_credito" value="1" > {{-- required=""> --}}
                                 <label class="form-check-label" for="">Si</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -365,7 +362,7 @@
                         <label>{{ $preguntas[38]['Descripcion'] }}</label>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="" name="trabaja" value="1" required="">
+                                <input class="form-check-input" type="radio" id="" name="trabaja" value="1"> {{-- required=""> --}}
                                 <label class="form-check-label" for="">Si</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -390,8 +387,7 @@
                         <label>{{ $preguntas[41]['Descripcion'] }}</label>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="" name="otros_ingresos" value="1"
-                                    required="">
+                                <input class="form-check-input" type="radio" id="" name="otros_ingresos" value="1"> {{-- required=""> --}}
                                 <label class="form-check-label" for="">Si</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -426,7 +422,7 @@
                         <label>{{ $preguntas[46]['Descripcion'] }}</label>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="" value="1" name="luz" required="">
+                                <input class="form-check-input" type="radio" id="" value="1" name="luz" > {{-- required=""> --}}
                                 <label class="form-check-label" for="">Si</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -439,7 +435,7 @@
                         <label>{{ $preguntas[47]['Descripcion'] }}</label>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="" name="agua" value="1" required="">
+                                <input class="form-check-input" type="radio" id="" name="agua" value="1" > {{-- required=""> --}}
                                 <label class="form-check-label" for="">Si</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -455,7 +451,7 @@
                         <label>{{ $preguntas[48]['Descripcion'] }}</label>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="drenaje" id="" value="1" required="">
+                                <input class="form-check-input" type="radio" name="drenaje" id="" value="1" > {{-- required=""> --}}
                                 <label class="form-check-label" for="">Si</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -468,7 +464,7 @@
                         <label>{{ $preguntas[49]['Descripcion'] }}</label>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="" name="piso_firme" value="1" required="">
+                                <input class="form-check-input" type="radio" id="" name="piso_firme" value="1" > {{-- required=""> --}}
                                 <label class="form-check-label" for="">Si</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -481,7 +477,7 @@
                         <label>{{ $preguntas[50]['Descripcion'] }}</label>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="" name="tv" value="1" required="">
+                                <input class="form-check-input" type="radio" id="" name="tv" value="1" > {{-- required=""> --}}
                                 <label class="form-check-label" for="">Si</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -494,7 +490,7 @@
                         <label>{{ $preguntas[51]['Descripcion'] }}</label>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="" name="internet" value="1" required="">
+                                <input class="form-check-input" type="radio" id="" name="internet" value="1" > {{-- required=""> --}}
                                 <label class="form-check-label" for="">Si</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -510,7 +506,7 @@
                         <label>{{ $preguntas[52]['Descripcion'] }}</label>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="" name="tv_paga" value="1" required="">
+                                <input class="form-check-input" type="radio" id="" name="tv_paga" value="1" > {{-- required=""> --}}
                                 <label class="form-check-label" for="">Si</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -536,7 +532,7 @@
                         <label>{{ $preguntas[54]['Descripcion'] }}</label>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="" name="microondas" value="1" required="">
+                                <input class="form-check-input" type="radio" id="" name="microondas" value="1" > {{-- required=""> --}}
                                 <label class="form-check-label" for="">Si</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -549,7 +545,7 @@
                         <label>{{ $preguntas[55]['Descripcion'] }}</label>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="" name="computadora" name="computadora" value="1" required="">
+                                <input class="form-check-input" type="radio" id="" name="computadora" name="computadora" value="1" > {{-- required=""> --}}
                                 <label class="form-check-label" for="">Si</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -565,7 +561,7 @@
                         <label>{{ $preguntas[56]['Descripcion'] }}</label>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="" name="celular" value="1" required="">
+                                <input class="form-check-input" type="radio" id="" name="celular" value="1" > {{-- required=""> --}}
                                 <label class="form-check-label" for="">Si</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -578,7 +574,7 @@
                         <label>{{ $preguntas[57]['Descripcion'] }}</label>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" id="" name="automovil" value="1" required="">
+                                <input class="form-check-input" type="radio" id="" name="automovil" value="1" > {{-- required=""> --}}
                                 <label class="form-check-label" for="">Si</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -629,8 +625,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" id="" name="servicios_salud" value="1"
-                                        required="">
+                                    <input class="form-check-input" type="radio" id="" name="servicios_salud" value="1"> {{-- required=""> --}}
                                     <label class="form-check-label" for="">Si</label>
                                 </div>
                                 <div class="form-check form-check-inline">
@@ -647,8 +642,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="seguro_social" id="" value="1"
-                                        required="">
+                                    <input class="form-check-input" type="radio" name="seguro_social" id="" value="1"> {{-- required=""> --}}
                                     <label class="form-check-label" for="">Si</label>
                                 </div>
                                 <div class="form-check form-check-inline">
@@ -685,8 +679,7 @@
                             <div class="col-md-12">{{ $preguntas[64]['Descripcion'] }}</div>
                             <div class="col-md-12">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" id="" name="permanente" value="1"
-                                        required="">
+                                    <input class="form-check-input" type="radio" id="" name="permanente" value="1"> {{-- required=""> --}}
                                     <label class="form-check-label" for="">Si</label>
                                 </div>
                                 <div class="form-check form-check-inline">
@@ -704,8 +697,7 @@
                             <div class="col-md-12"> {{ $preguntas[65]['Descripcion'] }}</div>
                             <div class="col-md-12">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" id="" name="hipertenso" value="1"
-                                        required="">
+                                    <input class="form-check-input" type="radio" id="" name="hipertenso" value="1"> {{-- required=""> --}}
                                     <label class="form-check-label" for="">Si</label>
                                 </div>
                                 <div class="form-check form-check-inline">
@@ -724,8 +716,7 @@
                             <div class="col-md-12">{{ $preguntas[67]['Descripcion'] }}</div>
                             <div class="col-md-12">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" id="" name="diabetico" value="1"
-                                        required="">
+                                    <input class="form-check-input" type="radio" id="" name="diabetico" value="1"> {{-- required=""> --}}
                                     <label class="form-check-label" for="">Si</label>
                                 </div>
                                 <div class="form-check form-check-inline">
@@ -750,8 +741,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" id="" name="obesidad" value="1"
-                                        required="">
+                                    <input class="form-check-input" type="radio" id="" name="obesidad" value="1"> {{-- required=""> --}}
                                     <label class="form-check-label" for="">Si</label>
                                 </div>
                                 <div class="form-check form-check-inline">
@@ -798,8 +788,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="temas_salud" id="" value="2"
-                                        required="">
+                                    <input class="form-check-input" type="radio" name="temas_salud" id="" value="2"> {{-- required=""> --}}
                                     <label class="form-check-label" for="">Mucho</label>
                                 </div>
                                 <div class="form-check form-check-inline">
@@ -820,7 +809,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="Practica_alguna_actividad" id="" value="1" required="">
+                                    <input class="form-check-input" type="radio" name="Practica_alguna_actividad" id="" value="1" > {{-- required=""> --}}
                                     <label class="form-check-label" for="">Si</label>
                                 </div>
                                 <div class="form-check form-check-inline">
@@ -841,8 +830,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="realiza_actividad" id="" value="1"
-                                        required="">
+                                    <input class="form-check-input" type="radio" name="realiza_actividad" id="" value="1"> {{-- required=""> --}}
                                     <label class="form-check-label" for="">Si</label>
                                 </div>
                                 <div class="form-check form-check-inline">
@@ -878,8 +866,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="puede_practicarlo" value="1"
-                                        required="">
+                                    <input class="form-check-input" type="radio" name="puede_practicarlo" value="1" > {{-- required=""> --}}
                                     <label class="form-check-label" for="">Si</label>
                                 </div>
                                 <div class="form-check form-check-inline">
@@ -921,8 +908,7 @@
                     <div class="col-sm-2">
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">Si</label>
-                            <input class="form-check-input" type="radio" id="" name="reducio_ingresos" value="1"
-                                required="">
+                            <input class="form-check-input" type="radio" id="" name="reducio_ingresos" value="1"> {{-- required=""> --}}
                         </div>
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">No</label>
@@ -936,8 +922,7 @@
                     <div class="col-sm-2">
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">Si</label>
-                            <input class="form-check-input" type="radio" id="" name="tres_meses_comida_acabara" value="1"
-                                required="">
+                            <input class="form-check-input" type="radio" id="" name="tres_meses_comida_acabara" value="1"> {{-- required=""> --}}
                         </div>
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">No</label>
@@ -950,8 +935,7 @@
                     <div class="col-sm-2">
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">Si</label>
-                            <input class="form-check-input" type="radio" id="" name="tres_meses_quedaron_comida" value="1"
-                                required="">
+                            <input class="form-check-input" type="radio" id="" name="tres_meses_quedaron_comida" value="1"> {{-- required=""> --}}
                         </div>
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">No</label>
@@ -966,7 +950,7 @@
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">Si</label>
                             <input class="form-check-input" type="radio" id=""
-                                name="tres_meses_sin_dinero_alimentacion_sana_variada" value="1" required="">
+                                name="tres_meses_sin_dinero_alimentacion_sana_variada" value="1" > {{-- required=""> --}}
                         </div>
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">No</label>
@@ -981,8 +965,7 @@
                     <div class="col-sm-2">
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">Si</label>
-                            <input class="form-check-input" type="radio" id="" name="quedo_desayunar_comer_cenar" value="1"
-                                required="">
+                            <input class="form-check-input" type="radio" id="" name="quedo_desayunar_comer_cenar" value="1"> {{-- required=""> --}}
                         </div>
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">No</label>
@@ -996,8 +979,7 @@
                     <div class="col-sm-2">
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">Si</label>
-                            <input class="form-check-input" type="radio" name="disminuyo_cantidad_dcc" id="" value="1"
-                                required="">
+                            <input class="form-check-input" type="radio" name="disminuyo_cantidad_dcc" id="" value="1"> {{-- required=""> --}}
                         </div>
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">No</label>
@@ -1011,7 +993,7 @@
                     <div class="col-sm-2">
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">Si</label>
-                            <input class="form-check-input" type="radio" id="" name="acosto_hambre" value="1" required="">
+                            <input class="form-check-input" type="radio" id="" name="acosto_hambre" value="1"> {{-- required=""> --}}
                         </div>
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">No</label>
@@ -1097,7 +1079,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="interesa_curso_capacitacion" id="" value="1" required="">
+                                    <input class="form-check-input" type="radio" name="interesa_curso_capacitacion" id="" value="1" > {{-- required=""> --}}
                                     <label class="form-check-label" for="">Si</label>
                                 </div>
                                 <div class="form-check form-check-inline">
@@ -1121,7 +1103,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="aprender_nuevas_tecnologias" id="" value="1" required="">
+                                    <input class="form-check-input" type="radio" name="aprender_nuevas_tecnologias" id="" value="1" > {{-- required=""> --}}
                                     <label class="form-check-label" for="">Si</label>
                                 </div>
                                 <div class="form-check form-check-inline">
@@ -1138,7 +1120,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="alguna_aprender_nuevas_tecnologias" id="" value="1" required="">
+                                    <input class="form-check-input" type="radio" name="alguna_aprender_nuevas_tecnologias" id="" value="1" > {{-- required=""> --}}
                                     <label class="form-check-label" for="">Si</label>
                                 </div>
                                 <div class="form-check form-check-inline">
@@ -1159,7 +1141,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="cuenta_espacio_huerto" id="" value="1" required="">
+                                    <input class="form-check-input" type="radio" name="cuenta_espacio_huerto" id="" value="1" > {{-- required=""> --}}
                                     <label class="form-check-label" for="">Si</label>
                                 </div>
                                 <div class="form-check form-check-inline">
@@ -1185,7 +1167,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="pondria_huerto_hogar" id="" value="1" required="">
+                                    <input class="form-check-input" type="radio" name="pondria_huerto_hogar" id="" value="1" > {{-- required=""> --}}
                                     <label class="form-check-label" for="">Si</label>
                                 </div>
                                 <div class="form-check form-check-inline">
@@ -1210,8 +1192,7 @@
                     <div class="col-sm-2">
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">Si</label>
-                            <input class="form-check-input" name="sabe_tipos_violencia" type="radio" id="" value="1"
-                                required="">
+                            <input class="form-check-input" name="sabe_tipos_violencia" type="radio" id="" value="1"> {{-- required=""> --}}
                         </div>
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">No</label>
@@ -1257,7 +1238,7 @@
                     <div class="col-sm-2">
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">Si</label>
-                            <input class="form-check-input" type="radio" id="" name="saber_tema" value="1" required="">
+                            <input class="form-check-input" type="radio" id="" name="saber_tema" value="1" > {{-- required=""> --}}
                         </div>
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">No</label>
@@ -1271,7 +1252,7 @@
                     <div class="col-sm-2">
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">Si</label>
-                            <input class="form-check-input" type="radio" id="" name="escuchado_adicciones_prevencion" value="1" required="">
+                            <input class="form-check-input" type="radio" id="" name="escuchado_adicciones_prevencion" value="1" > {{-- required=""> --}}
                         </div>
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">No</label>
@@ -1286,8 +1267,7 @@
                     <div class="col-sm-2">
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">Si</label>
-                            <input class="form-check-input" type="radio" name="denunciar_tipo_violencia" id="" value="1"
-                                required="">
+                            <input class="form-check-input" type="radio" name="denunciar_tipo_violencia" id="" value="1"> {{-- required=""> --}}
                         </div>
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">No</label>
@@ -1302,8 +1282,7 @@
                         <div class="form-check form-check-inline">
 
                             <label class="form-check-label" for="">Si</label>
-                            <input class="form-check-input" type="radio" name="siente_seguro_vivienda" id="" value="1"
-                                required="">
+                            <input class="form-check-input" type="radio" name="siente_seguro_vivienda" id="" value="1"> {{-- required=""> --}}
                         </div>
                         <div class="form-check form-check-inline">
                             <label class="form-check-label" for="">No</label>
@@ -1318,10 +1297,15 @@
         <!--fin de card body-->
         <!--fin de instrumentos de factores de riesgo-->
         <br><br>
-
-            <button type="submit" name="send" class="btn btn-success"><strong>Enviar</strong></button>
-            <button style="display: none;" type="button" name="accion" class="btn btn-primary" id="action" onclick="printHTML()">Imprimir</button>
-            <a style="display: none;" href="/" name="rel" class="btn btn-info" role="button" aria-pressed="true">Recargar Formulario</a>
+            <div class="container">
+                
+                <button type="submit" name="send" class="btn btn-success"><strong>Enviar</strong></button>
+                <div class="row justify-content-around">
+                    <button style="display: none;" type="button" name="accion" class="btn btn-primary col-2" id="action" onclick="printHTML()">Imprimir</button>
+                    <a style="display: none;"  href="/" name="rel" class="btn btn-info col-2" role="button" aria-pressed="true">Recargar Formulario</a>
+                    <a style="display: none;" href="https://qroo.gob.mx/sedeso" name="rel" class="btn btn-secondary col-2" role="button" aria-pressed="true">Salir</a>
+                </div>
+            </div>
         </div>
     </form>
     <!--FIN  FACTORES DE RIESGO-->

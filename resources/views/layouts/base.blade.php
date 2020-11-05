@@ -77,13 +77,15 @@
                     url: "/",
                     data: $("#cuestionario").serialize(),
                     success: function(data) {
-                        $("body").append('<div style="position: fixed; top: 10%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                        $("[name = 'send']").attr("disabled", true);
+                        $("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        // $("[name = 'send']").attr("disabled", true);
+                        $("[name = 'send']").hide();
                         $("[name='accion']").show();
                         $("[name='rel']").show();
                         setTimeout(function() { 
                             $("#sccs").alert('close');
                         }, 3000);                        
+                        window.print();
                     }
                 });
             });
