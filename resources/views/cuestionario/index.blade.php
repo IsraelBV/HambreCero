@@ -290,13 +290,13 @@
                 </div>
                 <!-- fin de fila 1-->
                 <div class="form-row">
-                    <div class="form-group col-md-5">
+                    <div class="form-group col-md-6">
                         <label for="nombre">{{ $preguntas[29]['Descripcion'] }}</label>
                         <div class="col-sm-8">
                             <input type="number" class="form-control" id="" name="renta_mensual">
                         </div>
                     </div>
-                    <div class="form-group col-md-7">
+                    <div class="form-group col-md-6">
                         <div class="col-sm-12">
                             <label>{{ $preguntas[30]['Descripcion'] }}</label>
                         </div>
@@ -361,7 +361,7 @@
                         <label>{{ $preguntas[37]['Descripcion'] }}</label>
                         <input type="number" class="form-control" name="adultos_mayores">
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-2 offset-md-1">
                         <label>{{ $preguntas[38]['Descripcion'] }}</label>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
@@ -381,12 +381,12 @@
                 </div>
                 <!--fila 6-->
                 <div class="form-row">
-                    <div class="form-group col-md-8"><label>{{ $preguntas[40]['Descripcion'] }}</label>
+                    <div class="form-group col-md-6"><label>{{ $preguntas[40]['Descripcion'] }}</label>
                         <input type="number" class="form-control" name="cuantos_aportan_recursos">
                     </div>
 
 
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-6">
                         <label>{{ $preguntas[41]['Descripcion'] }}</label>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
@@ -765,7 +765,7 @@
                         <label for="nombre">{{ $preguntas[70]['Descripcion'] }}</label>
                         <input type="number" class="form-control" id="" name="cuantos_ob">
                     </div>
-                    <div class="form-group col-md-5">
+                    <div class="form-group col-md-4">
                         <div form-group row>
                             <div class="col-md-12">
                                 {{ $preguntas[71]['Descripcion'] }}
@@ -782,7 +782,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group col-md-1">
+                    <div class="form-group col-md-2">
                         <label for="nombre">{{ $preguntas[72]['Descripcion'] }}</label>
                         <input type="text" class="form-control" name="cual_tiene">
                     </div>
@@ -791,7 +791,7 @@
                 <!--fin de fila 4-->
                 <!--fila 5-->
                 <div class="form-row">
-                    <div class="form-group col-md-8">
+                    <div class="form-group col-md-6">
                         <div form-group row>
                             <div class="col-md-12">
                                 <label>{{ $preguntas[73]['Descripcion'] }}</label>
@@ -813,7 +813,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-6">
                         <div form-group row>
                             <div class="col-md-12">
                                 <label>{{ $preguntas[74]['Descripcion'] }}</label>
@@ -863,7 +863,7 @@
                 </div>
                 <!--fin de agedo-->
                 <div class="form-row">
-                    <div class="form-group col-md-5">
+                    <div class="form-group col-md-6">
                         <div form-group row>
                             <div class="col-md-12">
                                 <label for="nombre">{{ $preguntas[77]['Descripcion'] }}</label>
@@ -871,7 +871,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group col-md-7">
+                    <div class="form-group col-md-6">
                         <div form-group row>
                             <div class="col-md-12">
                                 <label>{{ $preguntas[78]['Descripcion'] }}</label>
