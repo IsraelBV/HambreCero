@@ -16,6 +16,7 @@ use App\Models\C_Localidad;
 use App\Models\Persona;
 use App\Models\Encuesta;
 use App\Models\C_GrupoSocial;
+use App\Models\C_EstadoCivil;
 
 
 class CuestionarioController extends Controller
@@ -43,6 +44,7 @@ class CuestionarioController extends Controller
             'localidades'=> C_Localidad::findMany([57,249]),   
             'municipios'=> C_Municipio::findMany([5,4]),
             'gruposociales'=> C_GrupoSocial::all(),
+            'estadosCiviles' => C_EstadoCivil::all(),
             ]);
     }
 
@@ -92,6 +94,7 @@ class CuestionarioController extends Controller
         $persona->TelefonoCasa = $request->get('tel_casa');
         $persona->Email = $request->get('correo_ele');
         $persona->GrupoSocialId = $request->get('gruposocial');
+        $persona->EstadoCivilId = $request->get('estadocivil');
         $persona->save();
 
         $pregunta37 = "";

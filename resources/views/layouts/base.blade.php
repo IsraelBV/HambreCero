@@ -26,6 +26,11 @@
             color: white;
             font-size: 24px;
         }
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+        -webkit-appearance: none; 
+        margin: 0; 
+        }
 
     </style>
 </head>
@@ -68,6 +73,8 @@
         }
 
         $(document).ready(function() {
+            $("[name='tel_cel'],[name='tel_casa']").attr({pattern:'[1-9]{1}[0-9]{9}', type:'text', title:'10 NUMEROS'});//validacion para numero de telefono 
+            $("[name='cod_postal']").attr({pattern:'[7]{2}[0-9]{3}', type:'text', title:'5 NUMEROS'});//codigo postal validacion
            
             $("#cuestionario").submit(function(e) {
                 e.preventDefault();

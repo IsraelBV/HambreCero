@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('layouts.base');
+// Route::get('/exl', function () {
+//     return view('cuestionario.save');
 // });
 
 // Route::post('/exl', 'LayoutController@LectorExel');

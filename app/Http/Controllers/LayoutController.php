@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\C_Colonia;
+use App\Models\C_Localidad;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Models\C_GrupoSocial;
 
 class LayoutController extends Controller
 {
@@ -17,15 +18,16 @@ class LayoutController extends Controller
         
     //     $theArray = Excel::toArray([], $file);
         
-        
-    //     foreach($theArray[10] as $qwer){
+    //     foreach($theArray[1] as $qwer){
             
     //         // echo '<pre>';
-    //         // var_dump($qwer[0]);
+    //         // var_dump($qwer[0]." - ".$qwer[1]);
+    //         // var_dump(C_Localidad::where("Descripcion","=", $qwer[1])->first()->id);
     //         // echo '</pre>---------------';
             
-    //         $report = new C_GrupoSocial();
+    //         $report = new C_Colonia();
     //         $report->Descripcion = $qwer[0];
+    //         $report->LocalidadId = C_Localidad::where("Descripcion","=", $qwer[1])->first()->id;
     //         $report->save();
     //     }
         
