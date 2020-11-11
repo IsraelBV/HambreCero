@@ -35,6 +35,10 @@
         #modal_alerta{
             margin-top: 10%;
         }
+        #modal_alerta .modal-header{
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
 
     </style>
 </head>
