@@ -83,7 +83,7 @@ class CreateEncuestasTable extends Migration
             $table->boolean('Pregunta_91');
             $table->boolean('Pregunta_92');
             $table->boolean('Pregunta_93');
-            $table->boolean('Pregunta_94');
+            $table->integer('Pregunta_94');
             $table->boolean('Pregunta_95');
             $table->boolean('Pregunta_96');
             $table->string('Pregunta_97');

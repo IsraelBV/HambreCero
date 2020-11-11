@@ -273,7 +273,7 @@ class CuestionarioController extends Controller
         $encuesta->Pregunta_100 = $request->get('denunciar_tipo_violencia');
         $encuesta->Pregunta_101 = $request->get('siente_seguro_vivienda');
         $encuesta->PersonaId =  $idpersona["id"];
-        $encuesta->Intentos = 3;
+        $encuesta->Intentos = 0;
         $encuesta->EncuestadorId = 0;
         $encuesta->save();
 

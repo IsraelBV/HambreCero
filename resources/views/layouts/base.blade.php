@@ -32,6 +32,10 @@
         margin: 0; 
         }
 
+        #modal_alerta{
+            margin-top: 10%;
+        }
+
     </style>
 </head>
 
@@ -75,6 +79,9 @@
         $(document).ready(function() {
             $("[name='tel_cel'],[name='tel_casa']").attr({pattern:'[1-9]{1}[0-9]{9}', type:'text', title:'10 NUMEROS'});//validacion para numero de telefono 
             $("[name='cod_postal']").attr({pattern:'[7]{2}[0-9]{3}', type:'text', title:'5 NUMEROS'});//codigo postal validacion
+            $("[name='curp']").attr({pattern:'[A-Z]{4}[0-9]{6}[HM]{1}[A-Z]{5}[A-Z0-9]{1}[0-9]{1}', type:'text', title:'FORMATO DE CURP VALIDA'});//codigo postal validacion
+
+            $('#modal_alerta').modal('show');
            
             $("#cuestionario").submit(function(e) {
                 e.preventDefault();

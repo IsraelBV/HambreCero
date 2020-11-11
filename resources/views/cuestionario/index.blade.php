@@ -1311,11 +1311,29 @@
                 <div class="row justify-content-around">
                     <button style="display: none;" type="button" name="accion" class="btn btn-primary col-2" id="action" onclick="printHTML()">Imprimir</button>
                     <a style="display: none;"  href="/" name="rel" class="btn btn-info col-2" role="button" aria-pressed="true">Recargar Formulario</a>
-                    <a style="display: none;" href="https://qroo.gob.mx/sedeso" name="rel" class="btn btn-secondary col-2" role="button" aria-pressed="true">Salir</a>
+                    <a style="display: none;" href="https://qroo.gob.mx/sedeso/hambreceroquintanaroo" name="rel" class="btn btn-secondary col-2" role="button" aria-pressed="true">Salir</a>
                 </div>
             </div>
         </div>
     </form>
+    <br>
     <!--FIN  FACTORES DE RIESGO-->
+
+
+    <div id="modal_alerta" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                {{-- <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">×</span>
+                    </button>
+                </div> --}}
+                  <div class="modal-body">
+                    <img src="{{asset('img/ventana emergente.png')}}" class="img-fluid img-thumbnail">
+                </div>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 
 @endsection
