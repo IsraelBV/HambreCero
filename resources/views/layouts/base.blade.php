@@ -85,19 +85,90 @@
             $("[name='cod_postal']").attr({pattern:'[7]{2}[0-9]{3}', type:'text', title:'5 NUMEROS'});//codigo postal validacion
             $("[name='curp']").attr({pattern:'[A-Z]{4}[0-9]{6}[HM]{1}[A-Z]{5}[A-Z0-9]{1}[0-9]{1}', type:'text', title:'FORMATO DE CURP VALIDA'});//codigo postal validacion
 
-            $('#modal_alerta').modal('show');
+            $('#modal_alerta').modal('show');//muestra el modal
            
-            $("#cuestionario").submit(function(e) {
+            if ($("#ntn").val() == 0) { //bloquea los campos en caso de no tener intentos
+                // $('#encuestaupdate input').attr('readonly', 'readonly');
+                $('#encuestaupdate input').attr('disabled', true);
+                $('#encuestaupdate select').attr("disabled", true);
+                $("[name='send']").hide();
+                $("[name='accion']").show();
+                $("[name='rel']").show();
+            }
+
+            $("#encuesta").submit(function(e) { //envia los datos para registro
                 e.preventDefault();
                 
                 $.ajax({
                     type: "POST",
-                    url: "/",
-                    data: $("#cuestionario").serialize(),
+                    url: "/registro",
+                    data: $("#encuesta").serialize(),
+                    success: function(data) {
+                        
+                        if (data == 1) {
+                            var alertcolor = "success";
+                            var alerttxt = "Datos Guardados"
+                            window.print();
+                            $("[name = 'send']").hide();
+                            $("[name='accion']").show();
+                            $("[name='rel']").show();
+                        } else  {
+                            alertcolor = "danger";
+                            alerttxt = "¡Ya se ha registrado antes!"
+                            setTimeout(function() { 
+                                window.location.replace("/registro");
+                            }, 4000);   
+                        }
+
+                        $("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-'+alertcolor+' alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+alerttxt+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        
+                        setTimeout(function() { 
+                            $("#sccs").alert('close');
+                        }, 3000);                        
+                    }
+                });
+            });
+
+            $("#findpersona").submit(function(e) { //busca a las personas
+                e.preventDefault();
+                
+                $.ajax({
+                    type: "POST",
+                    url: "/findPersona",
+                    data: $("#findpersona").serialize(),
+                    success: function(data) {
+
+                        var listastring = "<br/><br/><h3>No se encontraron registros con esta información.<h3>";
+
+                        if(data.length > 0){
+                            
+                            var listastring =  '<br/><table class="table"><tr><th>NOMBRE</th><th>CURP</th><th>COLONIA</th></tr><tr>';
+                                
+                                $.each(data, function(k, v) {
+                                    listastring +='<td>'+(v['Nombre']!= null?v['Nombre']:"")+(v['APaterno']!= null?v['APaterno']:"")+(v['AMaterno']!= null?v['Amaterno']:"")+'</td>';
+                                    listastring +='<td>'+(v['CURP']!= null?v['CURP']:"N/D")+'</td>';
+                                    listastring +='<td>'+(v['colonia']!= null?v['colonia']:"N/D")+'</td>';
+                                    listastring +='<td><a class="btn btn-info" name="idpersona" href="/registro/'+v['id']+'/edit">Ir</a></td>';
+                                });
+                        } 
+
+                        $("#personasContenedor").html(listastring);
+
+                    }
+                });
+            });
+
+            $("#encuestaupdate").submit(function(e) { //envia los datos para actualizar
+                e.preventDefault();
+                
+                $.ajax({
+                    type: "PUT",
+                    url: "/registro/"+$("#ntn").data('persona'),
+                    data: $("#encuestaupdate").serialize(),
                     success: function(data) {
                         $("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                         // $("[name = 'send']").attr("disabled", true);
-                        $("[name = 'send']").hide();
+                        $("[name='send']").hide();
                         $("[name='accion']").show();
                         $("[name='rel']").show();
                         setTimeout(function() { 
@@ -107,6 +178,30 @@
                     }
                 });
             });
+
+            $("#opcion").change(function(){ //para el primer select
+                if (this.value == 1) {
+                    window.location.replace("/registro/create");
+                } else {
+                    $("#opcionbusqueda").show();
+                }
+            });
+
+            $("#opcion2").change(function(){ //para el segundo select
+                if (this.value == 1) {
+                    $("#findnombre").show();
+                    $("#findcurp").hide();
+                    $("#findcurp input").val("");
+                    $("#personasContenedor").html("");
+                } else {
+                    $("#findnombre").hide();
+                    $("#findcurp").show();
+                    $("#findnombre input").val("");
+                    $("#personasContenedor").html("");
+                }
+                $("[name='findfirst']").show();
+            });
+            
 
         });
     </script>

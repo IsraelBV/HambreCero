@@ -22,10 +22,11 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/', 'LayoutController@index');
 
 //Route::resource('/cuestionario', 'CuestionarioController');//ruta para posterior actualizacion
-Route::resource('/', 'CuestionarioController');
 
-Route::get('/saved', function () {
-        return view('cuestionario.save');
-    
-});
+Route::post('/findPersona', 'CuestionarioController@findPersona');
+
+Route::resource('/registro', 'CuestionarioController');
+// Route::get('/saved', function () {
+//         return view('cuestionario.save');
+// });
 
