@@ -96,6 +96,10 @@
                 $("[name='rel']").show();
             }
 
+            setTimeout(function() { 
+                $("#btnreturn").hide();
+            }, 5000);       
+                          
             $("#encuesta").submit(function(e) { //envia los datos para registro
                 e.preventDefault();
                 
@@ -108,8 +112,8 @@
                         if (data == 1) {
                             var alertcolor = "success";
                             var alerttxt = "Datos Guardados"
-                            window.print();
                             $("[name = 'send']").hide();
+                            window.print();
                             $("[name='accion']").show();
                             $("[name='rel']").show();
                         } else  {
@@ -117,14 +121,14 @@
                             alerttxt = "¡Ya se ha registrado antes!"
                             setTimeout(function() { 
                                 window.location.replace("/registro");
-                            }, 4000);   
+                            }, 4500);   
                         }
 
                         $("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-'+alertcolor+' alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+alerttxt+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                         
                         setTimeout(function() { 
                             $("#sccs").alert('close');
-                        }, 3000);                        
+                        }, 3500);                        
                     }
                 });
             });
@@ -145,7 +149,7 @@
                             var listastring =  '<br/><table class="table"><tr><th>NOMBRE</th><th>CURP</th><th>COLONIA</th></tr><tr>';
                                 
                                 $.each(data, function(k, v) {
-                                    listastring +='<td>'+(v['Nombre']!= null?v['Nombre']:"")+(v['APaterno']!= null?v['APaterno']:"")+(v['AMaterno']!= null?v['Amaterno']:"")+'</td>';
+                                    listastring +='<td>'+(v['Nombre']!= null?v['Nombre']:"")+(v['APaterno']!= null?v['APaterno']:"")+(v['AMaterno']!= null?v['AMaterno']:"")+'</td>';
                                     listastring +='<td>'+(v['CURP']!= null?v['CURP']:"N/D")+'</td>';
                                     listastring +='<td>'+(v['colonia']!= null?v['colonia']:"N/D")+'</td>';
                                     listastring +='<td><a class="btn btn-info" name="idpersona" href="/registro/'+v['id']+'/edit">Ir</a></td>';
@@ -166,15 +170,15 @@
                     url: "/registro/"+$("#ntn").data('persona'),
                     data: $("#encuestaupdate").serialize(),
                     success: function(data) {
-                        $("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-                        // $("[name = 'send']").attr("disabled", true);
                         $("[name='send']").hide();
+                        window.print();
+                        $("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                         $("[name='accion']").show();
                         $("[name='rel']").show();
+
                         setTimeout(function() { 
                             $("#sccs").alert('close');
-                        }, 3000);                        
-                        window.print();
+                        }, 3500);                        
                     }
                 });
             });

@@ -26,7 +26,7 @@
     {{-- @foreach ($preguntas as $pregunta)
         <p>{{ $pregunta->Descripcion }}</p>
     @endforeach --}}
-
+    
     <div class="container">
         <div class="row">
             <div class="col-sm-12 col-md-12">
@@ -1316,7 +1316,7 @@
     </form>
     <br>
     <!--FIN  FACTORES DE RIESGO-->
-
+    <a style="position: fixed; top: 10%; left: 10px;"  id="btnreturn" href="/registro" class="btn btn-dark" role="button" aria-pressed="true"><strong><span style="font-size: 1.5rem">&#8592; </span> Regresar</strong></a>
 
     {{-- <div id="modal_alerta" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">

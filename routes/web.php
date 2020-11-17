@@ -23,6 +23,10 @@ use Illuminate\Support\Facades\Route;
 
 //Route::resource('/cuestionario', 'CuestionarioController');//ruta para posterior actualizacion
 
+ Route::get('/', function () {
+     return redirect('/registro');
+});
+
 Route::post('/findPersona', 'CuestionarioController@findPersona');
 
 Route::resource('/registro', 'CuestionarioController');

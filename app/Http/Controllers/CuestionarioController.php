@@ -36,21 +36,25 @@ class CuestionarioController extends Controller
     public function findPersona(Request $request){
 
         $curp = $request->get('curp');
-
+        
         if (isset($curp)) {
+         
             return  DB::table('personas')
-            ->join('c_colonias', 'personas.ColoniaId', '=', 'c_colonias.id')
+            ->leftJoin('c_colonias', 'personas.ColoniaId', '=', 'c_colonias.id')
             ->select('personas.id', 'personas.Nombre', 'personas.APaterno','personas.AMaterno','personas.CURP','c_colonias.Descripcion as colonia')
-            ->where("CURP", $request->get('curp'))
+            ->where("personas.CURP", $curp)
             ->get();
+            
         } else {
+   
             return  DB::table('personas')
-            ->join('c_colonias', 'personas.ColoniaId', '=', 'c_colonias.id')
+            ->leftJoin('c_colonias', 'personas.ColoniaId', '=', 'c_colonias.id')
             ->select('personas.id', 'personas.Nombre', 'personas.APaterno','personas.AMaterno','personas.CURP','c_colonias.Descripcion as colonia')
-            ->where("Nombre", $request->get('nombre'))
-            ->where("APaterno", $request->get('apellido_p'))
-            ->where("AMaterno", $request->get('apellido_m'))
+            ->where("personas.Nombre", $request->get('nombre'))
+            ->where("personas.APaterno", $request->get('apellido_p'))
+            ->where("personas.AMaterno", $request->get('apellido_m'))
             ->get();
+            
         }
     }
 
@@ -121,8 +125,8 @@ class CuestionarioController extends Controller
         $persona->Email = $request->get('correo_ele');
         $persona->GrupoSocialId = $request->get('gruposocial');
         $persona->EstadoCivilId = $request->get('estadocivil');
-        $persona->save();
         
+
 
         $pregunta37 = "";
         if(!empty($request->get('si_cuantos'))){
@@ -209,7 +213,7 @@ class CuestionarioController extends Controller
         //$pregunta59 = $request->get('Tipo_material_A')."#".$request->get('Tipo_material_B')."#".$request->get('Tipo_material_C')."#".$request->get('Tipo_material_D');
         // $pregunta88 = $request->get('alimentos_opcion1')."#".$request->get('alimentos_opcion2')."#".$request->get('alimentos_opcion3')."#".$request->get('alimentos_opcion4')."#".$request->get('alimentos_opcion5')."#".$request->get('alimentos_opcion6')."#".$request->get('alimentos_opcion7')."#".$request->get('alimentos_opcion8')."#".$request->get('alimentos_opcion9')."#".$request->get('alimentos_opcion10')."#".$request->get('alimentos_opcion11')."#".$request->get('alimentos_opcion12');
         // $pregunta97 = $request->get('violencia_tipoA')."#".$request->get('violencia_tipoB')."#".$request->get('violencia_tipoC')."#".$request->get('violencia_tipoD')."#".$request->get('violencia_tipoE')."#".$request->get('violencia_tipoF');
-        $idpersona = $persona::latest('id')->first();
+       
 
         // echo $pregunta37;
         // echo "------------------------";
@@ -299,11 +303,16 @@ class CuestionarioController extends Controller
         $encuesta->Pregunta_99 = $request->get('escuchado_adicciones_prevencion');
         $encuesta->Pregunta_100 = $request->get('denunciar_tipo_violencia');
         $encuesta->Pregunta_101 = $request->get('siente_seguro_vivienda');
-        $encuesta->PersonaId =  $idpersona["id"];
         $encuesta->Intentos = 0;
         $encuesta->EncuestadorId = 0;
-        $encuesta->save();
-        
+
+        $persona->save();// guarda los datos de la persona
+
+        $idpersona = $persona::latest('id')->first(); //busca el id del ultimo registro persona guardado
+        $encuesta->PersonaId =  $idpersona["id"];
+
+        $encuesta->save(); // guarda las encuestas
+
         return 1;
     }
 
@@ -396,7 +405,6 @@ class CuestionarioController extends Controller
         $persona->Email = $request->get('correo_ele');
         $persona->GrupoSocialId = $request->get('gruposocial');
         $persona->EstadoCivilId = $request->get('estadocivil');
-        $persona->save();
 
         $pregunta37 = "";
         if(!empty($request->get('si_cuantos'))){
@@ -558,7 +566,10 @@ class CuestionarioController extends Controller
         $encuesta->Pregunta_100 = $request->get('denunciar_tipo_violencia');
         $encuesta->Pregunta_101 = $request->get('siente_seguro_vivienda');
         $encuesta->Intentos = 0;
-        $encuesta->save();
+
+        $persona->save();//actualiza los registros de persona
+
+        $encuesta->save();//actualiza las encuestas
 
         return 'Datos Actualizados';
     }
