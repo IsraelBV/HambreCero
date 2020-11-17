@@ -121,7 +121,8 @@ class CuestionarioController extends Controller
         $persona->Email = $request->get('correo_ele');
         $persona->GrupoSocialId = $request->get('gruposocial');
         $persona->EstadoCivilId = $request->get('estadocivil');
-        // $persona->save();
+        $persona->save();
+        
 
         $pregunta37 = "";
         if(!empty($request->get('si_cuantos'))){
@@ -301,9 +302,8 @@ class CuestionarioController extends Controller
         $encuesta->PersonaId =  $idpersona["id"];
         $encuesta->Intentos = 0;
         $encuesta->EncuestadorId = 0;
-        // $encuesta->save();
+        $encuesta->save();
         
-        // return 'Datos Guardados';
         return 1;
     }
 
@@ -326,15 +326,15 @@ class CuestionarioController extends Controller
      */
     public function edit($id)
     {   
-    //    echo $id;
-    //     dd(DB::table('personas')
-    //     ->join('encuestas', 'personas.id', '=', 'encuestas.personaId')
-    //     ->select('personas.*', 'encuestas.*')
-    //     ->where("personas.id", $id)
-    //     ->get()[0]);
-    //    echo "<pre>";
-    //    var_dump(C_Pregunta::all());
-    //   echo "</pre>";
+        //    echo $id;
+        //     dd(DB::table('personas')
+        //     ->join('encuestas', 'personas.id', '=', 'encuestas.personaId')
+        //     ->select('personas.*', 'encuestas.*')
+        //     ->where("personas.id", $id)
+        //     ->get()[0]);
+        //    echo "<pre>";
+        //    var_dump(C_Pregunta::all());
+        //   echo "</pre>";
 
         return view('cuestionario.encuestaUpdate',[
             'preguntas'=> C_Pregunta::all(),
