@@ -154,6 +154,7 @@
                                     listastring +='<td>'+(v['colonia']!= null?v['colonia']:"N/D")+'</td>';
                                     listastring +='<td><a class="btn btn-info" name="idpersona" href="/registro/'+v['id']+'/edit">Ir</a></td>';
                                 });
+                                listastring +='</tr>';
                         } 
 
                         $("#personasContenedor").html(listastring);
