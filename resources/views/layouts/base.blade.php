@@ -146,15 +146,16 @@
 
                         if(data.length > 0){
                             
-                            var listastring =  '<br/><table class="table"><tr><th>NOMBRE</th><th>CURP</th><th>COLONIA</th></tr><tr>';
+                            var listastring =  '<br/><table class="table"><tr><th>NOMBRE</th><th>CURP</th><th>COLONIA</th></tr>';
                                 
                                 $.each(data, function(k, v) {
+                                listastring +='<tr>';
                                     listastring +='<td>'+(v['Nombre']!= null?v['Nombre']:"")+(v['APaterno']!= null?v['APaterno']:"")+(v['AMaterno']!= null?v['AMaterno']:"")+'</td>';
                                     listastring +='<td>'+(v['CURP']!= null?v['CURP']:"N/D")+'</td>';
                                     listastring +='<td>'+(v['colonia']!= null?v['colonia']:"N/D")+'</td>';
                                     listastring +='<td><a class="btn btn-info" name="idpersona" href="/registro/'+v['id']+'/edit">Ir</a></td>';
-                                });
                                 listastring +='</tr>';
+                                });
                         } 
 
                         $("#personasContenedor").html(listastring);
