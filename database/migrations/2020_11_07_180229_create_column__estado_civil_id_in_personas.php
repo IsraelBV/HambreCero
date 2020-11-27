@@ -14,7 +14,7 @@ class CreateColumnEstadoCivilIdInPersonas extends Migration
     public function up()
     {
         Schema::table('personas', function (Blueprint $table) {
-            $table->integer('EstadoCivilId');
+            $table->integer('EstadoCivilId')->nullable();
         });
     }
 

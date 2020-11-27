@@ -14,7 +14,7 @@ class CreateColumnLoteInPersonas extends Migration
     public function up()
     {
         Schema::table('personas', function (Blueprint $table) {
-            $table->string('Lote');
+            $table->string('Lote')->nullable();
         });
     }
 

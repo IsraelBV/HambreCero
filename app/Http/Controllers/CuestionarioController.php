@@ -19,10 +19,16 @@ use App\Models\C_GrupoSocial;
 use App\Models\C_EstadoCivil;
 use Faker\Provider\ar_JO\Person;
 
+use Auth;
+
 use Illuminate\Support\Facades\DB;
 
 class CuestionarioController extends Controller
 {
+
+    public function __construct(){
+        // $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -130,8 +136,9 @@ class CuestionarioController extends Controller
 
         $pregunta37 = "";
         if(!empty($request->get('si_cuantos'))){
-            $pregunta37 .= $request->get('si_cuantos')."#";
+            $pregunta37 .= $request->get('si_cuantos');
         }
+        $pregunta37 .="#";
         if(!empty($request->get('no_cuantos'))){
             $pregunta37 .= $request->get('no_cuantos');
         }
@@ -304,7 +311,8 @@ class CuestionarioController extends Controller
         $encuesta->Pregunta_100 = $request->get('denunciar_tipo_violencia');
         $encuesta->Pregunta_101 = $request->get('siente_seguro_vivienda');
         $encuesta->Intentos = 0;
-        $encuesta->EncuestadorId = 0;
+        $encuesta->EncuestadorId = (Auth::check())?Auth::user()->id:0;
+        $encuesta->Entregado = 0;
 
         $persona->save();// guarda los datos de la persona
 
@@ -566,6 +574,9 @@ class CuestionarioController extends Controller
         $encuesta->Pregunta_100 = $request->get('denunciar_tipo_violencia');
         $encuesta->Pregunta_101 = $request->get('siente_seguro_vivienda');
         $encuesta->Intentos = 0;
+        $encuesta->EncuestadorId = (Auth::check())?Auth::user()->id:0;
+        $encuesta->Entregado = 0;
+
 
         $persona->save();//actualiza los registros de persona
 

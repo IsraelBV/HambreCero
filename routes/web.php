@@ -34,3 +34,21 @@ Route::resource('/registro', 'CuestionarioController');
 //         return view('cuestionario.save');
 // });
 
+
+Auth::routes();
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/register/success', 'Auth\RegisterController@success');
+
+// Auth::routes();
+
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// Route::get('/qwerty',function(){
+//     return view('layouts.sidebar');
+// });
+
+Route::post('/admin/findPersonaEntrega', 'Admin\EntregaController@findPersonaEntrega');
+
+Route::get('/admin/entrega','Admin\EntregaController@index');
+
+Route::put('/admin/entrega/{entrega}', 'Admin\EntregaController@registrarEntrega');
