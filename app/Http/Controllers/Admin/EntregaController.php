@@ -48,7 +48,7 @@ class EntregaController extends Controller
                     array_push($isds, $direcciones[$i]->id); //agrea las ids de los registros
 
                     if (!empty($direcciones[$i]->ColoniaId) && !empty($direcciones[$i]->Manzana) && !empty($direcciones[$i]->Lote)) { //si ninguna esta vacia
-                        $orwhere .= "(ColoniaId = ".$direcciones[$i]->ColoniaId." AND personas.Manzana = ".$direcciones[$i]->Manzana." AND personas.Lote = ".$direcciones[$i]->Lote.")";
+                        $orwhere .= "(ColoniaId = '".$direcciones[$i]->ColoniaId."' AND personas.Manzana = '".$direcciones[$i]->Manzana."' AND personas.Lote = '".$direcciones[$i]->Lote."')";
                         
                         if ($i < ($numeroDirecciones-1)) {
                             $orwhere .= " OR ";
@@ -59,12 +59,12 @@ class EntregaController extends Controller
                 array_push($isds, $direcciones[0]->id);
 
                 if (!empty($direcciones[0]->ColoniaId) && !empty($direcciones[0]->Manzana) && !empty($direcciones[0]->Lote)) { //si ninguna esta vacia
-                    $orwhere = "ColoniaId = ".$direcciones[0]->ColoniaId." AND personas.Manzana = ".$direcciones[0]->Manzana." AND personas.Lote = ".$direcciones[0]->Lote;
+                    $orwhere = "ColoniaId = '".$direcciones[0]->ColoniaId."' AND personas.Manzana = '".$direcciones[0]->Manzana."' AND personas.Lote = '".$direcciones[0]->Lote."'";
                 }
             }
 
             if ($orwhere != "") { //si trae la cadena de or que se genera unicamente si la direccion esta completa
-                return DB::table('personas')
+                $retper = DB::table('personas')
                     ->leftJoin('c_colonias', 'personas.ColoniaId', '=', 'c_colonias.id')
                     ->leftJoin('c_estadosciviles', 'personas.EstadoCivilId', '=', 'c_estadosciviles.id')
                     ->leftJoin('encuestas', 'personas.id', '=', 'encuestas.personaId')
@@ -73,7 +73,7 @@ class EntregaController extends Controller
                     ->orWhereRaw('('.$orwhere.')')
                     ->get();
             } else { 
-                return DB::table('personas')
+                $retper = DB::table('personas')
                     ->leftJoin('c_colonias', 'personas.ColoniaId', '=', 'c_colonias.id')
                     ->leftJoin('c_estadosciviles', 'personas.EstadoCivilId', '=', 'c_estadosciviles.id')
                     ->leftJoin('encuestas', 'personas.id', '=', 'encuestas.personaId')
@@ -81,7 +81,7 @@ class EntregaController extends Controller
                     ->whereIn('personas.id',$isds)
                     ->get();
             }
-
+            return ['retper'=>$retper, 'userlvl'=> Auth::user()->tipoUsuarioId];
             // dd(DB::getQueryLog());
         } 
     }
@@ -90,12 +90,15 @@ class EntregaController extends Controller
 
         $encuesta = Encuesta::where('PersonaId',$id)->first();
 
-        $encuesta->Entregado = 1;
-        $encuesta->EntregadorId = Auth::user()->id;
-        $encuesta->save();
-
-
-        return 1;
+        if ($encuesta->Entregado == 0) {
+            $encuesta->Entregado = 1;
+            $encuesta->EntregadorId = Auth::user()->id;
+            $encuesta->save();
+            return 1;
+        } else {
+            return 0;
+        }
+   
     }
 }
 

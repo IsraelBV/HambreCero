@@ -49,6 +49,6 @@ Route::get('/register/success', 'Auth\RegisterController@success');
 
 Route::post('/admin/findPersonaEntrega', 'Admin\EntregaController@findPersonaEntrega');
 
-Route::get('/admin/entrega','Admin\EntregaController@index');
+Route::get('/admin/entrega','Admin\EntregaController@index')->name('buscar');
 
 Route::put('/admin/entrega/{entrega}', 'Admin\EntregaController@registrarEntrega');

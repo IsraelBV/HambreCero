@@ -84,13 +84,17 @@
                                 </li>
                             @endif
                         @else
-                        @if (Auth::user()->tipoUsuarioId == 0)                            
-                            @if (Route::has('register'))
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('register') }}">{{ __('Registrar') }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                                <a class="nav-link" href="{{ route('buscar') }}">{{ __('Buscar') }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
                             </li>
+                            @if (Auth::user()->tipoUsuarioId == 0)                            
+                                @if (Route::has('register'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Usuarios') }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                                    {{-- <a class="nav-link" href="{{ route('register') }}">{{ __('Registrar') }}&nbsp;&nbsp;&nbsp;&nbsp;</a> --}}
+                                </li>
+                                @endif
                             @endif
-                        @endif
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
@@ -284,19 +288,24 @@
 
                         var listastring2 = "<br/><br/><h3>No se encontraron registros con esta CURP.<h3>";
 
-                        if(data.length > 0){
-                            
-                            var listastring2 =  '<br/><table class="table"><tr><th>NOMBRE</th><th>CURP</th><th>ESTADO CIVIL</th><th>DIRECCION</th></tr>';
+                        if(data['retper'] != undefined){    
+                            if(data['retper'].length > 0 ){
                                 
-                                $.each(data, function(k, v) {
-                                listastring2 +='<tr>';
-                                    listastring2 +='<td>'+(v['Nombre']!= null?v['Nombre']:"")+" "+(v['APaterno']!= null?v['APaterno']:"")+" "+(v['AMaterno']!= null?v['AMaterno']:"")+'</td>';
-                                    listastring2 +='<td>'+(v['CURP']!= null?v['CURP']:"N/D")+'</td>';
-                                    listastring2 +='<td>'+(v['estadoc']!= null?v['estadoc']:"N/D")+'</td>';
-                                    listastring2 +='<td>'+(v['colonia']!= null?v['colonia']:"")+" "+(v['Manzana']!= null?"MZ."+v['Manzana']:"")+" "+(v['Lote']!= null?"LT."+v['Lote']:"")+" "+(v['Calle']!= null?"C."+v['Calle']:"")+" "+(v['NoExt']!= null?"N°Int."+v['NoExt']:"")+" "+(v['NoInt']!= null?"N°Ext."+v['NoInt']:"")+'</td>';
-                                    listastring2 +=(v['Entregado'] != 1)?'<td><button class="btn btn-outline-success" name="idpersonaentrega" data-entid="'+v['id']+'">Entregar</button></td>':'<td><button disabled class="btn btn-danger" name="" data-entid="'+v['id']+'">  YA ENTREGADO  </button></td>';
-                                listastring2 +='</tr>';
-                                });
+                                var listastring2 =  '<br/><table class="table"><tr><th>NOMBRE</th><th>CURP</th><th>ESTADO CIVIL</th><th>DIRECCION</th></tr>';
+                                    
+                                    $.each(data['retper'], function(k, v) {
+                                        listastring2 +='<tr>';
+                                            listastring2 +='<td>'+(v['Nombre']!= null?v['Nombre']:"")+" "+(v['APaterno']!= null?v['APaterno']:"")+" "+(v['AMaterno']!= null?v['AMaterno']:"")+'</td>';
+                                            listastring2 +='<td>'+(v['CURP']!= null?v['CURP']:"N/D")+'</td>';
+                                            listastring2 +='<td>'+(v['estadoc']!= null?v['estadoc']:"N/D")+'</td>';
+                                            listastring2 +='<td>'+(v['colonia']!= null?v['colonia']:"")+" "+(v['Manzana']!= null?"MZ."+v['Manzana']:"")+" "+(v['Lote']!= null?"LT."+v['Lote']:"")+" "+(v['Calle']!= null?"C."+v['Calle']:"")+" "+(v['NoExt']!= null?"N°Int."+v['NoExt']:"")+" "+(v['NoInt']!= null?"N°Ext."+v['NoInt']:"")+'</td>';
+                                            if (data['userlvl'] == 0) {
+                                                listastring2 +=(v['Entregado'] != 1)?'<td><button class="btn btn-outline-success" name="idpersonaentrega" data-entid="'+v['id']+'">Entregar</button></td>':'<td><button disabled class="btn btn-danger" name="" data-entid="'+v['id']+'">  ENTREGADO  </button></td>';
+                                            }
+                                                
+                                        listastring2 +='</tr>';
+                                    });
+                            } 
                         } 
 
                         $("#entregaContenedor").html(listastring2);//despliega la lista de encontrados
@@ -321,7 +330,7 @@
                                             class:"btn btn-danger",
                                             disabled:"true",
                                             name: ""
-                                        }).html("  YA ENTREGADO  ");
+                                        }).html("  ENTREGADO  ");
 
                                         $("#entregadoModal").modal('hide');
                                     }

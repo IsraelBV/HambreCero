@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Auth;
 
 class RegisterController extends Controller
 {
@@ -72,8 +73,9 @@ class RegisterController extends Controller
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
             'tipoUsuarioId'=> 1,
+            'usuarioCreo'=> Auth::user()->id,
+            'password' => Hash::make($data['password']),
         ]);
     }
 

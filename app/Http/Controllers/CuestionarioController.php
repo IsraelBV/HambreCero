@@ -352,6 +352,15 @@ class CuestionarioController extends Controller
         //    echo "<pre>";
         //    var_dump(C_Pregunta::all());
         //   echo "</pre>";
+        $personaCollection = DB::table('personas')
+        ->join('encuestas', 'personas.id', '=', 'encuestas.personaId')
+        ->select('personas.*', 'encuestas.*')
+        ->where("personas.id", $id)
+        ->get();
+
+        if (Auth::check()) { //se utiliza para que siempre que haya alguein loggeado pueda editar la encuesta abiertamente
+            $personaCollection[0]->Intentos = 1;
+        }
 
         return view('cuestionario.encuestaUpdate',[
             'preguntas'=> C_Pregunta::all(),
@@ -366,11 +375,7 @@ class CuestionarioController extends Controller
             'municipios'=> C_Municipio::findMany([5,4]),
             'gruposociales'=> C_GrupoSocial::all(),
             'estadosCiviles' => C_EstadoCivil::all(),
-            'persona'=>DB::table('personas')
-            ->join('encuestas', 'personas.id', '=', 'encuestas.personaId')
-            ->select('personas.*', 'encuestas.*')
-            ->where("personas.id", $id)
-            ->get()
+            'persona'=>$personaCollection
             ]);
 
     }

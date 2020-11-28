@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h2 class="col-6 offset-md-3">Buscar CURP para entrega</h2>
+    <h2 class="col-6 offset-md-3">BUSCAR CURP PARA ENTREGA</h2>
     <br>
     <br>
     <form id="findentrega" action="" method="">
