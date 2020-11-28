@@ -258,7 +258,8 @@
             });
 
             $("#opcion2").change(function(){ //para el segundo select
-                if ($(this).value == 1) {
+            
+                if (this.value == 1) {
                     $("#findnombre").show();
                     $("#findcurp").hide();
                     $("#findcurp input").val("");
