@@ -81,7 +81,8 @@ class EntregaController extends Controller
                     ->whereIn('personas.id',$isds)
                     ->get();
             }
-            return ['retper'=>$retper, 'userlvl'=> Auth::user()->tipoUsuarioId];
+            return $retper;
+            // return ['retper'=>$retper, 'userlvl'=> Auth::user()->tipoUsuarioId];
             // dd(DB::getQueryLog());
         } 
     }

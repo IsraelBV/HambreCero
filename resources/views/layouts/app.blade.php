@@ -289,25 +289,30 @@
 
                         var listastring2 = "<br/><br/><h3>No se encontraron registros con esta CURP.<h3>";
 
-                        if(data['retper'] != undefined){    
-                            if(data['retper'].length > 0 ){
+                        if(data.length > 0 ){
+                        // if(data['retper'] != undefined){    
+                        //     if(data['retper'].length > 0 ){
                                 
-                                var listastring2 =  '<br/><table class="table"><tr><th>NOMBRE</th><th>CURP</th><th>ESTADO CIVIL</th><th>DIRECCION</th></tr>';
+                                var listastring2 =  '<br/><table class="table"><tr><th>NOMBRE</th><th>CURP</th><th>ESTADO CIVIL</th><th>DIRECCION</th><th>ENTREGA</th></tr>';
                                     
-                                    $.each(data['retper'], function(k, v) {
+                                    // $.each(data['retper'], function(k, v) {
+                                    $.each(data, function(k, v) {  
                                         listastring2 +='<tr>';
                                             listastring2 +='<td>'+(v['Nombre']!= null?v['Nombre']:"")+" "+(v['APaterno']!= null?v['APaterno']:"")+" "+(v['AMaterno']!= null?v['AMaterno']:"")+'</td>';
                                             listastring2 +='<td>'+(v['CURP']!= null?v['CURP']:"N/D")+'</td>';
                                             listastring2 +='<td>'+(v['estadoc']!= null?v['estadoc']:"N/D")+'</td>';
                                             listastring2 +='<td>'+(v['colonia']!= null?v['colonia']:"")+" "+(v['Manzana']!= null?"MZ."+v['Manzana']:"")+" "+(v['Lote']!= null?"LT."+v['Lote']:"")+" "+(v['Calle']!= null?"C."+v['Calle']:"")+" "+(v['NoExt']!= null?"N°Int."+v['NoExt']:"")+" "+(v['NoInt']!= null?"N°Ext."+v['NoInt']:"")+'</td>';
-                                            if (data['userlvl'] == 0) {
+                                            // if (data['userlvl'] == 0) {
                                                 listastring2 +=(v['Entregado'] != 1)?'<td><button class="btn btn-outline-success" name="idpersonaentrega" data-entid="'+v['id']+'">Entregar</button></td>':'<td><button disabled class="btn btn-danger" name="" data-entid="'+v['id']+'">  ENTREGADO  </button></td>';
-                                            }
+                                            // }
                                                 
                                         listastring2 +='</tr>';
                                     });
-                            } 
+                                    listastring2 +='</table>';
+                                    
                         } 
+                        //     } 
+                        // } 
 
                         $("#entregaContenedor").html(listastring2);//despliega la lista de encontrados
                         
