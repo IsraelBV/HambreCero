@@ -293,7 +293,7 @@
                         // if(data['retper'] != undefined){    
                         //     if(data['retper'].length > 0 ){
                                 
-                                var listastring2 =  '<br/><table class="table"><tr><th>NOMBRE</th><th>CURP</th><th>ESTADO CIVIL</th><th>DIRECCION</th><th>ENTREGA</th></tr>';
+                                var listastring2 =  '<br/><table class="table"><tr><th>NOMBRE</th><th>CURP</th><th>ESTADO CIVIL</th><th>DIRECCION</th><th>DOCUMENTACION</th><th>ENTREGA</th></tr>';
                                     
                                     // $.each(data['retper'], function(k, v) {
                                     $.each(data, function(k, v) {  
@@ -303,6 +303,7 @@
                                             listastring2 +='<td>'+(v['estadoc']!= null?v['estadoc']:"N/D")+'</td>';
                                             listastring2 +='<td>'+(v['colonia']!= null?v['colonia']:"")+" "+(v['Manzana']!= null?"MZ."+v['Manzana']:"")+" "+(v['Lote']!= null?"LT."+v['Lote']:"")+" "+(v['Calle']!= null?"C."+v['Calle']:"")+" "+(v['NoExt']!= null?"N°Int."+v['NoExt']:"")+" "+(v['NoInt']!= null?"N°Ext."+v['NoInt']:"")+'</td>';
                                             // if (data['userlvl'] == 0) {
+                                                listastring2 +='<td><button class="btn btn-outline-warning" name="idpersonadocumentacion" data-entid="'+v['id']+'">Documentos</button></td>';
                                                 listastring2 +=(v['Entregado'] != 1)?'<td><button class="btn btn-outline-success" name="idpersonaentrega" data-entid="'+v['id']+'">Entregar</button></td>':'<td><button disabled class="btn btn-danger" name="" data-entid="'+v['id']+'">  ENTREGADO  </button></td>';
                                             // }
                                                 
@@ -313,17 +314,209 @@
                         } 
                         //     } 
                         // } 
-
                         $("#entregaContenedor").html(listastring2);//despliega la lista de encontrados
                         
-                        $("[name='idpersonaentrega']").click(function(){// si se hace click a algun boton 
+                        $("[name='idpersonadocumentacion']").click(function(){// si se hace click a algun boton de documentacion
+
+                            var btndocumentacion = $(this);
+                            $("#entregadoModal .modal-title").html("DOCUMENTACION");//llena el titulo
+
+                            var strdocumentacion = '<div id="skidconcurp">';
+                                strdocumentacion += '<label for="">';
+                                    strdocumentacion += '¿La identificacion tiene la curp?';
+                                strdocumentacion += '</label>';
+                                strdocumentacion += '<br>';
+                                strdocumentacion += '<div class="form-check-inline">';
+                                    strdocumentacion += '<input class="form-check-input" type="radio" name="curpid" id="curpid" value="1">';
+                                    strdocumentacion += '<label class="form-check-label" for="curpid">';
+                                        strdocumentacion += 'Si';
+                                    strdocumentacion += '</label>';
+                                strdocumentacion += '</div>';
+                                strdocumentacion += '<div class="form-check-inline">';
+                                    strdocumentacion += '<input class="form-check-input" type="radio" name="curpid" id="curpid1" value="0">';
+                                    strdocumentacion += '<label class="form-check-label" for="curpid1">';
+                                        strdocumentacion += 'No';
+                                    strdocumentacion += '</label>';
+                                strdocumentacion += '</div>';
+                                strdocumentacion += '</div>';
+                            
+                                strdocumentacion += '<form id="formdocumentos">@csrf';
+                                strdocumentacion += '<div id="sktipodespensa">';
+                                strdocumentacion += '<label for="">¿Que tipo de despensa es?</label>';
+                                strdocumentacion += '<br>';
+                                strdocumentacion += '<div class="form-check-inline">';
+                                    strdocumentacion += '<input class="form-check-input" type="radio" name="donado" id="donado2" value="0">';
+                                    strdocumentacion += '<label class="form-check-label" for="donado2">Pagada</label>';
+                                strdocumentacion += '</div>';
+                                strdocumentacion += '<div class="form-check-inline">';
+                                    strdocumentacion += '<input class="form-check-input" type="radio" name="donado" id="donado1" value="1">';
+                                    strdocumentacion += '<label class="form-check-label" for="donado1">Donacion</label>';
+                                strdocumentacion += '</div>';
+                                strdocumentacion += '</div>';
+                                strdocumentacion += '<br>';
+                            strdocumentacion += '<div id="docscont"> </div>';
+
+                            $("#entregadoModal .modal-body").html(strdocumentacion);//llena opciones del body
+                                $.ajax({//manda a buscar registros de documentacion en caso de existir
+                                    type: "POST",
+                                    url: "/admin/findDocumentacion",
+                                    data: {
+                                        "_token": "{{ csrf_token() }}",
+                                        "entid":btndocumentacion.data("entid")
+                                        },
+                                    success: function(data) {         
+                                        if (data != 0) {
+
+                                            if (data[1] == 1) {                                                
+                                                $('#donado1').attr("checked", "checked");
+                                                $('#donado2').attr("disabled", true);
+                                            } else {
+                                                $('#donado2').attr("checked", "checked");
+                                                $('#donado1').attr("disabled", true);
+                                            }
+                                            $('#skidconcurp').hide();
+
+                                            strdocumentacion = '<label for="">Documentacion</label>';
+                                                    strdocumentacion += '<br>';
+                                                        strdocumentacion += '<div class="form-group">';
+                                                            strdocumentacion += '<div class="form-check">';
+                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="idoficial" name="idoficial" '+(data[0].Identificacion == 1?'checked onclick="return false;"':'')+'>';
+                                                                strdocumentacion += '<label class="form-check-label" for="idoficial">';
+                                                                    strdocumentacion += 'Identificación oficial vigente';
+                                                                strdocumentacion += '</label>';
+                                                            strdocumentacion += '</div>';   
+                                                                strdocumentacion += '<div class="form-check">';
+                                                                    strdocumentacion += '<input class="form-check-input" type="checkbox" id="curpdoc" name="curpdoc" '+(data[0].CURP == 1?'checked onclick="return false;"':'')+'>';
+                                                                    strdocumentacion += '<label class="form-check-label" for="curpdoc">';
+                                                                        strdocumentacion += 'CURP';
+                                                                    strdocumentacion += '</label>';
+                                                                strdocumentacion += '</div>';
+                                                            strdocumentacion += '<div class="form-check">';
+                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="cuestionario" name="cuestionario" '+(data[0].CuestionarioCompleto == 1?'checked onclick="return false;"':'')+'>';
+                                                                strdocumentacion += '<label class="form-check-label" for="cuestionario">';
+                                                                    strdocumentacion += 'Cuestionario completo firmado';
+                                                                strdocumentacion += '</label>';
+                                                            strdocumentacion += '</div>';
+                                                            strdocumentacion += '<div class="form-check">';
+                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="formato1" name="formato1" '+(data[0].F1SolicitudApoyo == 1?'checked onclick="return false;"':'')+'>';
+                                                                strdocumentacion += '<label class="form-check-label" for="formato1">';
+                                                                    strdocumentacion += 'Formato 1 Solicitud apoyo firmado';
+                                                                strdocumentacion += '</label>';
+                                                            strdocumentacion += '</div>';
+                                                            strdocumentacion += '<div class="form-check">';
+                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="domicilio" name="domicilio" '+(data[0].ComprobanteDomicilio == 1?'checked onclick="return false;"':'')+'>';
+                                                                strdocumentacion += '<label class="form-check-label" for="domicilio">';
+                                                                    strdocumentacion += 'Comprobante de domicilio no mayor a 3 meses de antigüedad ';
+                                                                strdocumentacion += '</label>';
+                                                            strdocumentacion += '</div>';
+                                                            strdocumentacion += '<div class="form-check">';
+                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="anexo17" name="anexo17" '+(data[0].Anexo17 == 1?'checked onclick="return false;"':'')+'>';
+                                                                strdocumentacion += '<label class="form-check-label" for="anexo17">';
+                                                                    strdocumentacion += 'Anexo 17 - Comprobante de recepción de apoyo';
+                                                                strdocumentacion += '</label>';
+                                                            strdocumentacion += '</div>';
+                                                            strdocumentacion += '<div class="form-check">';
+                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="comprobante" name="comprobante" '+(data[0].Comprobante == 1?'checked onclick="return false;"':'')+'>';
+                                                                strdocumentacion += data[1] == 0?'<label class="form-check-label" for="comprobante" id="rp">Recibo de pago</label>':'<label class="form-check-label" for="comprobante" id="a16">Anexo 16 - Carta de no pago</label>';                                                            
+                                                            strdocumentacion += '</div>';
+                                                        strdocumentacion += '</div>';
+                                                    strdocumentacion += '</form>';
+
+                                                    $("#docscont").html(strdocumentacion);
+                                            $("#entregadoModal").modal('show');// abre el modal de documentacion
+                                        } else {
+                                            $("#entregadoModal").modal('show');// abre el modal de documentacion
+
+                                            $("[name='donado'],[name='curpid']").click(function(){
+                                                    if (typeof $("[name='donado']:checked").val() != "undefined" && typeof $("[name='curpid']:checked").val() != "undefined") {
+                                                        var strdocumentacion2 = '<label for="">Documentacion</label>';
+                                                        strdocumentacion2 += '<br>';
+                                                            strdocumentacion2 += '<div class="form-group">';
+                                                                strdocumentacion2 += '<div class="form-check">';
+                                                                    strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="idoficial" name="idoficial">';
+                                                                    strdocumentacion2 += '<label class="form-check-label" for="idoficial">';
+                                                                        strdocumentacion2 += 'Identificación oficial vigente';
+                                                                    strdocumentacion2 += '</label>';
+                                                                strdocumentacion2 += '</div>';
+                                                                if ($("[name='curpid']:checked").val() == 0) {    
+                                                                    strdocumentacion2 += '<div class="form-check">';
+                                                                        strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="curpdoc" name="curpdoc">';
+                                                                        strdocumentacion2 += '<label class="form-check-label" for="curpdoc">';
+                                                                            strdocumentacion2 += 'CURP';
+                                                                        strdocumentacion2 += '</label>';
+                                                                    strdocumentacion2 += '</div>';
+                                                                }
+                                                                strdocumentacion2 += '<div class="form-check">';
+                                                                    strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="cuestionario" name="cuestionario">';
+                                                                    strdocumentacion2 += '<label class="form-check-label" for="cuestionario">';
+                                                                        strdocumentacion2 += 'Cuestionario completo firmado';
+                                                                    strdocumentacion2 += '</label>';
+                                                                strdocumentacion2 += '</div>';
+                                                                strdocumentacion2 += '<div class="form-check">';
+                                                                    strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="formato1" name="formato1">';
+                                                                    strdocumentacion2 += '<label class="form-check-label" for="formato1">';
+                                                                        strdocumentacion2 += 'Formato 1 Solicitud apoyo firmado';
+                                                                    strdocumentacion2 += '</label>';
+                                                                strdocumentacion2 += '</div>';
+                                                                strdocumentacion2 += '<div class="form-check">';
+                                                                    strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="domicilio" name="domicilio">';
+                                                                    strdocumentacion2 += '<label class="form-check-label" for="domicilio">';
+                                                                        strdocumentacion2 += 'Comprobante de domicilio no mayor a 3 meses de antigüedad ';
+                                                                    strdocumentacion2 += '</label>';
+                                                                strdocumentacion2 += '</div>';
+                                                                strdocumentacion2 += '<div class="form-check">';
+                                                                    strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="anexo17" name="anexo17">';
+                                                                    strdocumentacion2 += '<label class="form-check-label" for="anexo17">';
+                                                                        strdocumentacion2 += 'Anexo 17 - Comprobante de recepción de apoyo';
+                                                                    strdocumentacion2 += '</label>';
+                                                                strdocumentacion2 += '</div>';
+                                                                strdocumentacion2 += '<div class="form-check">';
+                                                                    strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="comprobante" name="comprobante">';
+                                                                    strdocumentacion2 += $("[name='donado']:checked").val() == 0 ?'<label class="form-check-label" for="comprobante" id="rp">Recibo de pago</label>':'<label class="form-check-label" for="comprobante" id="a16">Anexo 16 - Carta de no pago</label>';
+                                                                
+                                                                strdocumentacion2 += '</div>';
+                                                            strdocumentacion2 += '</div>';
+                                                        strdocumentacion2 += '</form>';
+
+                                                        $("#docscont").html(strdocumentacion2);
+                                                    }
+                                            });
+                                        }
+
+                                        $('#entregadoModal [data-btn="cpt"]').off().click(function(){//en caso de aceptar
+
+                                            $.ajax({//manda a guardar la documentacion
+                                                type: "POST",
+                                                url: "/admin/entrega/documentacion/"+btndocumentacion.data("entid"),
+                                                data:$('#formdocumentos').serialize(),
+                                                success: function(data) {                        
+                                                    
+                                                    $("#entregadoModal").modal('hide');
+                                                }
+                                            });
+
+                                        });
+                                    }
+                                });
+
+                            
+
+                           
+                            
+
+                                                         
+                        });
+
+
+                        $("[name='idpersonaentrega']").click(function(){// si se hace click a algun boton de entrega 
 
                             var btnentrega = $(this);
 
                             $("#entregadoModal .modal-title").html("¿Seguro(a) que desea guardar como entregado a "+btnentrega.parent().siblings("td:first").text()+"?");//llena la pregunta del modal
+                            $("#entregadoModal .modal-body").html("");//vacia el body de modal
                             $("#entregadoModal").modal('show');// abre el modal de desicion
 
-                            $('#entregadoModal [data-btn="cpt"]').click(function(){//en caso de aceptar
+                            $('#entregadoModal [data-btn="cpt"]').off().click(function(){//en caso de aceptar
 
                                 $.ajax({//manda a guardar como entregado
                                     type: "PUT",
@@ -331,14 +524,23 @@
                                     data: {
                                         "_token": "{{ csrf_token() }}"
                                         },
-                                    success: function(data) {                        
-                                        btnentrega.attr({
-                                            class:"btn btn-danger",
-                                            disabled:"true",
-                                            name: ""
-                                        }).html("  ENTREGADO  ");
+                                    success: function(data) {
+                                        if (data == 1) {                                            
+                                            btnentrega.attr({
+                                                class:"btn btn-danger",
+                                                disabled:"true",
+                                                name: ""
+                                            }).html("  ENTREGADO  ");
 
-                                        $("#entregadoModal").modal('hide');
+                                            $("#entregadoModal").modal('hide');
+                                        } else {
+                                            $("#entregadoModal").modal('hide');
+                                            $("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-danger alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        
+                                            setTimeout(function() { 
+                                                $("#sccs").alert('close');
+                                            }, 5000);  
+                                        }                      
                                     }
                                 });
 
@@ -354,3 +556,5 @@
     </script>
 </body>
 </html>
+
+

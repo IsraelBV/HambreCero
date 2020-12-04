@@ -52,3 +52,8 @@ Route::post('/admin/findPersonaEntrega', 'Admin\EntregaController@findPersonaEnt
 Route::get('/admin/entrega','Admin\EntregaController@index')->name('buscar');
 
 Route::put('/admin/entrega/{entrega}', 'Admin\EntregaController@registrarEntrega');
+
+Route::post('/admin/entrega/documentacion/{entrega}', 'Admin\EntregaController@registrarDocumentacion');
+
+Route::post('/admin/findDocumentacion', 'Admin\EntregaController@findDocumentacion');
+

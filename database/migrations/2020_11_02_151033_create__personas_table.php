@@ -39,6 +39,7 @@ class CreatePersonasTable extends Migration
             $table->string('TelefonoCelular')->nullable();
             $table->string('TelefonoCasa')->nullable();
             $table->string('Email')->nullable();
+            $table->integer('EncuestadorId')->nullable();
             $table->timestamps();
         });
     }

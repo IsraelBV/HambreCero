@@ -131,6 +131,7 @@ class CuestionarioController extends Controller
         $persona->Email = $request->get('correo_ele');
         $persona->GrupoSocialId = $request->get('gruposocial');
         $persona->EstadoCivilId = $request->get('estadocivil');
+        $persona->EncuestadorId = (Auth::check())?Auth::user()->id:0;
         
 
 
@@ -418,6 +419,7 @@ class CuestionarioController extends Controller
         $persona->Email = $request->get('correo_ele');
         $persona->GrupoSocialId = $request->get('gruposocial');
         $persona->EstadoCivilId = $request->get('estadocivil');
+        $persona->EncuestadorId = (Auth::check())?Auth::user()->id:0;
 
         $pregunta37 = "";
         if(!empty($request->get('si_cuantos'))){

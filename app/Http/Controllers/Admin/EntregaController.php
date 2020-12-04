@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use App\Models\Documentacion;
 use Illuminate\Support\Facades\DB;
 use Auth;
 use App\Models\Encuesta;
@@ -89,17 +89,64 @@ class EntregaController extends Controller
 
     public function registrarEntrega(Request $request, $id){
 
-        $encuesta = Encuesta::where('PersonaId',$id)->first();
+        $documentacion = Documentacion::where('PersonaId',$id)->first();
+        if ($documentacion !== null) {
+            if ($documentacion->CuestionarioCompleto == 1 && $documentacion->F1SolicitudApoyo == 1 && $documentacion->Identificacion == 1 && $documentacion->ComprobanteDomicilio == 1 && $documentacion->Comprobante == 1) {
+                $encuesta = Encuesta::where('PersonaId',$id)->first();
+    
+                if ($encuesta->Entregado == 0) {
+                    $encuesta->Entregado = 1;
+                    $encuesta->EntregadorId = Auth::user()->id;
+                    $encuesta->save();
+                    return 1;
+                } else {
+                    return "Ya ha sido registrado.";
+                }
+            } else {
+                return "Hacen falta documentos obligatorios.";
+            }
+        } else {
+            return "No ha registrado ningun documento.";
+        }
+    }
 
-        if ($encuesta->Entregado == 0) {
-            $encuesta->Entregado = 1;
-            $encuesta->EntregadorId = Auth::user()->id;
-            $encuesta->save();
-            return 1;
+    public function registrarDocumentacion(Request $request, $id){
+
+        $encuesta = Encuesta::where('PersonaId',$id)->first();
+        $documentacion = Documentacion::where('PersonaId',$id)->first();
+
+        $encuesta->Donado = $request->get('donado');
+
+        if ($documentacion === null) {
+            $documentacion = new Documentacion();
+        }
+
+        $documentacion->PersonaId = $id;
+        $documentacion->CuestionarioCompleto = $request->get('cuestionario') == 'on'?1:0;
+        $documentacion->F1SolicitudApoyo =  $request->get('formato1') == 'on'?1:0;
+        $documentacion->Identificacion =  $request->get('idoficial') == 'on'?1:0;
+        $documentacion->CURP =  $request->get('curpdoc') == 'on'?1:0;
+        $documentacion->ComprobanteDomicilio =  $request->get('domicilio') == 'on'?1:0;
+        $documentacion->Anexo17 =  $request->get('anexo17') == 'on'?1:0;
+        $documentacion->Comprobante =  $request->get('comprobante') == 'on'?1:0;
+        $documentacion->EncuestadorId = Auth::user()->id;
+
+        $documentacion->save();
+        $encuesta->save();
+
+        return 1;
+    }
+
+    public function findDocumentacion(Request $request){
+        
+        $documentacion = Documentacion::where('PersonaId',$request->get('entid'))->first();
+
+        if ($documentacion !== null) {
+            $encuesta = Encuesta::where('PersonaId',$request->get('entid'))->first();
+            return [$documentacion, $encuesta->Donado];
         } else {
             return 0;
         }
-   
     }
 }
 
