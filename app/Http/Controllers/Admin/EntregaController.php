@@ -143,7 +143,7 @@ class EntregaController extends Controller
 
         if ($documentacion !== null) {
             $encuesta = Encuesta::where('PersonaId',$request->get('entid'))->first();
-            return [$documentacion, $encuesta->Donado];
+            return [$documentacion, $encuesta->Donado,$encuesta->Entregado,Auth::user()->tipoUsuarioId];
         } else {
             return 0;
         }

@@ -85,7 +85,7 @@
                             @endif
                         @else
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('buscar') }}">{{ __('Buscar') }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                                <a class="nav-link" href="{{ route('buscar') }}">{{ __('Validacion') }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
                             </li>
                             @if (Auth::user()->tipoUsuarioId == 0)                            
                                 @if (Route::has('register'))
@@ -369,60 +369,73 @@
 
                                             if (data[1] == 1) {                                                
                                                 $('#donado1').attr("checked", "checked");
-                                                $('#donado2').attr("disabled", true);
                                             } else {
                                                 $('#donado2').attr("checked", "checked");
-                                                $('#donado1').attr("disabled", true);
                                             }
+                                            
                                             $('#skidconcurp').hide();
 
                                             strdocumentacion = '<label for="">Documentacion</label>';
                                                     strdocumentacion += '<br>';
                                                         strdocumentacion += '<div class="form-group">';
                                                             strdocumentacion += '<div class="form-check">';
-                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="idoficial" name="idoficial" '+(data[0].Identificacion == 1?'checked onclick="return false;"':'')+'>';
+                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="idoficial" name="idoficial" '+((data[2] == 1 && data[3] != 0)?'onclick="return false;"':'')+' '+(data[0].Identificacion == 1?'checked':'')+'>';
                                                                 strdocumentacion += '<label class="form-check-label" for="idoficial">';
                                                                     strdocumentacion += 'Identificación oficial vigente';
                                                                 strdocumentacion += '</label>';
                                                             strdocumentacion += '</div>';   
                                                                 strdocumentacion += '<div class="form-check">';
-                                                                    strdocumentacion += '<input class="form-check-input" type="checkbox" id="curpdoc" name="curpdoc" '+(data[0].CURP == 1?'checked onclick="return false;"':'')+'>';
+                                                                    strdocumentacion += '<input class="form-check-input" type="checkbox" id="curpdoc" name="curpdoc" '+((data[2] == 1 && data[3] != 0)?'onclick="return false;"':'')+' '+(data[0].CURP == 1?'checked':'')+'>';
                                                                     strdocumentacion += '<label class="form-check-label" for="curpdoc">';
                                                                         strdocumentacion += 'CURP';
                                                                     strdocumentacion += '</label>';
                                                                 strdocumentacion += '</div>';
                                                             strdocumentacion += '<div class="form-check">';
-                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="cuestionario" name="cuestionario" '+(data[0].CuestionarioCompleto == 1?'checked onclick="return false;"':'')+'>';
+                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="cuestionario" name="cuestionario" '+((data[2] == 1 && data[3] != 0)?'onclick="return false;"':'')+' '+(data[0].CuestionarioCompleto == 1?'checked':'')+'>';
                                                                 strdocumentacion += '<label class="form-check-label" for="cuestionario">';
                                                                     strdocumentacion += 'Cuestionario completo firmado';
                                                                 strdocumentacion += '</label>';
                                                             strdocumentacion += '</div>';
                                                             strdocumentacion += '<div class="form-check">';
-                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="formato1" name="formato1" '+(data[0].F1SolicitudApoyo == 1?'checked onclick="return false;"':'')+'>';
+                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="formato1" name="formato1" '+((data[2] == 1 && data[3] != 0)?'onclick="return false;"':'')+' '+(data[0].F1SolicitudApoyo == 1?'checked':'')+'>';
                                                                 strdocumentacion += '<label class="form-check-label" for="formato1">';
                                                                     strdocumentacion += 'Formato 1 Solicitud apoyo firmado';
                                                                 strdocumentacion += '</label>';
                                                             strdocumentacion += '</div>';
                                                             strdocumentacion += '<div class="form-check">';
-                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="domicilio" name="domicilio" '+(data[0].ComprobanteDomicilio == 1?'checked onclick="return false;"':'')+'>';
+                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="domicilio" name="domicilio" '+((data[2] == 1 && data[3] != 0)?'onclick="return false;"':'')+' '+(data[0].ComprobanteDomicilio == 1?'checked':'')+'>';
                                                                 strdocumentacion += '<label class="form-check-label" for="domicilio">';
                                                                     strdocumentacion += 'Comprobante de domicilio no mayor a 3 meses de antigüedad ';
                                                                 strdocumentacion += '</label>';
                                                             strdocumentacion += '</div>';
                                                             strdocumentacion += '<div class="form-check">';
-                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="anexo17" name="anexo17" '+(data[0].Anexo17 == 1?'checked onclick="return false;"':'')+'>';
+                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="anexo17" name="anexo17" '+((data[2] == 1 && data[3] != 0)?'onclick="return false;"':'')+' '+(data[0].Anexo17 == 1?'checked':'')+'>';
                                                                 strdocumentacion += '<label class="form-check-label" for="anexo17">';
                                                                     strdocumentacion += 'Anexo 17 - Comprobante de recepción de apoyo';
                                                                 strdocumentacion += '</label>';
                                                             strdocumentacion += '</div>';
                                                             strdocumentacion += '<div class="form-check">';
-                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="comprobante" name="comprobante" '+(data[0].Comprobante == 1?'checked onclick="return false;"':'')+'>';
-                                                                strdocumentacion += data[1] == 0?'<label class="form-check-label" for="comprobante" id="rp">Recibo de pago</label>':'<label class="form-check-label" for="comprobante" id="a16">Anexo 16 - Carta de no pago</label>';                                                            
+                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="comprobante" name="comprobante" '+((data[2] == 1 && data[3] != 0)?'onclick="return false;"':'')+' '+(data[0].Comprobante == 1?'checked':'')+'>';
+                                                                strdocumentacion += '<label class="form-check-label" for="comprobante" id="comprolabel">'+(data[1] == 0?'Recibo de pago':'Anexo 16 - Carta de no pago')+'</label>';                                                            
                                                             strdocumentacion += '</div>';
                                                         strdocumentacion += '</div>';
                                                     strdocumentacion += '</form>';
 
                                                     $("#docscont").html(strdocumentacion);
+                                                    
+                                                    if (data[2] == 1 && data[3] != 0) {                                                
+                                                        $('#donado1').off().attr('onclick', 'return false;');
+                                                        $('#donado2').off().attr('onclick', 'return false;');
+                                                    } else {
+                                                        $("[name='donado']").click(function(){
+                                                            if ($(this).val() == 0) {
+                                                                $('#comprolabel').html('Recibo de pago');
+                                                            } else {
+                                                                $('#comprolabel').html('Anexo 16 - Carta de no pago');
+                                                            }
+                                                        });
+                                                    } 
+                                                    
                                             $("#entregadoModal").modal('show');// abre el modal de documentacion
                                         } else {
                                             $("#entregadoModal").modal('show');// abre el modal de documentacion
@@ -472,8 +485,8 @@
                                                                 strdocumentacion2 += '</div>';
                                                                 strdocumentacion2 += '<div class="form-check">';
                                                                     strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="comprobante" name="comprobante">';
-                                                                    strdocumentacion2 += $("[name='donado']:checked").val() == 0 ?'<label class="form-check-label" for="comprobante" id="rp">Recibo de pago</label>':'<label class="form-check-label" for="comprobante" id="a16">Anexo 16 - Carta de no pago</label>';
-                                                                
+                                                                    strdocumentacion2 += '<label class="form-check-label" for="comprobante" id="rp">'+($("[name='donado']:checked").val() == 0?'Recibo de pago':'Anexo 16 - Carta de no pago')+'</label>';                         
+
                                                                 strdocumentacion2 += '</div>';
                                                             strdocumentacion2 += '</div>';
                                                         strdocumentacion2 += '</form>';

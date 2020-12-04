@@ -23,7 +23,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return redirect('/admin/entrega');
+        // return redirect('/admin/entrega');
+        return redirect('/');
         //return view('home');
     }
 }
