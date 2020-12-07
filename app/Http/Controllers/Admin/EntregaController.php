@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\DB;
 use Auth;
 use App\Models\Encuesta;
 
+use Illuminate\Support\Facades\Hash;
+
+use function PHPUnit\Framework\isNull;
+
 class EntregaController extends Controller
 {
     public function __construct()
@@ -47,18 +51,21 @@ class EntregaController extends Controller
                 for ($i=0; $i < $numeroDirecciones ; $i++) {
                     array_push($isds, $direcciones[$i]->id); //agrea las ids de los registros
 
-                    if (!empty($direcciones[$i]->ColoniaId) && !empty($direcciones[$i]->Manzana) && !empty($direcciones[$i]->Lote)) { //si ninguna esta vacia
+                    if (!isNull($direcciones[$i]->ColoniaId) && !isNull($direcciones[$i]->Manzana) && !isNull($direcciones[$i]->Lote)) { //si ninguna esta vacia
                         $orwhere .= "(ColoniaId = '".$direcciones[$i]->ColoniaId."' AND personas.Manzana = '".$direcciones[$i]->Manzana."' AND personas.Lote = '".$direcciones[$i]->Lote."')";
                         
-                        if ($i < ($numeroDirecciones-1)) {
-                            $orwhere .= " OR ";
+                        if ($i < ($numeroDirecciones-1)) {//verifica que sea la penultima iteracion para que el ultimo or quede entre la penultima y la ultima ya que no puede ir al final del query
+                            $isp = $i+1;
+                            if (!isNull($direcciones[$isp]->ColoniaId) && !isNull($direcciones[$isp]->Manzana) && !isNull($direcciones[$isp]->Lote)) { //verifica si en la proxima iteracion es correcta la direccion
+                                $orwhere .= " OR ";
+                            }
                         }
                     }
                 }
             } else { //si solo es un registro
                 array_push($isds, $direcciones[0]->id);
 
-                if (!empty($direcciones[0]->ColoniaId) && !empty($direcciones[0]->Manzana) && !empty($direcciones[0]->Lote)) { //si ninguna esta vacia
+                if (!isNull($direcciones[0]->ColoniaId) && !isNull($direcciones[0]->Manzana) && !isNull($direcciones[0]->Lote)) { //si ninguna esta vacia
                     $orwhere = "ColoniaId = '".$direcciones[0]->ColoniaId."' AND personas.Manzana = '".$direcciones[0]->Manzana."' AND personas.Lote = '".$direcciones[0]->Lote."'";
                 }
             }
@@ -147,6 +154,11 @@ class EntregaController extends Controller
         } else {
             return 0;
         }
+    }
+
+    public function contra(){
+
+        return Hash::make('mopj851219');
     }
 }
 
