@@ -57,3 +57,8 @@ Route::post('/admin/entrega/documentacion/{entrega}', 'Admin\EntregaController@r
 
 Route::post('/admin/findDocumentacion', 'Admin\EntregaController@findDocumentacion');
 
+Route::put('/admin/entrega/revertirEntrega/{entrega}', 'Admin\EntregaController@revertirEntrega');//revertir las entregas por admins
+
+
+Route::get('/admin/entrega/xx','Admin\EntregaController@contra');
+

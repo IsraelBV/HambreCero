@@ -88,8 +88,8 @@ class EntregaController extends Controller
                     ->whereIn('personas.id',$isds)
                     ->get();
             }
-            return $retper;
-            // return ['retper'=>$retper, 'userlvl'=> Auth::user()->tipoUsuarioId];
+            // return $retper;
+            return ['retper'=>$retper, 'userlvl'=> Auth::user()->tipoUsuarioId];
             // dd(DB::getQueryLog());
         } 
     }
@@ -156,9 +156,21 @@ class EntregaController extends Controller
         }
     }
 
-    public function contra(){
+    public function contra(){ //se utiliza para cambiar la contraseña 
 
         return Hash::make('mopj851219');
+    }
+
+    public function revertirEntrega($id){
+        $encuesta = Encuesta::where('PersonaId',$id)->first();
+        $documentacion = Documentacion::where('PersonaId',$id)->first();
+        
+        $encuesta->Entregado = 0;
+        $encuesta->save();
+
+        if ($documentacion !== null) {
+            $documentacion->delete();
+        }
     }
 }
 

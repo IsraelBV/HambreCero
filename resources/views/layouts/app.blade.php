@@ -289,30 +289,31 @@
 
                         var listastring2 = "<br/><br/><h3>No se encontraron registros con esta CURP.<h3>";
 
-                        if(data.length > 0 ){
-                        // if(data['retper'] != undefined){    
-                        //     if(data['retper'].length > 0 ){
-                                
-                                var listastring2 =  '<br/><table class="table"><tr><th>NOMBRE</th><th>CURP</th><th>ESTADO CIVIL</th><th>DIRECCION</th><th>DOCUMENTACION</th><th>ENTREGA</th></tr>';
+                        // if(data.length > 0 ){
+                            if(data['retper'] != undefined){    
+                                if(data['retper'].length > 0 ){
                                     
-                                    // $.each(data['retper'], function(k, v) {
-                                    $.each(data, function(k, v) {  
+                                    var listastring2 =  '<br/><table class="table"><tr><th>NOMBRE</th><th>CURP</th><th>ESTADO CIVIL</th><th>DIRECCION</th><th>DOCUMENTACION</th><th>ENTREGA</th>'+((data['userlvl'] == 0)?'<th>REVERTIR</th>':'')+'</tr>';
+                                        
+                                    $.each(data['retper'], function(k, v) {
+                                    // $.each(data, function(k, v) {  
                                         listastring2 +='<tr>';
                                             listastring2 +='<td>'+(v['Nombre']!= null?v['Nombre']:"")+" "+(v['APaterno']!= null?v['APaterno']:"")+" "+(v['AMaterno']!= null?v['AMaterno']:"")+'</td>';
                                             listastring2 +='<td>'+(v['CURP']!= null?v['CURP']:"N/D")+'</td>';
                                             listastring2 +='<td>'+(v['estadoc']!= null?v['estadoc']:"N/D")+'</td>';
                                             listastring2 +='<td>'+(v['colonia']!= null?v['colonia']:"")+" "+(v['Manzana']!= null?"MZ."+v['Manzana']:"")+" "+(v['Lote']!= null?"LT."+v['Lote']:"")+" "+(v['Calle']!= null?"C."+v['Calle']:"")+" "+(v['NoExt']!= null?"N°Int."+v['NoExt']:"")+" "+(v['NoInt']!= null?"N°Ext."+v['NoInt']:"")+'</td>';
-                                            // if (data['userlvl'] == 0) {
-                                                listastring2 +='<td><button class="btn btn-outline-warning" name="idpersonadocumentacion" data-entid="'+v['id']+'">Documentos</button></td>';
-                                                listastring2 +=(v['Entregado'] != 1)?'<td><button class="btn btn-outline-success" name="idpersonaentrega" data-entid="'+v['id']+'">Entregar</button></td>':'<td><button disabled class="btn btn-danger" name="" data-entid="'+v['id']+'">  ENTREGADO  </button></td>';
-                                            // }
+                                            listastring2 +='<td><button class="btn btn-outline-warning" name="idpersonadocumentacion" data-entid="'+v['id']+'">Documentos</button></td>';
+                                            listastring2 +=(v['Entregado'] != 1)?'<td><button class="btn btn-outline-success" name="idpersonaentrega" data-entid="'+v['id']+'">Entregar</button></td>':'<td><button disabled class="btn btn-danger" name="idpersonaentrega" data-entid="'+v['id']+'">  ENTREGADO  </button></td>';
+                                            if (data['userlvl'] == 0) {
+                                                listastring2 +='<td><button '+(v['Entregado'] == 1?'':'style="display:none;"')+' class="btn btn-outline-info" name="idpersonarevertir" data-entid="'+v['id']+'">Revertir</button></td>';                                  
+                                            } 
                                                 
                                         listastring2 +='</tr>';
                                     });
                                     listastring2 +='</table>';
-                                    
-                        } 
-                        //     } 
+                                        
+                                } 
+                            } 
                         // } 
                         $("#entregaContenedor").html(listastring2);//despliega la lista de encontrados
                         
@@ -520,7 +521,6 @@
                                                          
                         });
 
-
                         $("[name='idpersonaentrega']").click(function(){// si se hace click a algun boton de entrega 
 
                             var btnentrega = $(this);
@@ -541,9 +541,12 @@
                                         if (data == 1) {                                            
                                             btnentrega.attr({
                                                 class:"btn btn-danger",
-                                                disabled:"true",
-                                                name: ""
+                                                disabled:"true"
                                             }).html("  ENTREGADO  ");
+                                            
+                                            if ($("[name='idpersonarevertir'][data-entid='"+btnentrega.data("entid")+"']").length) {                                                
+                                                $("[name='idpersonarevertir'][data-entid='"+btnentrega.data("entid")+"']").show();
+                                            }
 
                                             $("#entregadoModal").modal('hide');
                                         } else {
@@ -554,6 +557,37 @@
                                                 $("#sccs").alert('close');
                                             }, 5000);  
                                         }                      
+                                    }
+                                });
+
+                            });                            
+                        });
+
+                        $("[name='idpersonarevertir']").off().click(function(){// si se hace click para revertir entrega 
+
+                            var btnrevertir = $(this);
+
+                            $("#entregadoModal .modal-title").html("¿Seguro(a) que desea revertir la entrega y documentacion de "+btnrevertir.parent().siblings("td:first").text()+"?");//llena la pregunta del modal
+                            $("#entregadoModal .modal-body").html("");//vacia el body de modal
+                            $("#entregadoModal").modal('show');// abre el modal de desicion
+
+                            $('#entregadoModal [data-btn="cpt"]').off().click(function(){//en caso de aceptar
+
+                                $.ajax({//manda a guardar como entregado
+                                    type: "PUT",
+                                    url: "/admin/entrega/revertirEntrega/"+btnrevertir.data("entid"),
+                                    data: {
+                                        "_token": "{{ csrf_token() }}"
+                                        },
+                                    success: function(data) {
+                                        $("[name='idpersonaentrega'][data-entid='"+btnrevertir.data("entid")+"']").attr({
+                                            class:"btn btn-success",
+                                            disabled:false
+                                        }).html("Entregar");
+
+                                        $("#entregadoModal").modal('hide'); 
+
+                                        btnrevertir.hide();                      
                                     }
                                 });
 
