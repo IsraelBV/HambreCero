@@ -162,7 +162,7 @@
                 $("#btnreturn").hide();
             }, 20000);       
                           
-            $("#encuesta").submit(function(e) { //envia los datos para registro
+            $("#encuesta").off().submit(function(e) { //envia los datos para registro
                 e.preventDefault();
                 
                 $.ajax({
@@ -195,7 +195,7 @@
                 });
             });
 
-            $("#findpersona").submit(function(e) { //busca a las personas
+            $("#findpersona").off().submit(function(e) { //busca a las personas
                 e.preventDefault();
                 
                 $.ajax({
@@ -226,7 +226,7 @@
                 });
             });
 
-            $("#encuestaupdate").submit(function(e) { //envia los datos para actualizar
+            $("#encuestaupdate").off().submit(function(e) { //envia los datos para actualizar
                 e.preventDefault();
                 
                 $.ajax({
@@ -276,7 +276,7 @@
     </script>
     <script> //se utiliza para admin
         $(document).ready(function() {
-            $("#findentrega").submit(function(e) { //busca a las personas
+            $("#findentrega").off().submit(function(e) { //busca a las personas
                 e.preventDefault();
                 
                 $.ajax({ //manda a buscar a los registros con la curp y de ahi busca todos lo que coincida con la direccion
@@ -315,7 +315,7 @@
                         // } 
                         $("#entregaContenedor").html(listastring2);//despliega la lista de encontrados
                         
-                        $("[name='idpersonadocumentacion']").click(function(){// si se hace click a algun boton de documentacion
+                        $("[name='idpersonadocumentacion']").off().click(function(){// si se hace click a algun boton de documentacion
 
                             var btndocumentacion = $(this);
                             $("#entregadoModal .modal-title").html("DOCUMENTACION");//llena el titulo
@@ -519,7 +519,7 @@
                                                          
                         });
 
-                        $("[name='idpersonaentrega']").click(function(){// si se hace click a algun boton de entrega 
+                        $("[name='idpersonaentrega']").off().click(function(){// si se hace click a algun boton de entrega 
 
                             var btnentrega = $(this);
 
