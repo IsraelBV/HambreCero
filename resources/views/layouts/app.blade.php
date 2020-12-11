@@ -7,8 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
     <title>{{ config('app.name', 'Hambre Cero') }}</title>
 
@@ -94,6 +93,9 @@
                                     {{-- <a class="nav-link" href="{{ route('register') }}">{{ __('Registrar') }}&nbsp;&nbsp;&nbsp;&nbsp;</a> --}}
                                 </li>
                                 @endif
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('reporte') }}">{{ __('Reportes') }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                                </li>
                             @endif
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -128,12 +130,8 @@
         </main>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
-    </script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script> //se utiliza para cuestionario
         function printHTML() {  
             if (window.print) {
@@ -600,6 +598,86 @@
 
             
         });        
+    </script>
+    <script>//reportes
+        $(document).ready(function() {
+            
+            $('#ciudadrpt').off().change(function(){
+                var ciudadrpt = $(this);
+                $.ajax({
+                    type: "POST",
+                    url: "/admin/reporte/findcolonias/"+ciudadrpt.val(),
+                    data: {
+                        "_token": "{{ csrf_token() }}"
+                        },
+                    success: function(data) {
+                        // var selectcolonia = '<option value="" selected>Seleccione una opcion</option>';
+                            var selectcolonia = '<option value="x" selected>Todas</option>';
+                        $.each(data, function(k, v) {
+                            selectcolonia += '<option value="'+v['id']+'" >'+v['colonia']+'</option>';
+                        });
+                        $('#coloniarpt').html(selectcolonia);
+                    }
+                });
+            });
+            
+            $('#findreporte').off().submit(function(e){
+                e.preventDefault();
+                
+                var sppiner = '<div class="text-center"></br></br><div class="spinner-border text-info" style="width: 6rem; height: 6rem;" role="status"><span class="sr-only">Loading...</span></div></div>';
+                $('#stats').html('');
+
+                $('#reportecontenedor').html(sppiner);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/admin/reporte/findReporte",
+                    data:{"_token": "{{ csrf_token() }}",
+                        "ciudadrpt":$('#ciudadrpt').val(),
+                        "coloniarpt":$('#coloniarpt').val(),
+                        "entregadorpt":$('#entregadorpt').val(),
+                        "donadorpt":$('#donadorpt').val()
+                        },
+                    success: function(data) {
+                        var reporte = "<br/><br/><h3>No se encontraron registros con la informacion proporcionada.<h3>";
+                        var entregados = 0;
+                        var donados = 0;
+
+                        if(data != undefined){    
+                            if(data.length > 0 ){
+                                
+                                var reporte = '<br/><table class="table table-hover"><tr class="table-info"><th>NOMBRE</th><th>CURP</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>ENTREGADO</th><th>DONADO</th><th>ENTREGO</th></tr>';
+                                    
+                                $.each(data, function(k, v) {
+                                    reporte +='<tr>';
+                                        reporte +='<td>'+(v['Nombre']!= null?v['Nombre']:"")+" "+(v['APaterno']!= null?v['APaterno']:"")+" "+(v['AMaterno']!= null?v['AMaterno']:"")+'</td>';
+                                        reporte +='<td>'+(v['CURP']!= null?v['CURP']:"N/D")+'</td>';
+                                        reporte +='<td>'+(v['municipio']!= null?v['municipio']:"N/D")+'</td>';
+                                        reporte +='<td>'+(v['localidad']!= null?v['localidad']:"N/D")+'</td>';
+                                        reporte +='<td>'+(v['colonia']!= null?v['colonia']:"")+" "+(v['Manzana']!= null?"MZ."+v['Manzana']:"")+" "+(v['Lote']!= null?"LT."+v['Lote']:"")+" "+(v['Calle']!= null?"C."+v['Calle']:"")+" "+(v['NoExt']!= null?"N°Int."+v['NoExt']:"")+" "+(v['NoInt']!= null?"N°Ext."+v['NoInt']:"")+'</td>';
+                                        reporte +='<td>'+(v['Entregado']!= null?(v['Entregado']==1?'SI':'NO'):"N/D")+'</td>';
+                                        reporte +='<td>'+(v['Donado']!= null?(v['Donado']==1?'SI':'NO'):"N/D")+'</td>';
+                                        reporte +='<td>'+(v['name']!= null?v['name']:"N/D")+'</td>';
+                                            
+                                        reporte +='</tr>';
+
+                                        if (v['Entregado']==1) {
+                                            entregados++;
+                                        }
+                                        if (v['Donado']==1) {
+                                            donados++;
+                                        }
+                                });
+                                reporte +='</table>';
+                                $('#stats').html('<strong>Registros: </strong>'+data.length+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>Entregados: </strong>'+entregados+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>Donados: </strong>'+donados)
+
+                            } 
+                        } 
+                        $('#reportecontenedor').html(reporte);
+                    }
+                });
+            });     
+        });
     </script>
 </body>
 </html>

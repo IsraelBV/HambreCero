@@ -22,8 +22,8 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/', 'LayoutController@index');
 
 //Route::resource('/cuestionario', 'CuestionarioController');//ruta para posterior actualizacion
-
- Route::get('/', function () {
+//ENCUESTAS-----------------------------------------------------------------------------------------------------------------------------------------
+Route::get('/', function () {
      return redirect('/registro');
 });
 
@@ -34,7 +34,7 @@ Route::resource('/registro', 'CuestionarioController');
 //         return view('cuestionario.save');
 // });
 
-
+//LOGIN/REGISTRO-------------------------------------------------------------------------------------------------------------------------------------
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/register/success', 'Auth\RegisterController@success');
@@ -46,7 +46,7 @@ Route::get('/register/success', 'Auth\RegisterController@success');
 // Route::get('/qwerty',function(){
 //     return view('layouts.sidebar');
 // });
-
+//ADMIN/ENTRGAS----------------------------------------------------------------------------------------------------------------------------------------
 Route::post('/admin/findPersonaEntrega', 'Admin\EntregaController@findPersonaEntrega');
 
 Route::get('/admin/entrega','Admin\EntregaController@index')->name('buscar');
@@ -60,5 +60,12 @@ Route::post('/admin/findDocumentacion', 'Admin\EntregaController@findDocumentaci
 Route::put('/admin/entrega/revertirEntrega/{entrega}', 'Admin\EntregaController@revertirEntrega');//revertir las entregas por admins
 
 
-Route::get('/admin/entrega/xx','Admin\EntregaController@contra');
+Route::get('/admin/entrega/xx','Admin\EntregaController@contra');//PARA LAS CONTRASEÑAS
+
+//REPORTES------------------------------------------------------------------------------------------------------------------------------------------------
+
+Route::get('/admin/reporte','Admin\ReporteController@index')->name('reporte');
+Route::post('/admin/reporte/findcolonias/{reporte}','Admin\ReporteController@findcolonias');
+Route::post('/admin/reporte/findReporte','Admin\ReporteController@findReporte');
+
 

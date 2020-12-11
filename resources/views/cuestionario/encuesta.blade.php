@@ -161,7 +161,7 @@
                     </div>
                     <div class="form-group col-md-2">
                         <label for="manzana">{{ $preguntas[14]['Descripcion'] }}</label><br>
-                        <input id="manzana" type="text" name="manzana" class="form-control" onkeyup="mayusculas(this);" required="" /><br>
+                        <input id="manzana" type="number" name="manzana" class="form-control" onkeyup="mayusculas(this);" required="" /><br>
                     </div>
                     <div class="form-group col-md-2">
                         <label for="lote">{{ $preguntas[15]['Descripcion'] }}</label><br>

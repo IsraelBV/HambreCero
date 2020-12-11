@@ -423,8 +423,9 @@ class CuestionarioController extends Controller
 
         $pregunta37 = "";
         if(!empty($request->get('si_cuantos'))){
-            $pregunta37 .= $request->get('si_cuantos')."#";
+            $pregunta37 .= $request->get('si_cuantos');
         }
+        $pregunta37 .="#";
         if(!empty($request->get('no_cuantos'))){
             $pregunta37 .= $request->get('no_cuantos');
         }

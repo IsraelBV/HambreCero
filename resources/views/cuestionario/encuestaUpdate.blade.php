@@ -396,10 +396,10 @@
                         <label>{{ $preguntas[36]['Descripcion'] }}</label>
                         <div class="form-row">
                             <div class="col-md-6">
-                                <div class="col-md-12"><input type="number" class="form-control" name="si_cuantos" placeholder="Si Cuantos" value="{{ !empty($persona[0]->Pregunta_37)?explode("#",$persona[0]->Pregunta_37)[0]:'' }}"></div>
+                                <div class="col-md-12"><input type="number" class="form-control" name="si_cuantos" placeholder="Si Cuantos" value="{{ !empty($persona[0]->Pregunta_37)?(strpos($persona[0]->Pregunta_37,'#')!== false?explode("#",$persona[0]->Pregunta_37)[0]:0):0}}"></div>
                             </div>
                             <div class="col-md-6">
-                                <div class="col-md-12"><input type="number" class="form-control" name="no_cuantos" placeholder="No Cuantos" value="{{ !empty($persona[0]->Pregunta_37)?explode("#",$persona[0]->Pregunta_37)[1]:'' }}"></div>
+                                <div class="col-md-12"><input type="number" class="form-control" name="no_cuantos" placeholder="No Cuantos" value="{{!empty($persona[0]->Pregunta_37)?(strpos($persona[0]->Pregunta_37,'#')!== false?explode("#",$persona[0]->Pregunta_37)[1]:$persona[0]->Pregunta_37):0}}"></div>
                             </div>
 
                         </div>
