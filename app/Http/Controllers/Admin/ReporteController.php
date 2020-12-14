@@ -66,7 +66,7 @@ class ReporteController extends Controller
                     ->leftJoin('c_municipios', 'personas.MunicipioId', '=', 'c_municipios.id')
                     ->leftJoin('encuestas', 'personas.id', '=', 'encuestas.personaId')
                     ->leftJoin('users', 'encuestas.EntregadorId', '=', 'users.id')
-                    ->select('personas.id', 'personas.Nombre', 'personas.APaterno','personas.AMaterno','personas.CURP','personas.Manzana','personas.Lote','personas.Calle','personas.NoExt','personas.NoInt','encuestas.Entregado','c_colonias.Descripcion as colonia','c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','users.name','encuestas.Donado')
+                    ->select('personas.id', 'personas.Nombre', 'personas.APaterno','personas.AMaterno','personas.CURP','personas.Manzana','personas.Lote','personas.Calle','personas.NoExt','personas.NoInt','encuestas.Entregado','c_colonias.Descripcion as colonia','c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','users.name','encuestas.Donado','personas.TelefonoCelular')
                     ->WhereRaw($whereraw)
                     ->get();
     }    

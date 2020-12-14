@@ -646,7 +646,7 @@
                         if(data != undefined){    
                             if(data.length > 0 ){
                                 
-                                var reporte = '<br/><table class="table table-hover"><tr class="table-info"><th>NOMBRE</th><th>CURP</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>ENTREGADO</th><th>DONADO</th><th>ENTREGO</th></tr>';
+                                var reporte = '<br/><table class="table table-hover"><tr class="table-info"><th>NOMBRE</th><th>CURP</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>TELEFONO</th><th>ENTREGADO</th><th>DONADO</th><th>VALIDO</th></tr>';
                                     
                                 $.each(data, function(k, v) {
                                     reporte +='<tr>';
@@ -655,6 +655,7 @@
                                         reporte +='<td>'+(v['municipio']!= null?v['municipio']:"N/D")+'</td>';
                                         reporte +='<td>'+(v['localidad']!= null?v['localidad']:"N/D")+'</td>';
                                         reporte +='<td>'+(v['colonia']!= null?v['colonia']:"")+" "+(v['Manzana']!= null?"MZ."+v['Manzana']:"")+" "+(v['Lote']!= null?"LT."+v['Lote']:"")+" "+(v['Calle']!= null?"C."+v['Calle']:"")+" "+(v['NoExt']!= null?"N°Int."+v['NoExt']:"")+" "+(v['NoInt']!= null?"N°Ext."+v['NoInt']:"")+'</td>';
+                                        reporte +='<td>'+(v['TelefonoCelular']!= null?v['TelefonoCelular']:"N/D")+'</td>';
                                         reporte +='<td>'+(v['Entregado']!= null?(v['Entregado']==1?'SI':'NO'):"N/D")+'</td>';
                                         reporte +='<td>'+(v['Donado']!= null?(v['Donado']==1?'SI':'NO'):"N/D")+'</td>';
                                         reporte +='<td>'+(v['name']!= null?v['name']:"N/D")+'</td>';
