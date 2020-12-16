@@ -8,6 +8,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+    {{-- <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css"> --}}
 
     <title>{{ config('app.name', 'Hambre Cero') }}</title>
 
@@ -132,6 +134,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+{{--<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script> --}}
+<script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
     <script> //se utiliza para cuestionario
         function printHTML() {  
             if (window.print) {
@@ -646,7 +656,7 @@
                         if(data != undefined){    
                             if(data.length > 0 ){
                                 
-                                var reporte = '<br/><table class="table table-hover"><tr class="table-info"><th>NOMBRE</th><th>CURP</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>TELEFONO</th><th>ENTREGADO</th><th>DONADO</th><th>VALIDO</th></tr>';
+                                var reporte = '<br/><table class="table table-hover" id="reptable"><thead><tr class="table-info"><th>NOMBRE</th><th>CURP</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>TELEFONO</th><th>ENTREGADO</th><th>DONADO</th><th>VALIDO</th></tr></thead><tbody>';
                                     
                                 $.each(data, function(k, v) {
                                     reporte +='<tr>';
@@ -669,12 +679,50 @@
                                             donados++;
                                         }
                                 });
-                                reporte +='</table>';
-                                $('#stats').html('<strong>Registros: </strong>'+data.length+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>Entregados: </strong>'+entregados+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>Donados: </strong>'+donados)
+                                reporte +='</tbody></table>';
+                                $('#stats').html('<strong>Registros: </strong>'+data.length+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>Entregados: </strong>'+entregados+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>Donados: </strong>'+donados);
+
 
                             } 
                         } 
                         $('#reportecontenedor').html(reporte);
+                        
+                        $('#reptable').DataTable({
+                            dom: 'frltpB',
+                            pageLength: 10,
+                            lengthMenu: [10,30,50,100,200,500],
+                            buttons: [{
+                                extend: 'excel',
+                                className: "btn btn-success",
+                                text: 'Exportar Reporte',
+                                title: '',
+                                filename: 'Reporte Hambre Cero',
+                            }],
+                            "language": {
+                                "decimal":        "",
+                                "emptyTable":     "No data available in table",
+                                "info":           "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                                "infoEmpty":      "Mostrando 0 to 0 of 0 entries",
+                                "infoFiltered":   "(filtered from _MAX_ total entries)",
+                                "infoPostFix":    "",
+                                "thousands":      ",",
+                                "lengthMenu":     "Mostrar _MENU_ registrtos",
+                                "loadingRecords": "Cargando...",
+                                "processing":     "Procesando...",
+                                "search":         "Buscar:",
+                                "zeroRecords":    "No matching records found",
+                                "paginate": {
+                                    "first":      "Primero",
+                                    "last":       "Ultimo",
+                                    "next":       "Siguiente",
+                                    "previous":   "Anterior"
+                                },
+                                "aria": {
+                                    "sortAscending":  ": activate to sort column ascending",
+                                    "sortDescending": ": activate to sort column descending"
+                                }
+                            }
+                        });
                     }
                 });
             });     
