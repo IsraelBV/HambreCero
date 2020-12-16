@@ -691,6 +691,8 @@
                             dom: 'frltpB',
                             pageLength: 10,
                             lengthMenu: [10,30,50,100,200,500],
+                            sScrollY:"30em",
+                            sScrollX: "100%",  
                             buttons: [{
                                 extend: 'excel',
                                 className: "btn btn-success",

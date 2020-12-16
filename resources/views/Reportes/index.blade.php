@@ -2,8 +2,6 @@
 
 @section('content')
     <h2 class="col-4 offset-md-4">REPORTES</h2>
-    <br>
-    <br>
     <form id="findreporte" action="" method="">
         <div class="form-row">
             <div class="form-group col-md-3">
