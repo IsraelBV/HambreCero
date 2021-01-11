@@ -180,12 +180,13 @@
                     url: "/registro",
                     data: $("#encuesta").serialize(),
                     success: function(data) {
-                        
-                        if (data == 1) {
+                        if (data[0] == 1) {
                             var alertcolor = "success";
                             var alerttxt = "Datos Guardados"
                             $("[name = 'send']").hide();
-                            window.print();
+                            $("[name='accion']").prop('href','/imprimir/'+data[1]);
+                            window.location.href = "/imprimir/"+data[1];
+                            //window.print();// formato anterior de impresion de pdf
                             $("[name='accion']").show();
                             $("[name='rel']").show();
                         } else  {
@@ -239,13 +240,15 @@
             $("#encuestaupdate").off().submit(function(e) { //envia los datos para actualizar
                 e.preventDefault();
                 
+                var idpersona = $("#ntn").data('persona');
                 $.ajax({
                     type: "PUT",
-                    url: "/registro/"+$("#ntn").data('persona'),
+                    url: "/registro/"+idpersona,
                     data: $("#encuestaupdate").serialize(),
                     success: function(data) {
                         $("[name='send']").hide();
-                        window.print();
+                        window.location.href = "/imprimir/"+idpersona;
+                        //window.print();// formato anterior de impresion de pdf
                         $("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                         $("[name='accion']").show();
                         $("[name='rel']").show();
@@ -519,14 +522,7 @@
 
                                         });
                                     }
-                                });
-
-                            
-
-                           
-                            
-
-                                                         
+                            });                                                         
                         });
 
                         $("[name='idpersonaentrega']").off().click(function(){// si se hace click a algun boton de entrega 

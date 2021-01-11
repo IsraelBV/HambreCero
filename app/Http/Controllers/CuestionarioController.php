@@ -23,6 +23,7 @@ use Auth;
 
 use Illuminate\Support\Facades\DB;
 
+
 class CuestionarioController extends Controller
 {
 
@@ -322,7 +323,7 @@ class CuestionarioController extends Controller
 
         $encuesta->save(); // guarda las encuestas
 
-        return 1;
+        return [1,$idpersona["id"]];
     }
 
     /**
@@ -603,4 +604,28 @@ class CuestionarioController extends Controller
     {
         //
     }
+
+    public function imprimir($id){
+       
+        $preguntas = C_Pregunta::all();
+        $estados = C_Estado::all();
+        $alimentos = C_Alimento::all();
+        $estudios = C_GradoDeEstudio::all();
+        $ss = C_SSInstitucion::all();
+        $violencias = C_TipoDeViolencia::all();
+        $materiales = C_TipoMaterial::all();
+        $colonias = C_Colonia::all();
+        $localidades = C_Localidad::findMany([57,249]);
+        $municipios = C_Municipio::findMany([5,4]);
+        $gruposociales = C_GrupoSocial::all();
+        $estadosCiviles = C_EstadoCivil::all();
+        $persona = DB::table('personas')
+            ->join('encuestas', 'personas.id', '=', 'encuestas.personaId')
+            ->select('personas.*', 'encuestas.*')
+            ->where("personas.id", $id)
+            ->get();
+
+        $pdf = \PDF::loadView('cuestionario.formato', compact('preguntas','persona','estados','alimentos','estudios','ss','violencias','materiales','colonias','localidades','municipios','gruposociales','estadosCiviles'));
+        return $pdf->download('Cuestionario.pdf');
+   }
 }

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\DB;
+use Auth;
 
 class ReporteController extends Controller
 {
@@ -16,6 +17,9 @@ class ReporteController extends Controller
     }
 
     public function index(){
+        if (Auth::user()->tipoUsuarioId != 0){
+            return redirect('home');
+        } 
         $ciudades  = DB::table('personas')
         ->leftJoin('c_localidades', 'personas.LocalidadId', '=', 'c_localidades.id')
         ->select('c_localidades.id','c_localidades.Descripcion as localidad')

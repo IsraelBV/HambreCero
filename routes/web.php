@@ -33,6 +33,7 @@ Route::resource('/registro', 'CuestionarioController');
 // Route::get('/saved', function () {
 //         return view('cuestionario.save');
 // });
+Route::get('/imprimir/{imprimir}', 'CuestionarioController@imprimir');//imprime un pdf <---------------------------------------
 
 //LOGIN/REGISTRO-------------------------------------------------------------------------------------------------------------------------------------
 Auth::routes();

@@ -1307,7 +1307,7 @@
                 
                 <button type="submit" name="send" class="btn btn-success"><strong>Enviar</strong></button>
                 <div class="row justify-content-around">
-                    <button style="display: none;" type="button" name="accion" class="btn btn-primary col-2" id="action" onclick="printHTML()">Imprimir</button>
+                    <a style="display: none;" href="" name="accion" class="btn btn-primary col-2" id="action" role="button" aria-pressed="true">Imprimir</a>
                     <a style="display: none;"  href="/registro/create" name="rel" class="btn btn-info col-2" role="button" aria-pressed="true">Recargar Formulario</a>
                     <a style="display: none;" href="https://qroo.gob.mx/sedeso/hambreceroquintanaroo" name="rel" class="btn btn-secondary col-2" role="button" aria-pressed="true">Salir</a>
                 </div>
