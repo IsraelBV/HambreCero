@@ -544,8 +544,8 @@
                         <label>{{ $preguntas[51]['Descripcion'] }}</label>
                         <div class="col-md-12">
                             <div class="form-check form-check-inline">
-                                <input id="no12" class="form-check-input" type="radio"mname="internet" value="1" {{ $persona[0]->Pregunta_52 == 1?'checked':'' }}> {{-- required=""> --}}
-                                <label class="form-check-label" for="no12">Sí</label>
+                                <input id="si12" class="form-check-input" type="radio"mname="internet" value="1" {{ $persona[0]->Pregunta_52 == 1?'checked':'' }}> {{-- required=""> --}}
+                                <label class="form-check-label" for="si12">Sí</label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input id="no12" class="form-check-input" type="radio" name="internet" value="0" {{ $persona[0]->Pregunta_52 === 0?'checked':'' }}>
@@ -1357,10 +1357,11 @@
         <br><br>
             <div class="container">
                 
-                <button type="submit" name="send" class="btn btn-success"><strong>Enviar</strong></button>
+                <button type="submit" name="send" class="btn btn-success"><strong>Guardar</strong></button>
                 <div class="row justify-content-around">
-                    <a style="display: none;" href="/imprimir/{{$persona[0]->PersonaId}}" name="accion" class="btn btn-primary col-2" id="action" role="button" aria-pressed="true">Imprimir</a>
-                    <a style="display: none;" href="https://qroo.gob.mx/sedeso/hambreceroquintanaroo" name="rel" class="btn btn-secondary col-2" role="button" aria-pressed="true">Salir</a>
+                    <a style="display: none;" href="/imprimir/{{$persona[0]->PersonaId}}" name="accion" class="btn btn-primary col-2" id="action" role="button" aria-pressed="true" target="_blank">Descargar Formato</a>
+                    <a style="display: none;" href="/" name="rel" class="btn btn-secondary col-2" role="button" aria-pressed="true">Regresar</a>
+                    {{-- <a style="display: none;" href="https://qroo.gob.mx/sedeso/hambreceroquintanaroo" name="rel" class="btn btn-secondary col-2" role="button" aria-pressed="true">Salir</a> --}}
                 </div>
             </div>
         </div>

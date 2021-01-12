@@ -626,6 +626,8 @@ class CuestionarioController extends Controller
             ->get();
 
         $pdf = \PDF::loadView('cuestionario.formato', compact('preguntas','persona','estados','alimentos','estudios','ss','violencias','materiales','colonias','localidades','municipios','gruposociales','estadosCiviles'));
-        return $pdf->download('Cuestionario.pdf');
+        $pdf->setPaper('letter', 'portrait');
+        return $pdf->stream("Cuestionario.pdf");//, array("Attachment" => 0)); 
+        // return $pdf->download('Cuestionario.pdf');
    }
 }

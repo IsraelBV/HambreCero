@@ -185,7 +185,7 @@
                             var alerttxt = "Datos Guardados"
                             $("[name = 'send']").hide();
                             $("[name='accion']").prop('href','/imprimir/'+data[1]);
-                            window.location.href = "/imprimir/"+data[1];
+                            // window.location.href = "/imprimir/"+data[1];//no imprimir automaticamente
                             //window.print();// formato anterior de impresion de pdf
                             $("[name='accion']").show();
                             $("[name='rel']").show();
@@ -247,7 +247,7 @@
                     data: $("#encuestaupdate").serialize(),
                     success: function(data) {
                         $("[name='send']").hide();
-                        window.location.href = "/imprimir/"+idpersona;
+                        // window.location.href = "/imprimir/"+idpersona; //no imprimir automaticamente
                         //window.print();// formato anterior de impresion de pdf
                         $("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
                         $("[name='accion']").show();

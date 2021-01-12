@@ -4,18 +4,18 @@
         <meta charset="UTF-8">
         <title>Document</title>
         <style>
+            html {
+                margin: 30pt 15pt;
+            }
             h4{
                 text-align: center;
                 text-transform: uppercase;
                 width: 7.5in;
-                margin-top: 1em;
+                margin-top: 1.2em;
                 margin-bottom: .7em;
             }
             body{
                 font-size: .6em;
-            }
-            #tercero{
-                text-decoration:underline;
             }
             p{ 
                 margin-bottom: .1em;
@@ -28,7 +28,10 @@
                 font-size: 1.2em !important;
             }
             p:not(.espp){ 
-                width: 3.4in;
+                width: auto;
+            }
+            p.espp{
+                width: auto;
             }
             .divcont{
                 clear:both; 
@@ -38,19 +41,21 @@
                 position: absolute; 
                 left: 0pt; 
                 width: 3.8in;
+                /* background-color: brown; */
             }
             .divder{
-                margin-left:3.8in;
+                margin-left:4in;
                 width: 3.8in;
+                /* background-color: aqua; */
             }
             #headerimg{
                 margin-left: .45in;
                 width: 6.5in;
                 max-width: 100%;
             }
-            .cardsd {
-                width: 7.5in;
-            }
+            /* .cardsd {
+                width: auto;
+            } */
             input[type="radio"] {
                 vertical-align: bottom;
                 transform: scale(0.5);
@@ -130,7 +135,7 @@
                     <p><strong>{{ $preguntas[10]['Descripcion'] }}:</strong> {{ $persona[0]->FechaNacimiento != null?$persona[0]->FechaNacimiento:'' }}</p>
 
                     <p><strong>{{ $preguntas[11]['Descripcion'] }}:</strong> 
-                        @if ($persona[0]->GradoEstudiosId == null)
+                        @if ($persona[0]->GradoEstudiosId != null)
                             @foreach ($estudios as $estudio)
                                 @if ($estudio->id == $persona[0]->GradoEstudiosId)
                                     {{$estudio->Descripcion}}
@@ -141,7 +146,7 @@
                     </p>
 
                     <p><strong>{{ $preguntas[12]['Descripcion'] }}:</strong>
-                        @if ($persona[0]->ColoniaId == null)
+                        @if ($persona[0]->ColoniaId != null)
                             @foreach ($colonias as $colonia)
                                 @if ($colonia->id == $persona[0]->ColoniaId)
                                     {{$colonia->Descripcion}}
@@ -163,7 +168,7 @@
                     <!--Fila 6-->
                     <p><strong>{{ $preguntas[18]['Descripcion'] }}:</strong> {{ $estados[22]['Descripcion'] }}</p>
                     <p><strong>{{ $preguntas[19]['Descripcion'] }}:</strong> 
-                        @if ($persona[0]->MunicipioId == null)
+                        @if ($persona[0]->MunicipioId != null)
                             @foreach ($municipios as $municipio)
                                 @if ($municipio->id == $persona[0]->MunicipioId)
                                     {{$municipio->Descripcion}}
@@ -173,7 +178,7 @@
                         @endif
                     </p>
                     <p><strong>{{ $preguntas[20]['Descripcion'] }}:</strong> 
-                        @if ($persona[0]->LocalidadId == null)
+                        @if ($persona[0]->LocalidadId != null)
                             @foreach ($localidades as $localidad)
                                 @if ($localidad->id == $persona[0]->LocalidadId)
                                     {{$localidad->Descripcion}}
@@ -217,7 +222,7 @@
                     </p>
                     <!-- fin de fila 1-->
                     <p><strong>{{ $preguntas[29]['Descripcion'] }}:</strong> {{ $persona[0]->Pregunta_30 != null?$persona[0]->Pregunta_30:''}}</p>
-                    <p><strong>{{ $preguntas[30]['Descripcion'] }}:</strong> 
+                    <p><strong>{{ $preguntas[30]['Descripcion'] }}:</strong> <br>
                         Sí <input type="radio" {{ $persona[0]->Pregunta_31 == 1?'checked':'' }}>
                         No <input type="radio" {{ $persona[0]->Pregunta_31 === 0?'checked':'' }}>
                                 
@@ -330,7 +335,7 @@
                                 No <input type="radio" {{ $persona[0]->Pregunta_61 === 0?'checked':'' }}>
                     </p>
                     <p><strong>{{ $preguntas[61]['Descripcion'] }}:</strong> 
-                            @if ($persona[0]->Pregunta_62 == null)
+                            @if ($persona[0]->Pregunta_62 != null)
                             @foreach ($ss as $s)
                                 @if ($s->id == $persona[0]->Pregunta_62)
                                     {{$s->Descripcion}}
@@ -374,7 +379,7 @@
     
                     <!--fin de fila 4-->
                     <!--fila 5-->
-                    <p><strong>{{ $preguntas[73]['Descripcion'] }}:</strong> 
+                    <p><strong>{{ $preguntas[73]['Descripcion'] }}:</strong> <br>
                         <input type="radio" {{ $persona[0]->Pregunta_74 == 2?'checked':'' }}> Mucho
                         <input type="radio" {{ $persona[0]->Pregunta_74 == 1?'checked':'' }}> Poco
                         <input type="radio" {{ $persona[0]->Pregunta_74 === 0?'checked':'' }}> Nada
@@ -404,8 +409,12 @@
             <!--fin de infromacion de salu-->
             <!--INFROMACION DE ACCESO A LA ALIMENTACION-->
             <br>
+            <br>
+            <br>
+            <br>
             <h4>ACCESO A LA ALIMENTACIÓN</h4>
-            <div class="cardsd">
+            <div class="divcont" >
+                <div class="diviz" >
                     <p class="espp"><strong>{{ $preguntas[79]['Descripcion'] }}:</strong> 
                         Sí <input type="radio" {{ $persona[0]->Pregunta_80 == 1?'checked':'' }}>
                         No <input type="radio" {{ $persona[0]->Pregunta_80 === 0?'checked':'' }}>
@@ -445,7 +454,9 @@
                     </p>
                     <!--fin de fila-->
                     <!--fin de fila-->
-                    <p class="espp"><strong>{{ $preguntas[87]['Descripcion'] }}:</strong><br>
+                </div>
+                <div class="divder">
+                    <p><strong>{{ $preguntas[87]['Descripcion'] }}:</strong><br>
                         <input  type="checkbox" value="{{ $alimentos[0]['id'] }}" {{ in_array($alimentos[0]['id'],explode("#",$persona[0]->Pregunta_88))?'checked':''  }}> {{ $alimentos[0]['Descripcion'] }}<br>
                         <input  type="checkbox" value="{{ $alimentos[1]['id'] }}" {{ in_array($alimentos[1]['id'],explode("#",$persona[0]->Pregunta_88))?'checked':''  }}> {{ $alimentos[1]['Descripcion'] }}<br>
                         <input  type="checkbox" value="{{ $alimentos[2]['id'] }}" {{ in_array($alimentos[2]['id'],explode("#",$persona[0]->Pregunta_88))?'checked':''  }}> {{ $alimentos[2]['Descripcion'] }}<br>
@@ -461,6 +472,7 @@
                     </p>
                     <!--fin fila-->
                 <!--fin de cardbody-->
+                </div>
             </div>
             <!-- FIN DE ACCESO A LA ALIMENTACION-->
             <!--INICIO-->
@@ -499,7 +511,8 @@
             <!--FIN-->
             <!--INICIO INSTRUMENTOS FACTORES DE RIESGO-->
             <h4 >INSTRUMENTO DE IDENTIFICACIÓN DE FACTORES DE RIESGO</h4>
-            <div class="cardsd">
+            <div class="divcont" >
+                <div class="diviz" >
 
                     <p class="espp"><strong> {{ $preguntas[95]['Descripcion'] }}:</strong> 
                         Sí <input type="radio" {{ $persona[0]->Pregunta_96 == 1?'checked':'' }}> {{-- required=""> --}}
@@ -519,12 +532,13 @@
                         No <input type="radio" {{ $persona[0]->Pregunta_98 === 0?'checked':'' }}>
                     </p>
                     <!--fin de fila-->
-                    <p  class="espp"><strong> {{ $preguntas[98]['Descripcion'] }}:</strong> 
+                    <p  class="espp"><strong> {{ $preguntas[98]['Descripcion'] }}:</strong><br>
                         Sí <input  type="radio" {{ $persona[0]->Pregunta_99 == 1?'checked':'' }}> {{-- required=""> --}}
                         No <input  type="radio" {{ $persona[0]->Pregunta_99 === 0?'checked':'' }}>
                     </p>
                     <!--fin de fila-->
-                    <p class="espp"><strong> {{ $preguntas[99]['Descripcion'] }}:</strong>                        Sí <input type="radio" {{ $persona[0]->Pregunta_100 == 1?'checked':'' }}> {{-- required=""> --}}
+                    <p class="espp"><strong> {{ $preguntas[99]['Descripcion'] }}:</strong>                        
+                        Sí <input type="radio" {{ $persona[0]->Pregunta_100 == 1?'checked':'' }}> {{-- required=""> --}}
                         No <input type="radio" {{ $persona[0]->Pregunta_100 === 0?'checked':'' }}>
                     </p>
                     <!--fin de fila-->
@@ -533,10 +547,39 @@
                         No <input type="radio" {{ $persona[0]->Pregunta_101 === 0?'checked':'' }}> 
                     </p>
                     <!--fin de fila-->
+                </div>
+                <div class="divder">
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+
+                    <p style='text-align: center;'>_______________________________</p>
+                    <h3 style='text-align: center;'>FIRMA</h3>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+
+                </div>
             </div>
             <!--fin de card body-->
             <!--fin de instrumentos de factores de riesgo-->
         <!--FIN  FACTORES DE RIESGO-->
+        <br>
         <br>
         <br>
             <p class="espp2">Este programa utiliza recursos públicos y es ajeno a cualquier partido político. Queda prohibido el uso para fines distintos al desarrollo social. Quien haga uso indebido de los recursos de este programa deberá ser denunciado y sancionado conforme lo dispone la ley de la materia Los datos personales recabados, serán protegidos de acuerdo a lo establecido en la Ley General de Protección de Datos Personales en Posesión de los Sujetos Obligados y la Ley de Protección de Datos Personales Posesión de Sujetos Obligados para el Estado de Quintana Roo.</p>
