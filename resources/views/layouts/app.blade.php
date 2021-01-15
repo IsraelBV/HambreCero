@@ -91,7 +91,7 @@
                             @if (Auth::user()->tipoUsuarioId == 0)                            
                                 @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Usuarios') }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                                    <a class="nav-link" href="{{ route('usuarios') }}">{{ __('Usuarios') }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
                                     {{-- <a class="nav-link" href="{{ route('register') }}">{{ __('Registrar') }}&nbsp;&nbsp;&nbsp;&nbsp;</a> --}}
                                 </li>
                                 @endif
@@ -725,6 +725,120 @@
                 });
             });     
         });
+    </script>
+    <script>//usuarios
+        $(document).ready(function() {
+
+            var datatableuser = $('#usrtble').DataTable({ // datatable para tabla de usuarios
+                            dom: 'frltpB',
+                            pageLength: 10, 
+                            lengthMenu: [10,30,50],
+                            sScrollY: '35em' ,
+                            scrollCollapse: true,
+                            
+                            buttons: [
+                                        {
+                                            text: 'Registar Usuario',
+                                            className: "btn btn-success",
+                                            action: function ( e, dt, node, config ) {
+                                                window.location = "{{ route('register') }}";
+                                            }
+                                        }
+                                    ],
+                            "language": {
+                                "decimal":        "",
+                                "emptyTable":     "No data available in table",
+                                "info":           "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                                "infoEmpty":      "Mostrando 0 to 0 of 0 entries",
+                                "infoFiltered":   "(filtered from _MAX_ total entries)",
+                                "infoPostFix":    "",
+                                "thousands":      ",",
+                                "lengthMenu":     "Mostrar _MENU_ registrtos",
+                                "loadingRecords": "Cargando...",
+                                "processing":     "Procesando...",
+                                "search":         "Buscar:",
+                                "zeroRecords":    "No matching records found",
+                                "paginate": {
+                                    "first":      "Primero",
+                                    "last":       "Ultimo",
+                                    "next":       "Siguiente",
+                                    "previous":   "Anterior"
+                                }
+                            }
+            });
+
+            $("[name='idusuariodesh']").off().click(function(){// para deshabilitar usuario 
+
+                var btndeshabilitar = $(this);
+                var modalconfirmuser = '<div class="modal fade" id="usuariomodal" tabindex="-1" role="dialog" aria-labelledby="usuariomodalLabel" aria-hidden="true">';
+                    modalconfirmuser+='<div class="modal-dialog" role="document">';
+                        modalconfirmuser+='<div class="modal-content">';
+                            modalconfirmuser+='<div class="modal-header">';
+                                modalconfirmuser+='<h5 class="modal-title" id="usuariomodalLabel">¿Seguro(a) que desea deshabilitar a '+btndeshabilitar.parent().siblings("td:first").text()+'?</h5>';
+                                modalconfirmuser+='<button type="button" class="close" data-dismiss="modal" aria-label="Close">';
+                                    modalconfirmuser+='<span aria-hidden="true">&times;</span>';
+                                modalconfirmuser+='</button>';
+                            modalconfirmuser+='</div>';
+                            modalconfirmuser+='<div class="modal-footer">';
+                                modalconfirmuser+='<button type="button" class="btn btn-primary" data-btn="cpt">Si</button>';
+                                modalconfirmuser+='<button type="button" class="btn btn-secondary" data-dismiss="modal" data-btn="cnl">No</button>';
+                            modalconfirmuser+='</div>';
+                        modalconfirmuser+='</div>';
+                    modalconfirmuser+='</div>';
+                modalconfirmuser+='</div>';
+
+                $('#mdlusr').html(modalconfirmuser)
+
+                
+                $("#usuariomodal").modal('show');// abre el modal de desicion
+
+                $('#usuariomodal [data-btn="cpt"]').off().click(function(){//en caso de aceptar
+
+                    $.ajax({//manda a guardar como entregado
+                        type: "PUT",
+                        url: "/admin/user/deshabilitar/"+btndeshabilitar.data("usid"),
+                        data: {
+                            "_token": "{{ csrf_token() }}"
+                            },
+                        success: function() {                            
+                            btndeshabilitar.parent().parent().remove();
+                            $("#usuariomodal").modal('hide');            
+                        }
+                    });
+
+                });                            
+            });
+
+            // $("#formularioedicionusuario").off().submit(function(e){
+            //     e.preventDefault();
+
+            //     var idpersona = $("#ntn").data('persona');
+            //     $.ajax({
+            //         type: "PUT",
+            //         url: "/registro/"+idpersona,
+            //         data: $("#encuestaupdate").serialize(),
+            //         success: function(data) {
+            //             $("[name='send']").hide();
+            //             window.location.href = "/imprimir/"+idpersona;
+            //             //window.print();// formato anterior de impresion de pdf
+            //             $("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+            //             $("[name='accion']").show();
+            //             $("[name='rel']").show();
+
+            //             setTimeout(function() { 
+            //                 $("#sccs").alert('close');
+            //             }, 3500);                        
+            //         }
+            //     });
+
+
+            // });
+
+        });
+
+
+
+
     </script>
 </body>
 </html>

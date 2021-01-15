@@ -64,9 +64,15 @@ Route::put('/admin/entrega/revertirEntrega/{entrega}', 'Admin\EntregaController@
 Route::get('/admin/entrega/xx','Admin\EntregaController@contra');//PARA LAS CONTRASEÑAS
 
 //REPORTES------------------------------------------------------------------------------------------------------------------------------------------------
-
 Route::get('/admin/reporte','Admin\ReporteController@index')->name('reporte');
 Route::post('/admin/reporte/findcolonias/{reporte}','Admin\ReporteController@findcolonias');
 Route::post('/admin/reporte/findReporte','Admin\ReporteController@findReporte');
+
+//USUARIOS------------------------------------------------------------------------------------------------------------------------------------------------
+Route::get('/admin/user','Admin\UsuarioController@index')->name('usuarios');
+Route::get('/admin/user/{user}/edit','Admin\UsuarioController@editarUsuario');
+Route::put('/admin/user/{user}', 'Admin\UsuarioController@actualizarUsuario');//revertir las entregas por admins
+Route::put('/admin/user/deshabilitar/{user}', 'Admin\UsuarioController@deshabilitarUsuario');//revertir las entregas por admins
+
 
 
