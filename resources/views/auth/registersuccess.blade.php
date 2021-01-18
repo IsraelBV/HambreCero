@@ -7,7 +7,7 @@
                 <div class="jumbotron alert alert-success">
                     <h1 class="display-4">Datos Guardados</h1>
                     <hr class="my-4">
-                    <p>El usuario ha sido registrado</p>
+                    <p>{{$msg}}</p>
                     <a class="btn btn-primary btn-lg" href="/admin/user" role="button">Regresar</a>
                   </div>
             </div>

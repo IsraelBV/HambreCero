@@ -792,9 +792,9 @@
                 
                 $("#usuariomodal").modal('show');// abre el modal de desicion
 
-                $('#usuariomodal [data-btn="cpt"]').off().click(function(){//en caso de aceptar
+                $('#usuariomodal [data-btn="cpt"]').off().click(function(){//en caso de aceptar deshabilitar el usuario
 
-                    $.ajax({//manda a guardar como entregado
+                    $.ajax({//manda deshabilitar el usuario
                         type: "PUT",
                         url: "/admin/user/deshabilitar/"+btndeshabilitar.data("usid"),
                         data: {

@@ -71,8 +71,8 @@ Route::post('/admin/reporte/findReporte','Admin\ReporteController@findReporte');
 //USUARIOS------------------------------------------------------------------------------------------------------------------------------------------------
 Route::get('/admin/user','Admin\UsuarioController@index')->name('usuarios');
 Route::get('/admin/user/{user}/edit','Admin\UsuarioController@editarUsuario');
-Route::put('/admin/user/{user}', 'Admin\UsuarioController@actualizarUsuario');//revertir las entregas por admins
-Route::put('/admin/user/deshabilitar/{user}', 'Admin\UsuarioController@deshabilitarUsuario');//revertir las entregas por admins
-
-
+Route::get('/admin/user/pass/{user}/edit','Admin\UsuarioController@editarcontraseña');
+Route::put('/admin/user/{user}', 'Admin\UsuarioController@actualizarUsuario');//actualizar datos de usuario
+Route::put('/admin/user/pass/{user}', 'Admin\UsuarioController@actualizarContraseña');//actualizar contraseña
+Route::put('/admin/user/deshabilitar/{user}', 'Admin\UsuarioController@deshabilitarUsuario');//deshabilita al usuario
 

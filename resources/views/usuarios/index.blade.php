@@ -9,6 +9,7 @@
             <th>EMAIL</th>
             <th>NIVEL</th>
             <th>EDITAR</th>
+            <th>CONTRASEÑA</th>
             <th>DESHABILITAR</th>
         </tr>
     </thead>
@@ -18,7 +19,8 @@
                 <td>{{$user->name}}</td>
                 <td>{{$user->email}}</td>
                 <td>{{$user->tipoUsuarioId == 0?'Aministrador':'Capturista'}}</td>
-                <td><a href="/admin/user/{{$user->id}}/edit" class="btn btn-outline-warning" name="idusuarioeditar" >Editar</a></td> {{-- data-usid="{{$user->id}}" --}}
+                <td><a href="/admin/user/{{$user->id}}/edit" class="btn btn-outline-info" name="idusuarioeditar" >Editar Usuario</a></td>
+                <td><a href="/admin/user/pass/{{$user->id}}/edit" class="btn btn-outline-warning" name="idusuarioeditarcont" >Editar Contraseña</a></td>
                 <td><button class="btn btn-outline-danger" name="idusuariodesh" data-usid="{{$user->id}}">Deshabilitar</button></td>
             </tr>
         @endforeach

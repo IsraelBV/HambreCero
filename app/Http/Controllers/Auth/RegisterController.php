@@ -76,6 +76,7 @@ class RegisterController extends Controller
             'tipoUsuarioId'=> 1,
             'usuarioCreo'=> Auth::user()->id,
             'password' => Hash::make($data['password']),
+            'status' => 1,
         ]);
     }
 
@@ -99,7 +100,9 @@ class RegisterController extends Controller
 
     public function success()
     {
-        return view('auth.registersuccess');
+        return view('auth.registersuccess',[
+            'msg'=> 'El usuario ha sido registrado'
+            ]);
     }
     
 }
