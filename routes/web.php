@@ -48,17 +48,21 @@ Route::get('/register/success', 'Auth\RegisterController@success');
 //     return view('layouts.sidebar');
 // });
 //ADMIN/ENTRGAS----------------------------------------------------------------------------------------------------------------------------------------
-Route::post('/admin/findPersonaEntrega', 'Admin\EntregaController@findPersonaEntrega');
-
 Route::get('/admin/entrega','Admin\EntregaController@index')->name('buscar');
 
-Route::put('/admin/entrega/{entrega}', 'Admin\EntregaController@registrarEntrega');
+Route::post('/admin/findPersonaEntrega', 'Admin\EntregaController@findPersonaEntrega');
+
+Route::post('/admin/findListaEntregas/{entrega}', 'Admin\EntregaController@findEntregas');
+
+Route::delete('/admin/entrega/revertirEntrega/{entrega}', 'Admin\EntregaController@revertirEntrega');//revertir las entregas por admins
+
+
+Route::post('/admin/entrega/{entrega}', 'Admin\EntregaController@registrarEntrega');
 
 Route::post('/admin/entrega/documentacion/{entrega}', 'Admin\EntregaController@registrarDocumentacion');
 
-Route::post('/admin/findDocumentacion', 'Admin\EntregaController@findDocumentacion');
+Route::post('/admin/findDocumentacion/{entrega}', 'Admin\EntregaController@findDocumentacion');
 
-Route::put('/admin/entrega/revertirEntrega/{entrega}', 'Admin\EntregaController@revertirEntrega');//revertir las entregas por admins
 
 
 Route::get('/admin/entrega/xx','Admin\EntregaController@contra');//PARA LAS CONTRASEÑAS

@@ -24,6 +24,7 @@ class CreateDocumentacionTable extends Migration
             $table->boolean('Anexo17')->nullable();
             $table->boolean('Comprobante')->nullable();
             $table->integer('EncuestadorId')->nullable();
+            $table->boolean('Donado');
             $table->timestamps();
         });
     }

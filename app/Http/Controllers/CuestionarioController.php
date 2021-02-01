@@ -133,6 +133,7 @@ class CuestionarioController extends Controller
         $persona->GrupoSocialId = $request->get('gruposocial');
         $persona->EstadoCivilId = $request->get('estadocivil');
         $persona->EncuestadorId = (Auth::check())?Auth::user()->id:0;
+        $persona->Intentos = 0;
         
 
 
@@ -312,9 +313,7 @@ class CuestionarioController extends Controller
         $encuesta->Pregunta_99 = $request->get('escuchado_adicciones_prevencion');
         $encuesta->Pregunta_100 = $request->get('denunciar_tipo_violencia');
         $encuesta->Pregunta_101 = $request->get('siente_seguro_vivienda');
-        $encuesta->Intentos = 0;
         $encuesta->EncuestadorId = (Auth::check())?Auth::user()->id:0;
-        $encuesta->Entregado = 0;
 
         $persona->save();// guarda los datos de la persona
 
@@ -421,6 +420,7 @@ class CuestionarioController extends Controller
         $persona->GrupoSocialId = $request->get('gruposocial');
         $persona->EstadoCivilId = $request->get('estadocivil');
         $persona->EncuestadorId = (Auth::check())?Auth::user()->id:0;
+        $persona->Intentos = 0;
 
         $pregunta37 = "";
         if(!empty($request->get('si_cuantos'))){
@@ -582,10 +582,7 @@ class CuestionarioController extends Controller
         $encuesta->Pregunta_99 = $request->get('escuchado_adicciones_prevencion');
         $encuesta->Pregunta_100 = $request->get('denunciar_tipo_violencia');
         $encuesta->Pregunta_101 = $request->get('siente_seguro_vivienda');
-        $encuesta->Intentos = 0;
         $encuesta->EncuestadorId = (Auth::check())?Auth::user()->id:0;
-        $encuesta->Entregado = 0;
-
 
         $persona->save();//actualiza los registros de persona
 
