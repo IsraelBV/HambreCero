@@ -6,13 +6,13 @@
         <div class="form-row">
             <div class="form-group col-md-2">
                 <label for="periodorpt">Periodo</label>
-                    <br>
-                    <select id="periodorpt" class="form-control" name="periodorpt">
-                        <option value="x" selected>Todas</option>
-                        @foreach ($periodos as $periodo)
-                            <option value="{{$periodo->id}}">{{$periodo->periodo}}</option>
-                        @endforeach
-                    </select>
+                <br>
+                <select id="periodorpt" class="form-control" name="periodorpt">
+                    <option value="x" selected>Todas</option>
+                    @foreach ($periodos as $periodo)
+                        <option value="{{$periodo->id}}">{{$periodo->periodo}}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="form-group col-md-2">
                 <label for="entregadorpt">Entregado</label>

@@ -393,7 +393,7 @@ class CuestionarioController extends Controller
      */
     public function edit($id)
     {   
-        if(session('periodo') == 1){ //20202
+        if(session('periodo') == 1){ //2020
             $personaCollection = DB::table('personas')
             ->join('encuestas', 'personas.id', '=', 'encuestas.personaId')
             ->select('personas.*', 'encuestas.*')
