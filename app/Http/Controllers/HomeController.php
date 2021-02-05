@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\C_Periodo;
 use Illuminate\Http\Request;
+use Auth;
 
 class HomeController extends Controller
 {
@@ -26,5 +28,26 @@ class HomeController extends Controller
         // return redirect('/admin/entrega');
         return redirect('/');
         //return view('home');
+    }
+
+    public function managePeriodos()
+    {
+        if (Auth::check()) {
+            if (session()->has('periodo')) {
+                return redirect('/');
+            } else {
+                return view('layouts.periodos',['periodos'=> C_Periodo::all()]);
+            }
+        } else {
+            return redirect('/');
+        }
+    }
+
+    public function redirectPeriodos(Request $request)
+    {
+        $periodo = C_Periodo::where('id',$request->get('periodo'))->first();
+        session(['periodo' => $request->get('periodo'), 'periodoNombre' =>$periodo->Descripcion]);
+
+        return redirect('/');
     }
 }

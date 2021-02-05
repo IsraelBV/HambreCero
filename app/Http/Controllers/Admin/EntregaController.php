@@ -20,7 +20,12 @@ class EntregaController extends Controller
     }
 
     public function index(){
-        return view('entregas.index');
+        
+        if (session()->has('periodo')) {
+            return view('entregas.index');       
+        } else {
+            return redirect('/periodo');
+        }
     }
     
     public function findPersonaEntrega(Request $request){ // listo
@@ -196,7 +201,7 @@ class EntregaController extends Controller
                     $entrega->PersonaId = $id;
                     $entrega->DocumentacionId = $documentacion->id;
                     $entrega->EntregadorId = Auth::user()->id;
-                    $entrega->PeriodoId = 1;
+                    $entrega->PeriodoId = session('periodo');
                     $entrega->Direccion = ($persona[0]->colonia!=null ? $persona[0]->colonia : 'Col.N/D')." Mz.".($persona[0]->Manzana!=null ? $persona[0]->Manzana : 'N/D')." Lt.".($persona[0]->Lote!=null ?$persona[0]->Lote : 'N/D')." Calle: ".($persona[0]->Calle!=null ?$persona[0]->Calle : 'N/D')." NoExt: ".($persona[0]->NoExt!=null ?$persona[0]->NoExt : 'N/D')." NoInt: ".($persona[0]->NoInt!=null ?$persona[0]->NoInt : 'N/D');
                     $entrega->Donado = $documentacion->Donado;
 

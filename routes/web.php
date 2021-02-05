@@ -21,6 +21,10 @@ use Illuminate\Support\Facades\Route;
 
 // Route::get('/', 'LayoutController@index');
 
+//SELECTOR DE PERIODOS
+Route::get('/periodo', 'HomeController@managePeriodos');
+Route::post('/redirectPeriodo', 'HomeController@redirectPeriodos');
+
 //Route::resource('/cuestionario', 'CuestionarioController');//ruta para posterior actualizacion
 //ENCUESTAS-----------------------------------------------------------------------------------------------------------------------------------------
 Route::get('/', function () {

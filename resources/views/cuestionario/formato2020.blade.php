@@ -123,7 +123,7 @@
                         @if ($persona[0]->EstadoNacimientoId != null)
                             @foreach ($estados as $estado)
                                 @if ($estado->id == $persona[0]->EstadoNacimientoId)
-                                    {{$estadocivil->Descripcion}}
+                                    {{$estado->Descripcion}}
                                 @endif
                             @endforeach
                         @endif

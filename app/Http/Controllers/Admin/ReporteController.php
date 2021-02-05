@@ -32,7 +32,12 @@ class ReporteController extends Controller
         ->orderBy('LocalidadId', 'ASC')
         ->get();
 
-        return view('reportes.index',['ciudades'=>$ciudades,'colonias'=>$colonias]);
+        $periodos  = DB::table('c_periodos')
+        ->select('id','Descripcion as periodo')
+        ->orderBy('id', 'ASC')
+        ->get();
+
+        return view('reportes.index',['ciudades'=>$ciudades,'colonias'=>$colonias,'periodos'=>$periodos]);
     }
 
     public function findcolonias($entidad){
@@ -55,7 +60,8 @@ class ReporteController extends Controller
         $donadorpt = $request->get('donadorpt');
         $ciudadrpt = $request->get('ciudadrpt');
         $coloniarpt = $request->get('coloniarpt');
-
+        $periodorpt = $request->get('periodorpt');
+        
        
         //$whereraw = '(entregas.Donado = "'.$entregadorpt.'"'.($entregadorpt==1?')':' OR encuestas.Entregado IS NULL)');
         $whereraw = $entregadorpt==1?'entregas.Donado IS NOT NULL':'entregas.Donado IS NULL';
@@ -63,7 +69,8 @@ class ReporteController extends Controller
         $whereraw .= ((is_null($donadorpt) || $donadorpt=='x')?'':' AND entregas.Donado = "'.$donadorpt.'"');
         $whereraw .= ((is_null($ciudadrpt) || $ciudadrpt=='x')?'':' AND personas.LocalidadId = "'.$ciudadrpt.'"');
         $whereraw .= ((is_null($coloniarpt) || $coloniarpt=='x')?'':' AND personas.ColoniaId = "'.$coloniarpt.'"');
-
+        $whereraw .= ((is_null($periodorpt) || $periodorpt=='x')?'':' AND entregas.PeriodoId = "'.$periodorpt.'"');
+        
         return DB::table('personas')
                     ->leftJoin('entregas', 'personas.id', '=', 'entregas.personaId')
                     ->leftJoin('c_colonias', 'personas.ColoniaId', '=', 'c_colonias.id')

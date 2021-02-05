@@ -2,31 +2,6 @@
 
 @section('content')
 
-    {{-- <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link active" href="#">INFORMACION GENERAL</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">INFORMACION FAMILIAR Y VIVIENADA</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">INFORMACION GENERAL DE SALUD</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">ACCESO A LA ALIMENTACIÓN</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">INFORMACIÓN DE DESARROLLO HUMANO</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">INSTRUMENTO DE IDENTIFICACIÓN DE FACTORES DE RIESGO</a>
-        </li>
-    </ul> --}}
-
-    {{-- @foreach ($preguntas as $pregunta)
-        <p>{{ $pregunta->Descripcion }}</p>
-    @endforeach --}}
-
     <div class="container">
         <div class="row">
             <div class="col-sm-12 col-md-12">

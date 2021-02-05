@@ -4,7 +4,17 @@
     <h2 class="col-4 offset-md-4">REPORTES</h2>
     <form id="findreporte" action="" method="">
         <div class="form-row">
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-2">
+                <label for="periodorpt">Periodo</label>
+                    <br>
+                    <select id="periodorpt" class="form-control" name="periodorpt">
+                        <option value="x" selected>Todas</option>
+                        @foreach ($periodos as $periodo)
+                            <option value="{{$periodo->id}}">{{$periodo->periodo}}</option>
+                        @endforeach
+                    </select>
+            </div>
+            <div class="form-group col-md-2">
                 <label for="entregadorpt">Entregado</label>
                 <select id="entregadorpt" class="form-control" name="entregadorpt" >
                     {{-- <option value="" selected>Seleccione una opcion</option> --}}
@@ -13,7 +23,7 @@
                     <option value="0">NO</option>
                 </select>
             </div> 
-            <div class="form-group col-md-3">
+            <div class="form-group col-md-2">
                 <label for="donadorpt">Donado</label>
                 <select id="donadorpt" class="form-control" name="donadorpt">
                     {{-- <option value="" selected>Seleccione una opcion</option> --}}

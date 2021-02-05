@@ -65,6 +65,11 @@
                 <a class="navbar-brand"  style="color: white;" href="{{ url('/') }}">
                     {{-- {{ config('app.name', '') }} --}}
                     Secretaria de Desarrollo Social
+                    @if (session()->has('periodo'))
+                         {{' / '.session('periodoNombre')}}
+                    @endif
+
+                    
                 </a>
                 {{-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -669,7 +674,8 @@
                         "ciudadrpt":$('#ciudadrpt').val(),
                         "coloniarpt":$('#coloniarpt').val(),
                         "entregadorpt":$('#entregadorpt').val(),
-                        "donadorpt":$('#donadorpt').val()
+                        "donadorpt":$('#donadorpt').val(),
+                        "periodorpt":$('#periodorpt').val(),
                         },
                     success: function(data) {
                         var reporte = "<br/><br/><h3>No se encontraron registros con la informacion proporcionada.<h3>";
@@ -690,7 +696,7 @@
                                         reporte +='<td>'+(v['colonia']!= null?v['colonia']:"N/D")+'</td>';
                                         reporte +='<td>'+(v['Manzana']!= null?"MZ."+v['Manzana']:"")+" "+(v['Lote']!= null?"LT."+v['Lote']:"")+" "+(v['Calle']!= null?"C."+v['Calle']:"")+" "+(v['NoExt']!= null?"N°Int."+v['NoExt']:"")+" "+(v['NoInt']!= null?"N°Ext."+v['NoInt']:"")+'</td>';
                                         reporte +='<td>'+(v['TelefonoCelular']!= null?v['TelefonoCelular']:"N/D")+'</td>';
-                                        reporte +='<td>'+(v['Entregado']!= null?(v['Entregado']==1?'SI':'NO'):"N/D")+'</td>';
+                                        reporte +='<td>'+(v['Donado']!= null?'SI':'NO')+'</td>';
                                         reporte +='<td>'+(v['Donado']!= null?(v['Donado']==1?'SI':'NO'):"N/D")+'</td>';
                                         reporte +='<td>'+(v['name']!= null?v['name']:"N/D")+'</td>';
                                             
@@ -732,7 +738,7 @@
                                 "infoFiltered":   "(filtered from _MAX_ total entries)",
                                 "infoPostFix":    "",
                                 "thousands":      ",",
-                                "lengthMenu":     "Mostrar _MENU_ registrtos",
+                                "lengthMenu":     "Mostrar _MENU_ registros",
                                 "loadingRecords": "Cargando...",
                                 "processing":     "Procesando...",
                                 "search":         "Buscar:",
