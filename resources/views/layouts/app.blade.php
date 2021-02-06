@@ -702,7 +702,7 @@
                                             
                                         reporte +='</tr>';
 
-                                        if (v['Entregado']==1) {
+                                        if (v['Donado']!= null) {
                                             entregados++;
                                         }
                                         if (v['Donado']==1) {
