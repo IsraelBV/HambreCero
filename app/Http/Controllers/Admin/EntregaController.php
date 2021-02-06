@@ -141,7 +141,7 @@ class EntregaController extends Controller
         if ($documentacion !== null) {//se encontro una documentacion
             $entrega = Entrega::where('DocumentacionId',$documentacion->id)->first();
             //si tiene todo los documentos y ademas ya existe un registro de entrega entonces ya puede hacer uno nuevo y por lo tanto envia cero
-            if ($documentacion->CuestionarioCompleto == 1 && $documentacion->F1SolicitudApoyo == 1 && $documentacion->Identificacion == 1 && $documentacion->CURP == 1 && $documentacion->ComprobanteDomicilio == 1 && $documentacion->Anexo17 == 1 && $documentacion->Comprobante == 1 && $entrega !== null) {
+            if ($documentacion->CuestionarioCompleto == 1 && $documentacion->F1SolicitudApoyo == 1 && $documentacion->Identificacion == 1 && $documentacion->ComprobanteDomicilio == 1 && $documentacion->Anexo17 == 1 && $documentacion->Comprobante == 1 && $entrega !== null) {
                 return 0;
             } else { //si falta algun documento o la entrega devuelve la informacion para plasmarla
                 return $documentacion;
