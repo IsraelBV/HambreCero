@@ -421,9 +421,9 @@ class CuestionarioController extends Controller
                 ]);
         } else {//2020 bis
             $personaCollection = DB::table('personas')
-            ->join('encuestas', 'personas.id', '=', 'encuestas.personaId')
-            ->select('personas.*', 'encuestas.*')
-            ->where("personas.id", $id)
+            ->leftjoin('encuestas', 'personas.id', '=', 'encuestas.personaId')
+            ->select('personas.*', 'encuestas.Pregunta_33')
+            ->where('personas.id', $id)
             ->get();
 
             if (Auth::check()) { //se utiliza para que siempre que haya alguein loggeado pueda editar la encuesta abiertamente
