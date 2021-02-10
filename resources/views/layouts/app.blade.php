@@ -189,7 +189,7 @@
                     success: function(data) {
                         if (data[0] == 1) {
                             var alertcolor = "success";
-                            var alerttxt = "Datos Guardados"
+                            var alerttxt = "Datos Guardados, ID: "+data[1];
                             $("[name = 'send']").hide();
                             $("[name='accion']").prop('href','/imprimir/'+data[1]);
                             // window.location.href = "/imprimir/"+data[1];//no imprimir automaticamente
@@ -208,7 +208,7 @@
                         
                         setTimeout(function() { 
                             $("#sccs").alert('close');
-                        }, 3500);                        
+                        }, 12000);                        
                     }
                 });
             });

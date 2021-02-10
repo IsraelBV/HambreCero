@@ -140,12 +140,21 @@ class EntregaController extends Controller
         
         if ($documentacion !== null) {//se encontro una documentacion
             $entrega = Entrega::where('DocumentacionId',$documentacion->id)->first();
-            //si tiene todo los documentos y ademas ya existe un registro de entrega entonces ya puede hacer uno nuevo y por lo tanto envia cero
-            if ($documentacion->CuestionarioCompleto == 1 && $documentacion->F1SolicitudApoyo == 1 && $documentacion->Identificacion == 1 && $documentacion->ComprobanteDomicilio == 1 && $documentacion->Anexo17 == 1 && $documentacion->Comprobante == 1 && $entrega !== null) {
-                return 0;
-            } else { //si falta algun documento o la entrega devuelve la informacion para plasmarla
-                return $documentacion;
-                //return [$documentacion, $documentacion->Donado,$encuesta->Entregado,Auth::user()->tipoUsuarioId];
+            
+            if(session('periodo') == 1){//2020 bis
+                //si tiene todo los documentos( curp u anexo 17: comodines) y ademas ya existe un registro de entrega entonces ya puede hacer uno nuevo y por lo tanto envia cero
+                if ($documentacion->CuestionarioCompleto == 1 && $documentacion->F1SolicitudApoyo == 1 && $documentacion->Identificacion == 1 && $documentacion->ComprobanteDomicilio == 1 && $documentacion->Comprobante == 1 && $entrega !== null) {
+                    return 0;
+                } else { //si falta algun documento necesario o la entrega devuelve la informacion para plasmarla
+                    return $documentacion;
+                }
+            } else {//2020bis
+                //si tiene todo los documentos (curp, cuestionario completo y formato 1: son comodines) y ademas ya existe un registro de entrega entonces ya puede hacer uno nuevo y por lo tanto envia cero
+                if ($documentacion->Identificacion == 1 && $documentacion->ComprobanteDomicilio == 1 && $documentacion->Anexo17 == 1 && $documentacion->Comprobante == 1 && $entrega !== null) {
+                    return 0;
+                } else { //si falta algun documento o la entrega devuelve la informacion para plasmarla
+                    return $documentacion;
+                }
             }
         } else { // no hay documentacion previa
             return 0;
