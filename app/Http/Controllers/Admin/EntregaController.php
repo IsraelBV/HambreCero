@@ -146,8 +146,12 @@ class EntregaController extends Controller
                 if ($documentacion->CuestionarioCompleto == 1 && $documentacion->F1SolicitudApoyo == 1 && $documentacion->Identificacion == 1 && $documentacion->ComprobanteDomicilio == 1 && $documentacion->Comprobante == 1 && $entrega !== null) {
                     return 0;
                 } else { //si falta algun documento necesario o la entrega devuelve la informacion para plasmarla
-                    if (($documentacion->CuestionarioCompleto != 1 || $documentacion->F1SolicitudApoyo != 1) && $entrega->PeriodoId == 2) {//verifica que si falta uno de los 2 documentos sea una entrega de 2020bis para dejarla pasar
-                        return 0;
+                    if ($entrega !== null) {//verifica que haya una entrega
+                        if (($documentacion->CuestionarioCompleto != 1 || $documentacion->F1SolicitudApoyo != 1) && $entrega->PeriodoId == 2) {//verifica que si falta uno de los 2 documentos sea una entrega de 2020bis para dejarla pasar
+                            return 0;
+                        } else {
+                            return $documentacion;
+                        }
                     } else {
                         return $documentacion;
                     }
@@ -157,8 +161,12 @@ class EntregaController extends Controller
                 if ($documentacion->Identificacion == 1 && $documentacion->ComprobanteDomicilio == 1 && $documentacion->Anexo17 == 1 && $documentacion->Comprobante == 1 && $entrega !== null) {
                     return 0;
                 } else { //si falta algun documento o la entrega devuelve la informacion para plasmarla
-                    if ($documentacion->Anexo17 != 1 && $entrega->PeriodoId == 1) {//verifica que anexo 17 sea una entrega de 2020 para dejarla pasar
-                        return 0;
+                    if ($entrega !== null) {//verifica que haya una entrega
+                        if ($documentacion->Anexo17 != 1 && $entrega->PeriodoId == 1) {//verifica que anexo 17 sea una entrega de 2020 para dejarla pasar
+                            return 0;
+                        } else {
+                            return $documentacion;
+                        }
                     } else {
                         return $documentacion;
                     }
@@ -199,7 +207,12 @@ class EntregaController extends Controller
 
         if ($documentacion !== 0) {//si da cero es por que esta completo si no es por que hace falta un documento
             
-            if ($documentacion->CuestionarioCompleto == 1 && $documentacion->F1SolicitudApoyo == 1 && $documentacion->Identificacion == 1 && $documentacion->ComprobanteDomicilio == 1 && $documentacion->Comprobante == 1) {      
+            if(session('periodo') == 1){
+                $docComplete = ($documentacion->CuestionarioCompleto == 1 && $documentacion->F1SolicitudApoyo == 1 && $documentacion->Identificacion == 1 && $documentacion->ComprobanteDomicilio == 1 && $documentacion->Comprobante == 1)?1:0;
+            }else{
+                $docComplete = ($documentacion->Identificacion == 1 && $documentacion->ComprobanteDomicilio == 1 && $documentacion->Comprobante == 1 && $documentacion->Anexo17 == 1 )?1:0;
+            }
+            if ($docComplete == 1) {      
                 
                 $entrega = Entrega::where('DocumentacionId',$documentacion->id)->first();
                 
