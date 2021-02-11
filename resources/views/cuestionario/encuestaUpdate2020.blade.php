@@ -45,7 +45,7 @@
                     </div>
                     <div class="form-group col-md-4">
                         <label for="clave_elector" for="clave_e">{{ $preguntas[5]['Descripcion'] }}</label>
-                        <input type="text" class="form-control" id="clave_elector" name="clave_elector" onkeyup="mayusculas(this);" required="" value="{{ $persona[0]->ClaveElector != null?$persona[0]->ClaveElector:'' }}">
+                        <input type="text" class="form-control" id="clave_elector" name="clave_elector" onkeyup="mayusculas(this);" value="{{ $persona[0]->ClaveElector != null?$persona[0]->ClaveElector:'' }}"> {{-- required=""> --}}
                     </div>
                 </div>
                 <!--fin de fila 2-->
