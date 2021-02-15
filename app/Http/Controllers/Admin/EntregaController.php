@@ -88,8 +88,10 @@ class EntregaController extends Controller
                 $retper = DB::table('personas')
                     ->leftJoin('c_colonias', 'personas.ColoniaId', '=', 'c_colonias.id')
                     ->leftJoin('c_estadosciviles', 'personas.EstadoCivilId', '=', 'c_estadosciviles.id')
+                    ->leftJoin('c_municipios', 'personas.MunicipioId', '=', 'c_municipios.id')
+                    ->leftJoin('c_localidades', 'personas.LocalidadId', '=', 'c_localidades.id')
                     // ->leftJoin('encuestas', 'personas.id', '=', 'encuestas.personaId') // cambio de logica en entregas y el select igual
-                    ->select('personas.id', 'personas.Nombre', 'personas.APaterno','personas.AMaterno','personas.CURP','personas.Manzana','personas.Lote','personas.Calle','personas.NoExt','personas.NoInt','c_colonias.Descripcion as colonia','c_estadosciviles.Descripcion as estadoc')
+                    ->select('personas.id', 'personas.Nombre', 'personas.APaterno','personas.AMaterno','personas.CURP','personas.Manzana','personas.Lote','personas.Calle','personas.NoExt','personas.NoInt','c_colonias.Descripcion as colonia','c_estadosciviles.Descripcion as estadoc','c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad')
                     // ->select('personas.id', 'personas.Nombre', 'personas.APaterno','personas.AMaterno','personas.CURP','personas.Manzana','personas.Lote','personas.Calle','personas.NoExt','personas.NoInt','encuestas.Entregado','c_colonias.Descripcion as colonia','c_estadosciviles.Descripcion as estadoc')
                     ->whereIn('personas.id',$isds)
                     ->get();
@@ -117,7 +119,8 @@ class EntregaController extends Controller
         
         return DB::table('entregas') //lista de entregados
         ->leftJoin('c_periodos', 'entregas.PeriodoId', '=', 'c_periodos.id')
-        ->select('entregas.*', 'c_periodos.Descripcion')
+        ->leftJoin('users', 'entregas.EntregadorId', '=', 'users.id')
+        ->select('entregas.*', 'c_periodos.Descripcion', 'users.name')
         ->where('entregas.PersonaId',$id)
         ->get();
     }

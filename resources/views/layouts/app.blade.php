@@ -226,12 +226,14 @@
 
                         if(data.length > 0){
                             
-                            var listastring =  '<br/><table class="table"><tr><th>NOMBRE</th><th>CURP</th><th>COLONIA</th></tr>';
+                            var listastring =  '<br/><table class="table"><tr><th>NOMBRE</th><th>CURP</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>COLONIA</th></tr>';
                                 
                                 $.each(data, function(k, v) {
                                 listastring +='<tr>';
                                     listastring +='<td>'+(v['Nombre']!= null?v['Nombre']:"")+(v['APaterno']!= null?v['APaterno']:"")+(v['AMaterno']!= null?v['AMaterno']:"")+'</td>';
                                     listastring +='<td>'+(v['CURP']!= null?v['CURP']:"N/D")+'</td>';
+                                    listastring +='<td>'+(v['municipio']!= null?v['municipio']:"N/D")+'</td>';
+                                    listastring +='<td>'+(v['localidad']!= null?v['localidad']:"N/D")+'</td>';
                                     listastring +='<td>'+(v['colonia']!= null?v['colonia']:"N/D")+'</td>';
                                     listastring +='<td><a class="btn btn-info" name="idpersona" href="/registro/'+v['id']+'/edit">Ir</a></td>';
                                 listastring +='</tr>';
@@ -311,13 +313,15 @@
                             if(data['retper'] != undefined){    
                                 if(data['retper'].length > 0 ){
 
-                                    var listastring2 =  '<br/><table class="table"><tr><th>NOMBRE</th><th>CURP</th><th>ESTADO CIVIL</th><th>DIRECCION</th><th>ENTREGAS</th><th>DOCUMENTOS</th><th>ENTREGAR</th></tr>';//+((data['userlvl'] == 0)?'<th>REVERTIR</th>':'')+'</tr>';
+                                    var listastring2 =  '<br/><table class="table"><tr><th>NOMBRE</th><th>CURP</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>ENTREGAS</th><th>DOCUMENTOS</th><th>ENTREGAR</th></tr>';//+((data['userlvl'] == 0)?'<th>REVERTIR</th>':'')+'</tr>';<th>ESTADO CIVIL</th>
                                         
                                     $.each(data['retper'], function(k, v) {
                                         listastring2 +='<tr>';
                                             listastring2 +='<td>'+(v['Nombre']!= null?v['Nombre']:"")+" "+(v['APaterno']!= null?v['APaterno']:"")+" "+(v['AMaterno']!= null?v['AMaterno']:"")+'</td>';
                                             listastring2 +='<td>'+(v['CURP']!= null?v['CURP']:"N/D")+'</td>';
-                                            listastring2 +='<td>'+(v['estadoc']!= null?v['estadoc']:"N/D")+'</td>';
+                                            listastring2 +='<td>'+(v['municipio']!= null?v['municipio']:"N/D")+'</td>';
+                                            listastring2 +='<td>'+(v['localidad']!= null?v['localidad']:"N/D")+'</td>';
+                                            // listastring2 +='<td>'+(v['estadoc']!= null?v['estadoc']:"N/D")+'</td>';
                                             listastring2 +='<td>'+(v['colonia']!= null?v['colonia']:"")+" "+(v['Manzana']!= null?"MZ."+v['Manzana']:"")+" "+(v['Lote']!= null?"LT."+v['Lote']:"")+" "+(v['Calle']!= null?"C."+v['Calle']:"")+" "+(v['NoExt']!= null?"N°Int."+v['NoExt']:"")+" "+(v['NoInt']!= null?"N°Ext."+v['NoInt']:"")+'</td>';
                                             listastring2 +='<td><button class="btn btn-outline-info" name="idpersonalistaentrega" data-entid="'+v['id']+'">Entregas</button></td>';
                                             listastring2 +='<td><button class="btn btn-outline-warning" name="idpersonadocumentacion" data-entid="'+v['id']+'">Documentos</button></td>';
@@ -345,13 +349,15 @@
                                     },
                                 success: function(data) {
                                     //tabla de entregas
-                                    var strlistaentregas =  '<br/><table class="table table-hover"><tr><th>DIRECCION</th><th>PERIODO</th><th>DONADO</th><th>FECHA</th>'+((userlvl == 0)?'<th>REVERTIR</th>':'')+'</tr>';
+                                    var strlistaentregas =  '<br/><table class="table table-hover"><tr><th>ID ENTREGA</th><th>DIRECCION</th><th>PERIODO</th><th>DONADO</th><th>FECHA</th><th>ENTREGO</th>'+((userlvl == 0)?'<th>REVERTIR</th>':'')+'</tr>';
                                     $.each(data, function(k, v) {
                                         strlistaentregas +='<tr>';
+                                        strlistaentregas +='<td>'+(v['id']!= null?v['id']:"N/D")+'</td>';
                                         strlistaentregas +='<td>'+(v['Direccion']!= null?v['Direccion']:"N/D")+'</td>';
                                         strlistaentregas +='<td>'+(v['Descripcion']!= null?v['Descripcion']:"N/D")+'</td>';
                                         strlistaentregas +='<td>'+(v['Donado']!= null?(v['Donado'] == 1 ?'Si':'No'):"N/D")+'</td>';
                                         strlistaentregas +='<td>'+(v['created_at']!= null?v['created_at']:"N/D")+'</td>';
+                                        strlistaentregas +='<td>'+(v['name']!= null?v['name']:"N/D")+'</td>';
                                         strlistaentregas +=(userlvl == 0)?'<td><input type="checkbox" class="chkToggle" data-onstyle="danger" data-offstyle="outline-warning"><button class="btn btn-outline-danger" name="identregarevertir" data-entid="'+v['id']+'" disabled>Revertir</button></td>':'';
                                         strlistaentregas +='</tr>';
                                     });
@@ -685,7 +691,7 @@
                         if(data != undefined){    
                             if(data.length > 0 ){
                                 
-                                var reporte = '<br/><table class="table table-hover" id="reptable"><thead><tr class="table-info"><th>NOMBRE</th><th>CURP</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>COLONIA</th><th>DIRECCION</th><th>TELEFONO</th><th>ENTREGADO</th><th>DONADO</th><th>VALIDO</th></tr></thead><tbody>';
+                                var reporte = '<br/><table class="table table-hover" id="reptable"><thead><tr class="table-info"><th>NOMBRE</th><th>CURP</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>COLONIA</th><th>DIRECCION</th><th>TELEFONO</th><th>ID ENTREGA</th><th>ENTREGADO</th><th>DONADO</th><th>VALIDO</th><th>FECHA ENTREGA</th></tr></thead><tbody>';
                                     
                                 $.each(data, function(k, v) {
                                     reporte +='<tr>';
@@ -696,10 +702,20 @@
                                         reporte +='<td>'+(v['colonia']!= null?v['colonia']:"N/D")+'</td>';
                                         reporte +='<td>'+(v['Manzana']!= null?"MZ."+v['Manzana']:"")+" "+(v['Lote']!= null?"LT."+v['Lote']:"")+" "+(v['Calle']!= null?"C."+v['Calle']:"")+" "+(v['NoExt']!= null?"N°Int."+v['NoExt']:"")+" "+(v['NoInt']!= null?"N°Ext."+v['NoInt']:"")+'</td>';
                                         reporte +='<td>'+(v['TelefonoCelular']!= null?v['TelefonoCelular']:"N/D")+'</td>';
+                                        reporte +='<td>'+(v['idEnt']!= null?v['idEnt']:"N/D")+'</td>';
                                         reporte +='<td>'+(v['Donado']!= null?'SI':'NO')+'</td>';
                                         reporte +='<td>'+(v['Donado']!= null?(v['Donado']==1?'SI':'NO'):"N/D")+'</td>';
                                         reporte +='<td>'+(v['name']!= null?v['name']:"N/D")+'</td>';
-                                            
+                                        if (v['fechaE']!= null) {
+                                            var d = new Date(v['fechaE']);
+                                            d.setHours(d.getHours() - 5);
+                                            //d = d.getFullYear()+'-'+("0"+ (d.getMonth() + 1)).slice(-2)+'-'+("0"+d.getDate()).slice(-2)+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+                                            d = d.toLocaleString();
+                                        } else {
+                                            var d = "N/D";
+                                        }
+                                        
+                                        reporte +='<td>'+d+'</td>';
                                         reporte +='</tr>';
 
                                         if (v['Donado']!= null) {
