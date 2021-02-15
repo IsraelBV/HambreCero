@@ -56,7 +56,9 @@ class CuestionarioController extends Controller
          
             return  DB::table('personas')
             ->leftJoin('c_colonias', 'personas.ColoniaId', '=', 'c_colonias.id')
-            ->select('personas.id', 'personas.Nombre', 'personas.APaterno','personas.AMaterno','personas.CURP','c_colonias.Descripcion as colonia')
+            ->leftJoin('c_municipios', 'personas.MunicipioId', '=', 'c_municipios.id')
+            ->leftJoin('c_localidades', 'personas.LocalidadId', '=', 'c_localidades.id')
+            ->select('personas.id', 'personas.Nombre', 'personas.APaterno','personas.AMaterno','personas.CURP','c_colonias.Descripcion as colonia','c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad')
             ->where("personas.CURP", $curp)
             ->get();
             
@@ -64,7 +66,9 @@ class CuestionarioController extends Controller
    
             return  DB::table('personas')
             ->leftJoin('c_colonias', 'personas.ColoniaId', '=', 'c_colonias.id')
-            ->select('personas.id', 'personas.Nombre', 'personas.APaterno','personas.AMaterno','personas.CURP','c_colonias.Descripcion as colonia')
+            ->leftJoin('c_municipios', 'personas.MunicipioId', '=', 'c_municipios.id')
+            ->leftJoin('c_localidades', 'personas.LocalidadId', '=', 'c_localidades.id')
+            ->select('personas.id', 'personas.Nombre', 'personas.APaterno','personas.AMaterno','personas.CURP','c_colonias.Descripcion as colonia','c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad')
             ->where("personas.Nombre", $request->get('nombre'))
             ->where("personas.APaterno", $request->get('apellido_p'))
             ->where("personas.AMaterno", $request->get('apellido_m'))
