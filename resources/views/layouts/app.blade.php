@@ -476,7 +476,7 @@
                                                             strdocumentacion += '<div class="form-check">';
                                                                 strdocumentacion += '<input class="form-check-input" type="checkbox" id="cuestionario" name="cuestionario" '+(data.CuestionarioCompleto == 1?'checked':'')+'>';
                                                                 strdocumentacion += '<label class="form-check-label" for="cuestionario">';
-                                                                    strdocumentacion += 'Cuestionario completo firmado';
+                                                                    strdocumentacion += 'Anexo 15 - completo firmado';
                                                                 strdocumentacion += '</label>';
                                                             strdocumentacion += '</div>';
                                                             strdocumentacion += '<div class="form-check">';
@@ -542,7 +542,7 @@
                                                                 strdocumentacion2 += '<div class="form-check">';
                                                                     strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="cuestionario" name="cuestionario">';
                                                                     strdocumentacion2 += '<label class="form-check-label" for="cuestionario">';
-                                                                        strdocumentacion2 += 'Cuestionario completo firmado';
+                                                                        strdocumentacion2 += 'Anexo 15 - completo firmado';
                                                                     strdocumentacion2 += '</label>';
                                                                 strdocumentacion2 += '</div>';
                                                                 strdocumentacion2 += '<div class="form-check">';

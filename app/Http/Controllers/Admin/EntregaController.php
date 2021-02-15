@@ -187,7 +187,7 @@ class EntregaController extends Controller
 
         $documentacion->Donado = $request->get('donado');
         $documentacion->PersonaId = $id;
-        $documentacion->CuestionarioCompleto = $request->get('cuestionario') == 'on'?1:0;
+        $documentacion->CuestionarioCompleto = $request->get('cuestionario') == 'on'?1:0;//Anexo 15
         $documentacion->F1SolicitudApoyo =  $request->get('formato1') == 'on'?1:0;
         $documentacion->Identificacion =  $request->get('idoficial') == 'on'?1:0;
         $documentacion->CURP =  $request->get('curpdoc') == 'on'?1:0;
