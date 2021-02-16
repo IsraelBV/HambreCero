@@ -296,7 +296,7 @@
 
         });
     </script>
-    <script> //se utiliza para admin
+    <script> //se utiliza para entregas
         $(document).ready(function() {
             $("#findentrega").off().submit(function(e) { //busca a las personas
                 e.preventDefault();
@@ -468,6 +468,22 @@
                                                     strdocumentacion += '<br>';
                                                         strdocumentacion += '<div class="form-group">';
                                                             strdocumentacion += '<div class="form-check">';
+                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="comprobante" name="comprobante" '+(data.Comprobante == 1?'checked':'')+'>';
+                                                                strdocumentacion += '<label class="form-check-label" for="comprobante" id="comprolabel">'+(data.Donado == 0?'Recibo de pago':'Anexo 16 - Carta de no pago')+'</label>';                                                            
+                                                                strdocumentacion += '</div>';
+                                                            strdocumentacion += '<div class="form-check">';
+                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="cuestionario" name="cuestionario" '+(data.CuestionarioCompleto == 1?'checked':'')+'>';
+                                                                strdocumentacion += '<label class="form-check-label" for="cuestionario">';
+                                                                    strdocumentacion += 'Cuestionario Necesidades (2020)/ Solicitud de Apoyo (2020bis)';
+                                                                strdocumentacion += '</label>';
+                                                            strdocumentacion += '</div>';
+                                                            strdocumentacion += '<div class="form-check">';
+                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="formato1" name="formato1" '+(data.F1SolicitudApoyo == 1?'checked':'')+'>';
+                                                                strdocumentacion += '<label class="form-check-label" for="formato1">';
+                                                                    strdocumentacion += 'Formato 1 Solicitud apoyo firmado';
+                                                                strdocumentacion += '</label>';
+                                                            strdocumentacion += '</div>';
+                                                            strdocumentacion += '<div class="form-check">';
                                                                 strdocumentacion += '<input class="form-check-input" type="checkbox" id="idoficial" name="idoficial" '+(data.Identificacion == 1?'checked':'')+'>';
                                                                 strdocumentacion += '<label class="form-check-label" for="idoficial">';
                                                                     strdocumentacion += 'Identificación oficial vigente';
@@ -480,18 +496,6 @@
                                                                     strdocumentacion += '</label>';
                                                                 strdocumentacion += '</div>';
                                                             strdocumentacion += '<div class="form-check">';
-                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="cuestionario" name="cuestionario" '+(data.CuestionarioCompleto == 1?'checked':'')+'>';
-                                                                strdocumentacion += '<label class="form-check-label" for="cuestionario">';
-                                                                    strdocumentacion += 'Anexo 15 - completo firmado';
-                                                                strdocumentacion += '</label>';
-                                                            strdocumentacion += '</div>';
-                                                            strdocumentacion += '<div class="form-check">';
-                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="formato1" name="formato1" '+(data.F1SolicitudApoyo == 1?'checked':'')+'>';
-                                                                strdocumentacion += '<label class="form-check-label" for="formato1">';
-                                                                    strdocumentacion += 'Formato 1 Solicitud apoyo firmado';
-                                                                strdocumentacion += '</label>';
-                                                            strdocumentacion += '</div>';
-                                                            strdocumentacion += '<div class="form-check">';
                                                                 strdocumentacion += '<input class="form-check-input" type="checkbox" id="domicilio" name="domicilio" '+(data.ComprobanteDomicilio == 1?'checked':'')+'>';
                                                                 strdocumentacion += '<label class="form-check-label" for="domicilio">';
                                                                     strdocumentacion += 'Comprobante de domicilio no mayor a 3 meses de antigüedad ';
@@ -503,10 +507,6 @@
                                                                     strdocumentacion += 'Anexo 17 - Comprobante de recepción de apoyo';
                                                                 strdocumentacion += '</label>';
                                                             strdocumentacion += '</div>';
-                                                            strdocumentacion += '<div class="form-check">';
-                                                                strdocumentacion += '<input class="form-check-input" type="checkbox" id="comprobante" name="comprobante" '+(data.Comprobante == 1?'checked':'')+'>';
-                                                                strdocumentacion += '<label class="form-check-label" for="comprobante" id="comprolabel">'+(data.Donado == 0?'Recibo de pago':'Anexo 16 - Carta de no pago')+'</label>';                                                            
-                                                                strdocumentacion += '</div>';
                                                                 strdocumentacion += '<input type="hidden" name="docid" value="'+data.id+'">';
                                                         strdocumentacion += '</div>';
                                                     strdocumentacion += '</form>';
@@ -532,6 +532,22 @@
                                                         strdocumentacion2 += '<br>';
                                                             strdocumentacion2 += '<div class="form-group">';
                                                                 strdocumentacion2 += '<div class="form-check">';
+                                                                    strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="comprobante" name="comprobante">';
+                                                                    strdocumentacion2 += '<label class="form-check-label" for="comprobante" id="rp">'+($("[name='donado']:checked").val() == 0?'Recibo de pago':'Anexo 16 - Carta de no pago')+'</label>';                         
+                                                                strdocumentacion2 += '</div>';
+                                                                strdocumentacion2 += '<div class="form-check">';
+                                                                    strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="cuestionario" name="cuestionario">';
+                                                                    strdocumentacion2 += '<label class="form-check-label" for="cuestionario">';
+                                                                        strdocumentacion2 += 'Cuestionario Necesidades (2020)/ Solicitud de Apoyo (2020bis)';
+                                                                    strdocumentacion2 += '</label>';
+                                                                strdocumentacion2 += '</div>';
+                                                                strdocumentacion2 += '<div class="form-check">';
+                                                                    strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="formato1" name="formato1">';
+                                                                    strdocumentacion2 += '<label class="form-check-label" for="formato1">';
+                                                                        strdocumentacion2 += 'Formato 1 Solicitud apoyo firmado';
+                                                                    strdocumentacion2 += '</label>';
+                                                                strdocumentacion2 += '</div>';
+                                                                strdocumentacion2 += '<div class="form-check">';
                                                                     strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="idoficial" name="idoficial">';
                                                                     strdocumentacion2 += '<label class="form-check-label" for="idoficial">';
                                                                         strdocumentacion2 += 'Identificación oficial vigente';
@@ -546,18 +562,6 @@
                                                                     strdocumentacion2 += '</div>';
                                                                 }
                                                                 strdocumentacion2 += '<div class="form-check">';
-                                                                    strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="cuestionario" name="cuestionario">';
-                                                                    strdocumentacion2 += '<label class="form-check-label" for="cuestionario">';
-                                                                        strdocumentacion2 += 'Anexo 15 - completo firmado';
-                                                                    strdocumentacion2 += '</label>';
-                                                                strdocumentacion2 += '</div>';
-                                                                strdocumentacion2 += '<div class="form-check">';
-                                                                    strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="formato1" name="formato1">';
-                                                                    strdocumentacion2 += '<label class="form-check-label" for="formato1">';
-                                                                        strdocumentacion2 += 'Formato 1 Solicitud apoyo firmado';
-                                                                    strdocumentacion2 += '</label>';
-                                                                strdocumentacion2 += '</div>';
-                                                                strdocumentacion2 += '<div class="form-check">';
                                                                     strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="domicilio" name="domicilio">';
                                                                     strdocumentacion2 += '<label class="form-check-label" for="domicilio">';
                                                                         strdocumentacion2 += 'Comprobante de domicilio no mayor a 3 meses de antigüedad ';
@@ -568,10 +572,6 @@
                                                                     strdocumentacion2 += '<label class="form-check-label" for="anexo17">';
                                                                         strdocumentacion2 += 'Anexo 17 - Comprobante de recepción de apoyo';
                                                                     strdocumentacion2 += '</label>';
-                                                                strdocumentacion2 += '</div>';
-                                                                strdocumentacion2 += '<div class="form-check">';
-                                                                    strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="comprobante" name="comprobante">';
-                                                                    strdocumentacion2 += '<label class="form-check-label" for="comprobante" id="rp">'+($("[name='donado']:checked").val() == 0?'Recibo de pago':'Anexo 16 - Carta de no pago')+'</label>';                         
                                                                 strdocumentacion2 += '</div>';
                                                                 strdocumentacion2 += '<input type="hidden" name="docid" value="0">';
                                                             strdocumentacion2 += '</div>';
