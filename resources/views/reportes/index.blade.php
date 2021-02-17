@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
     <h2 class="col-4 offset-md-4">REPORTES</h2>
     <form id="findreporte" action="" method="">
         <div class="form-row">
