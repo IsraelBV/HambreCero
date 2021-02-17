@@ -664,6 +664,20 @@
                     }
                 });
             });
+
+            $('#entregadorpt').off().change(function(){
+                var ciudadrpt = $(this);
+
+                if (ciudadrpt.val() == 1) {
+                    $('#periodorpt').prop('disabled', false);
+                    $('#donadorpt').prop('disabled', false);
+                } else { 
+                    $("#periodorpt").val('x');
+                    $("#donadorpt").val('x');
+                    $('#periodorpt').prop('disabled', true)
+                    $('#donadorpt').prop('disabled', true);
+                }
+            });
             
             $('#findreporte').off().submit(function(e){
                 e.preventDefault();
