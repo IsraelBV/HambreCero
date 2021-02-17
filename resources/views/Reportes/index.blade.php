@@ -5,6 +5,15 @@
     <form id="findreporte" action="" method="">
         <div class="form-row">
             <div class="form-group col-md-2">
+                <label for="entregadorpt">Entregado</label>
+                <select id="entregadorpt" class="form-control" name="entregadorpt" >
+                    {{-- <option value="" selected>Seleccione una opcion</option> --}}
+                    {{-- <option value="x" selected>Todos</option> --}}
+                    <option value="1">SI</option>
+                    <option value="0">NO</option>
+                </select>
+            </div> 
+            <div class="form-group col-md-2">
                 <label for="periodorpt">Periodo</label>
                 <br>
                 <select id="periodorpt" class="form-control" name="periodorpt">
@@ -14,15 +23,6 @@
                     @endforeach
                 </select>
             </div>
-            <div class="form-group col-md-2">
-                <label for="entregadorpt">Entregado</label>
-                <select id="entregadorpt" class="form-control" name="entregadorpt" >
-                    {{-- <option value="" selected>Seleccione una opcion</option> --}}
-                    {{-- <option value="x" selected>Todos</option> --}}
-                    <option value="1">SI</option>
-                    <option value="0">NO</option>
-                </select>
-            </div> 
             <div class="form-group col-md-2">
                 <label for="donadorpt">Donado</label>
                 <select id="donadorpt" class="form-control" name="donadorpt">

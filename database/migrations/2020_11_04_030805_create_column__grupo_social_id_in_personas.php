@@ -14,7 +14,7 @@ class CreateColumnGrupoSocialIdInPersonas extends Migration
     public function up()
     {
         Schema::table('personas', function (Blueprint $table) {
-            $table->int('GrupoSocialId')->nullable();
+            $table->integer('GrupoSocialId')->nullable();
         });
     }
 
