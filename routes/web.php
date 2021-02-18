@@ -84,3 +84,5 @@ Route::put('/admin/user/{user}', 'Admin\UsuarioController@actualizarUsuario');//
 Route::put('/admin/user/pass/{user}', 'Admin\UsuarioController@actualizarContraseña');//actualizar contraseña
 Route::put('/admin/user/deshabilitar/{user}', 'Admin\UsuarioController@deshabilitarUsuario');//deshabilita al usuario
 
+//ESPECIAL---------------------------------------------------------------------------------------------------
+Route::get('/especial/direccion','LayoutController@direccion');
