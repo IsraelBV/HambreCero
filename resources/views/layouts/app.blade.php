@@ -821,47 +821,8 @@
     </script>
     <script>//usuarios
         $(document).ready(function() {
-
-            var datatableuser = $('#usrtble').DataTable({ // datatable para tabla de usuarios
-                            dom: 'frltpB',
-                            pageLength: 10, 
-                            lengthMenu: [10,30,50],
-                            sScrollY: '35em' ,
-                            scrollCollapse: true,
-                            
-                            buttons: [
-                                        {
-                                            text: 'Registar Usuario',
-                                            className: "btn btn-success",
-                                            action: function ( e, dt, node, config ) {
-                                                window.location = "{{ route('register') }}";
-                                            }
-                                        }
-                                    ],
-                            "language": {
-                                "decimal":        "",
-                                "emptyTable":     "No data available in table",
-                                "info":           "Mostrando _START_ a _END_ de _TOTAL_ registros",
-                                "infoEmpty":      "Mostrando 0 to 0 of 0 entries",
-                                "infoFiltered":   "(filtered from _MAX_ total entries)",
-                                "infoPostFix":    "",
-                                "thousands":      ",",
-                                "lengthMenu":     "Mostrar _MENU_ registrtos",
-                                "loadingRecords": "Cargando...",
-                                "processing":     "Procesando...",
-                                "search":         "Buscar:",
-                                "zeroRecords":    "No matching records found",
-                                "paginate": {
-                                    "first":      "Primero",
-                                    "last":       "Ultimo",
-                                    "next":       "Siguiente",
-                                    "previous":   "Anterior"
-                                }
-                            }
-            });
-
+            
             $("[name='idusuariodesh']").off().click(function(){// para deshabilitar usuario 
-
                 var btndeshabilitar = $(this);
                 var modalconfirmuser = '<div class="modal fade" id="usuariomodal" tabindex="-1" role="dialog" aria-labelledby="usuariomodalLabel" aria-hidden="true">';
                     modalconfirmuser+='<div class="modal-dialog" role="document">';
@@ -901,6 +862,46 @@
 
                 });                            
             });
+
+            var datatableuser = $('#usrtble').DataTable({ // datatable para tabla de usuarios
+                            dom: 'frltpB',
+                            pageLength: 10, 
+                            lengthMenu: [10,30,50],
+                            sScrollY: '35em' ,
+                            scrollCollapse: true,
+                            
+                            buttons: [
+                                        {
+                                            text: 'Registar Usuario',
+                                            className: "btn btn-success",
+                                            action: function ( e, dt, node, config ) {
+                                                window.location = "{{ route('register') }}";
+                                            }
+                                        }
+                                    ],
+                            "language": {
+                                "decimal":        "",
+                                "emptyTable":     "No data available in table",
+                                "info":           "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                                "infoEmpty":      "Mostrando 0 to 0 of 0 entries",
+                                "infoFiltered":   "(filtered from _MAX_ total entries)",
+                                "infoPostFix":    "",
+                                "thousands":      ",",
+                                "lengthMenu":     "Mostrar _MENU_ registrtos",
+                                "loadingRecords": "Cargando...",
+                                "processing":     "Procesando...",
+                                "search":         "Buscar:",
+                                "zeroRecords":    "No matching records found",
+                                "paginate": {
+                                    "first":      "Primero",
+                                    "last":       "Ultimo",
+                                    "next":       "Siguiente",
+                                    "previous":   "Anterior"
+                                }
+                            }
+            });
+
+            
 
             // $("#formularioedicionusuario").off().submit(function(e){
             //     e.preventDefault();
