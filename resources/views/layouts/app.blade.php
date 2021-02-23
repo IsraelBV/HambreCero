@@ -349,7 +349,7 @@
                                     },
                                 success: function(data) {
                                     //tabla de entregas
-                                    var strlistaentregas =  '<br/><table class="table table-hover"><tr><th>ID ENTREGA</th><th>DIRECCION</th><th>PERIODO</th><th>DONADO</th><th>FECHA</th><th>ENTREGO</th>'+((userlvl == 0)?'<th>REVERTIR</th>':'')+'</tr>';
+                                    var strlistaentregas =  '<br/><table class="table table-hover"><tr><th>ID ENTREGA</th><th>DIRECCION</th><th>PERIODO</th><th>DONADO</th><th>FECHA</th><th>ENTREGO</th>'+((userlvl == 0)?'<th>EDITAR</th><th>REVERTIR</th>':'')+'</tr>';
                                     $.each(data, function(k, v) {
                                         strlistaentregas +='<tr>';
                                         strlistaentregas +='<td>'+(v['id']!= null?v['id']:"N/D")+'</td>';
@@ -358,7 +358,7 @@
                                         strlistaentregas +='<td>'+(v['Donado']!= null?(v['Donado'] == 1 ?'Si':'No'):"N/D")+'</td>';
                                         strlistaentregas +='<td>'+(v['created_at']!= null?v['created_at']:"N/D")+'</td>';
                                         strlistaentregas +='<td>'+(v['name']!= null?v['name']:"N/D")+'</td>';
-                                        strlistaentregas +=(userlvl == 0)?'<td><input type="checkbox" class="chkToggle" data-onstyle="danger" data-offstyle="outline-warning"><button class="btn btn-outline-danger" name="identregarevertir" data-entid="'+v['id']+'" disabled>Revertir</button></td>':'';
+                                        strlistaentregas +=(userlvl == 0)?'<td><a class="btn btn-outline-warning" name="identregaeditar" href="/admin/entrega/'+v['id']+'/edit" target="_blank">Editar</a></td><td><input type="checkbox" class="chkToggle" data-onstyle="danger" data-offstyle="outline-warning"><button class="btn btn-outline-danger" name="identregarevertir" data-entid="'+v['id']+'" disabled>Revertir</button></td>':'';
                                         strlistaentregas +='</tr>';
                                     });
                                     strlistaentregas +='</table>';
@@ -381,6 +381,10 @@
                                     
                                     $('#entregadoModal [data-btn="cpt"]').hide();//ocultar el boton de guardar por que no sirve de nada
                                     
+                                    $("[name='identregaeditar']").off().click(function(){//se utiliza solo para cerrar el modal cuando le dan clic a editar una entrega ya que redirecciona al volver a abrir refresca la info del modal
+                                        $("#entregadoModal").modal('hide');
+                                    });
+
                                     $("[name='identregarevertir']").off().click(function(){// si se hace click para revertir entrega 
 
                                         var btnrevertir = $(this);
@@ -640,6 +644,31 @@
                 });
             });
 
+            $("#entregaupdate").off().submit(function(e) { //envia los datos para actualizar una entrega abierta en la lista de entregas
+                e.preventDefault();
+                
+                var identrega = $("#hid").data('entrega');
+                $.ajax({
+                    type: "PUT",
+                    url: "/admin/entrega/"+identrega,
+                    data: $("#entregaupdate").serialize(),
+                    success: function(data) {
+                        $("[name='send']").hide();
+                        $("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+                        // $("[name='accion']").show();
+                        // $("[name='rel']").show();
+
+                        setTimeout(function() { 
+                            $("#sccs").alert('close');
+                            window.close();
+                        }, 5000);                        
+                    }, 
+                    error: function(XMLHttpRequest, textStatus, errorThrown){
+                        $("[name='send']").hide();
+                        $("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-danger alert-dismissible fade show" role="alert"> <h3 class="alert-heading">Por favor tomar captura y reportar el error <br> Status: '+ textStatus+' Error: ' + errorThrown+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'); 
+                    }
+                });
+            });
             
         });        
     </script>
