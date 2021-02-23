@@ -322,7 +322,7 @@
                                             listastring2 +='<td>'+(v['municipio']!= null?v['municipio']:"N/D")+'</td>';
                                             listastring2 +='<td>'+(v['localidad']!= null?v['localidad']:"N/D")+'</td>';
                                             // listastring2 +='<td>'+(v['estadoc']!= null?v['estadoc']:"N/D")+'</td>';
-                                            listastring2 +='<td>'+(v['colonia']!= null?v['colonia']:"")+" "+(v['Manzana']!= null?"MZ."+v['Manzana']:"")+" "+(v['Lote']!= null?"LT."+v['Lote']:"")+" "+(v['Calle']!= null?"C."+v['Calle']:"")+" "+(v['NoExt']!= null?"N°Int."+v['NoExt']:"")+" "+(v['NoInt']!= null?"N°Ext."+v['NoInt']:"")+'</td>';
+                                            listastring2 +='<td>'+(v['colonia']!= null?v['colonia']:"")+" "+(v['Manzana']!= null?"MZ."+v['Manzana']:"")+" "+(v['Lote']!= null?"LT."+v['Lote']:"")+" "+(v['Calle']!= null?"C."+v['Calle']:"")+" "+(v['NoExt']!= null?"N°Ext."+v['NoExt']:"")+" "+(v['NoInt']!= null?"N°Int."+v['NoInt']:"")+'</td>';
                                             listastring2 +='<td><button class="btn btn-outline-info" name="idpersonalistaentrega" data-entid="'+v['id']+'">Entregas</button></td>';
                                             listastring2 +='<td><button class="btn btn-outline-warning" name="idpersonadocumentacion" data-entid="'+v['id']+'">Documentos</button></td>';
                                             listastring2 +=(data['docper'] !== 0)?'<td><button disabled class="btn btn-outline-danger" name="idpersonaentrega" data-entid="'+v['id']+'"> ENTREGADO </button></td>':'<td><button class="btn btn-outline-success" name="idpersonaentrega" data-entid="'+v['id']+'">Entregar</button></td>';
