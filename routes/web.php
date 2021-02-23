@@ -58,8 +58,11 @@ Route::post('/admin/findPersonaEntrega', 'Admin\EntregaController@findPersonaEnt
 
 Route::post('/admin/findListaEntregas/{entrega}', 'Admin\EntregaController@findEntregas');
 
-Route::delete('/admin/entrega/revertirEntrega/{entrega}', 'Admin\EntregaController@revertirEntrega');//revertir las entregas por admins
+Route::get('/admin/entrega/{entrega}/edit','Admin\EntregaController@editarEntrega');// editar una entrega
 
+Route::put('/admin/entrega/{entrega}','Admin\EntregaController@actualizarEntrega');// editar una entrega
+
+Route::delete('/admin/entrega/revertirEntrega/{entrega}', 'Admin\EntregaController@revertirEntrega');//revertir las entregas por admins
 
 Route::post('/admin/entrega/{entrega}', 'Admin\EntregaController@registrarEntrega');
 
@@ -85,4 +88,5 @@ Route::put('/admin/user/pass/{user}', 'Admin\UsuarioController@actualizarContras
 Route::put('/admin/user/deshabilitar/{user}', 'Admin\UsuarioController@deshabilitarUsuario');//deshabilita al usuario
 
 //ESPECIAL---------------------------------------------------------------------------------------------------
-Route::get('/especial/direccion','LayoutController@direccion');
+Route::get('/especial/direccion','LayoutController@direccion');/// especial para pasar la direccion concatenada a la direccion en la bitacora
+
