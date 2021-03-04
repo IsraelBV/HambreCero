@@ -134,7 +134,9 @@ class EntregaController extends Controller
         return DB::table('entregas') //lista de entregados
         ->leftJoin('c_periodos', 'entregas.PeriodoId', '=', 'c_periodos.id')
         ->leftJoin('users', 'entregas.EntregadorId', '=', 'users.id')
-        ->select('entregas.*', 'c_periodos.Descripcion', 'users.name')
+        ->leftJoin('c_municipios', 'entregas.MunicipioId', '=', 'c_municipios.id')
+        ->leftJoin('c_localidades', 'entregas.LocalidadId', '=', 'c_localidades.id')
+        ->select('entregas.*', 'c_periodos.Descripcion as periodo', 'users.name','c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad')
         ->where('entregas.PersonaId',$id)
         ->get();
     }
