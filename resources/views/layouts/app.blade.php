@@ -354,7 +354,7 @@
                                         strlistaentregas +='<tr>';
                                         strlistaentregas +='<td>'+(v['id']!= null?v['id']:"N/D")+'</td>';
                                         strlistaentregas +='<td>'+'Mpio. '+(v['municipio']!= null?v['municipio']:"N/D")+' Loc. '+(v['localidad']!= null?v['localidad']:"N/D")+' '+(v['Direccion']!= null?v['Direccion']:"N/D")+'</td>';
-                                        strlistaentregas +='<td>'+(v['periodos']!= null?v['periodos']:"N/D")+'</td>';
+                                        strlistaentregas +='<td>'+(v['periodo']!= null?v['periodo']:"N/D")+'</td>';
                                         strlistaentregas +='<td>'+(v['Donado']!= null?(v['Donado'] == 1 ?'Si':'No'):"N/D")+'</td>';
                                         strlistaentregas +='<td>'+(v['created_at']!= null?v['created_at']:"N/D")+'</td>';
                                         strlistaentregas +='<td>'+(v['name']!= null?v['name']:"N/D")+'</td>';
