@@ -349,12 +349,12 @@
                                     },
                                 success: function(data) {
                                     //tabla de entregas
-                                    var strlistaentregas =  '<br/><table class="table table-hover"><tr><th>ID ENTREGA</th><th>DIRECCION</th><th>PERIODO</th><th>DONADO</th><th>FECHA</th><th>ENTREGO</th>'+((userlvl == 0)?'<th>EDITAR</th><th>REVERTIR</th>':'')+'</tr>';
+                                    var strlistaentregas =  '<br/><table class="table table-hover"><tr><th>ID ENT.</th><th>DIRECCION</th><th>PERIODO</th><th>DONADO</th><th>FECHA</th><th>ENTREGO</th>'+((userlvl == 0)?'<th>EDITAR</th><th>REVERTIR</th>':'')+'</tr>';
                                     $.each(data, function(k, v) {
                                         strlistaentregas +='<tr>';
                                         strlistaentregas +='<td>'+(v['id']!= null?v['id']:"N/D")+'</td>';
-                                        strlistaentregas +='<td>'+(v['Direccion']!= null?v['Direccion']:"N/D")+'</td>';
-                                        strlistaentregas +='<td>'+(v['Descripcion']!= null?v['Descripcion']:"N/D")+'</td>';
+                                        strlistaentregas +='<td>'+'Mpio. '+(v['municipio']!= null?v['municipio']:"N/D")+' Loc. '+(v['localidad']!= null?v['localidad']:"N/D")+' '+(v['Direccion']!= null?v['Direccion']:"N/D")+'</td>';
+                                        strlistaentregas +='<td>'+(v['periodos']!= null?v['periodos']:"N/D")+'</td>';
                                         strlistaentregas +='<td>'+(v['Donado']!= null?(v['Donado'] == 1 ?'Si':'No'):"N/D")+'</td>';
                                         strlistaentregas +='<td>'+(v['created_at']!= null?v['created_at']:"N/D")+'</td>';
                                         strlistaentregas +='<td>'+(v['name']!= null?v['name']:"N/D")+'</td>';
