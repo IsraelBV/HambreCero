@@ -15,6 +15,7 @@ class CreateColumnsFirst2021InPersonas extends Migration
     {
         Schema::table('personas', function (Blueprint $table) {
             $table->string('password')->nullable();
+            $table->string('PeriodoId');
         });
     }
 
@@ -27,6 +28,7 @@ class CreateColumnsFirst2021InPersonas extends Migration
     {
         Schema::table('personas', function (Blueprint $table) {
             $table->dropColumn('password');
+            $table->dropColumn('PeriodoId');
         });
     }
 }

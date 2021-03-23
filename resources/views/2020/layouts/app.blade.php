@@ -184,7 +184,7 @@
                 
                 $.ajax({
                     type: "POST",
-                    url: "/registro",
+                    url: "/registro2020",
                     data: $("#encuesta").serialize(),
                     success: function(data) {
                         if (data[0] == 1) {
@@ -200,7 +200,7 @@
                             alertcolor = "danger";
                             alerttxt = "¡Ya se ha registrado antes!"
                             setTimeout(function() { 
-                                window.location.replace("/registro");
+                                window.location.replace("/registro2020");
                             }, 4500);   
                         }
 
@@ -235,7 +235,7 @@
                                     listastring +='<td>'+(v['municipio']!= null?v['municipio']:"N/D")+'</td>';
                                     listastring +='<td>'+(v['localidad']!= null?v['localidad']:"N/D")+'</td>';
                                     listastring +='<td>'+(v['colonia']!= null?v['colonia']:"N/D")+'</td>';
-                                    listastring +='<td><a class="btn btn-info" name="idpersona" href="/registro/'+v['id']+'/edit">Ir</a></td>';
+                                    listastring +='<td><a class="btn btn-info" name="idpersona" href="/registro2020/'+v['id']+'/edit">Ir</a></td>';
                                 listastring +='</tr>';
                                 });
                         } 
@@ -252,7 +252,7 @@
                 var idpersona = $("#ntn").data('persona');
                 $.ajax({
                     type: "PUT",
-                    url: "/registro/"+idpersona,
+                    url: "/registro2020/"+idpersona,
                     data: $("#encuestaupdate").serialize(),
                     success: function(data) {
                         $("[name='send']").hide();
@@ -271,7 +271,7 @@
 
             $("#opcion").change(function(){ //para el primer select
                 if (this.value == 1) {
-                    window.location.replace("/registro/create");
+                    window.location.replace("/registro2020/create");
                 } else {
                     $("#opcionbusqueda").show();
                 }
@@ -909,7 +909,7 @@
             //     var idpersona = $("#ntn").data('persona');
             //     $.ajax({
             //         type: "PUT",
-            //         url: "/registro/"+idpersona,
+            //         url: "/registro2020/"+idpersona,
             //         data: $("#encuestaupdate").serialize(),
             //         success: function(data) {
             //             $("[name='send']").hide();

@@ -105,7 +105,7 @@
                 
                 $.ajax({
                     type: "POST",
-                    url: "/registro",
+                    url: "/registro2020",
                     data: $("#encuesta").serialize(),
                     success: function(data) {
                         
@@ -120,7 +120,7 @@
                             alertcolor = "danger";
                             alerttxt = "¡Ya se ha registrado antes!"
                             setTimeout(function() { 
-                                window.location.replace("/registro");
+                                window.location.replace("/registro2020");
                             }, 4500);   
                         }
 
@@ -153,7 +153,7 @@
                                     listastring +='<td>'+(v['Nombre']!= null?v['Nombre']:"")+(v['APaterno']!= null?v['APaterno']:"")+(v['AMaterno']!= null?v['AMaterno']:"")+'</td>';
                                     listastring +='<td>'+(v['CURP']!= null?v['CURP']:"N/D")+'</td>';
                                     listastring +='<td>'+(v['colonia']!= null?v['colonia']:"N/D")+'</td>';
-                                    listastring +='<td><a class="btn btn-info" name="idpersona" href="/registro/'+v['id']+'/edit">Ir</a></td>';
+                                    listastring +='<td><a class="btn btn-info" name="idpersona" href="/registro2020/'+v['id']+'/edit">Ir</a></td>';
                                 listastring +='</tr>';
                                 });
                         } 
@@ -169,7 +169,7 @@
                 
                 $.ajax({
                     type: "PUT",
-                    url: "/registro/"+$("#ntn").data('persona'),
+                    url: "/registro2020/"+$("#ntn").data('persona'),
                     data: $("#encuestaupdate").serialize(),
                     success: function(data) {
                         $("[name='send']").hide();
@@ -187,7 +187,7 @@
 
             $("#opcion").change(function(){ //para el primer select
                 if (this.value == 1) {
-                    window.location.replace("/registro/create");
+                    window.location.replace("/registro2020/create");
                 } else {
                     $("#opcionbusqueda").show();
                 }

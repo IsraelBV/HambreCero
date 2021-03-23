@@ -208,7 +208,7 @@
                 <button type="submit" name="send" class="btn btn-success"><strong>Guardar</strong></button>
                 <div class="row justify-content-around">
                     <a style="display: none;" href="" name="accion" class="btn btn-primary col-2" id="action" role="button" aria-pressed="true" target="_blank">Descargar Formato</a>
-                    <a style="display: none;"  href="/registro/create" name="rel" class="btn btn-info col-2" role="button" aria-pressed="true">Recargar Formulario</a>
+                    <a style="display: none;"  href="/registro2020/create" name="rel" class="btn btn-info col-2" role="button" aria-pressed="true">Recargar Formulario</a>
                     <a style="display: none;" href="/" name="rel" class="btn btn-secondary col-2" role="button" aria-pressed="true">Regresar</a>
                     {{-- <a style="display: none;" href="https://qroo.gob.mx/sedeso/hambreceroquintanaroo" name="rel" class="btn btn-secondary col-2" role="button" aria-pressed="true">Salir</a> --}}
                 </div>
@@ -217,7 +217,7 @@
     </form>
     <br>
     <!--FIN  FACTORES DE RIESGO-->
-    <a style="position: fixed; top: 10%; left: 10px;"  id="btnreturn" href="/registro" class="btn btn-dark" role="button" aria-pressed="true"><strong><span style="font-size: 1.5rem">&#8592; </span> Regresar</strong></a>
+    <a style="position: fixed; top: 10%; left: 10px;"  id="btnreturn" href="/registro2020" class="btn btn-dark" role="button" aria-pressed="true"><strong><span style="font-size: 1.5rem">&#8592; </span> Regresar</strong></a>
 
     {{-- <div id="modal_alerta" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
