@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCColoniasTable extends Migration
+class CreateTableCCentrosEntrega extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateCColoniasTable extends Migration
      */
     public function up()
     {
-        Schema::create('C_Colonias', function (Blueprint $table) {
+        Schema::create('c_centrosdeentrega', function (Blueprint $table) {
             $table->id();
-            $table->string('Descripcion');
-            $table->integer('CentroEntregaId');
-            $table->integer('LocalidadId');
+            $table->string('Descripcion')->nullable();
+            $table->string('Direccion')->nullable();
+            $table->boolean('status')->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateCColoniasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('C_Colonias');
+        Schema::dropIfExists('c_centrosdeentrega');
     }
 }

@@ -22,26 +22,35 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/', 'LayoutController@index');
 
 //SELECTOR DE PERIODOS
-Route::get('/periodo', 'HomeController@managePeriodos');
-Route::post('/redirectPeriodo', 'HomeController@redirectPeriodos');
+Route::get('/periodo', 'Auth\PeriodosController@managePeriodos');
+Route::post('/redirectPeriodo', 'Auth\PeriodosController@redirectPeriodos');
 
 //Route::resource('/cuestionario', 'CuestionarioController');//ruta para posterior actualizacion
 //ENCUESTAS-----------------------------------------------------------------------------------------------------------------------------------------
 Route::get('/', function () {
-     return redirect('/registro');
+     if (session()->has('periodo')) {
+          
+          if (session('periodo') != 3) {
+               return redirect('/registro2020');
+          } else {
+               return redirect('/registro');
+          }
+     } else {
+          return redirect('/registro');
+     }
 });
 
-Route::post('/findPersona', 'CuestionarioController@findPersona');
+Route::post('/findPersona2020', 'P2020\CuestionarioController@findPersona');
 
-Route::resource('/registro', 'CuestionarioController');
+Route::resource('/registro2020', 'P2020\CuestionarioController');
 // Route::get('/saved', function () {
 //         return view('cuestionario.save');
 // });
-Route::get('/imprimir/{imprimir}', 'CuestionarioController@imprimir');//imprime un pdf <---------------------------------------
+Route::get('/imprimir2020/{imprimir}', 'P2020\CuestionarioController@imprimir');//imprime un pdf <---------------------------------------
 
 //LOGIN/REGISTRO-------------------------------------------------------------------------------------------------------------------------------------
 Auth::routes();
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\P2020\HomeController::class, 'index'])->name('home');
 Route::get('/register/success', 'Auth\RegisterController@success');
 
 // Auth::routes();
@@ -52,41 +61,58 @@ Route::get('/register/success', 'Auth\RegisterController@success');
 //     return view('layouts.sidebar');
 // });
 //ADMIN/ENTRGAS----------------------------------------------------------------------------------------------------------------------------------------
-Route::get('/admin/entrega','Admin\EntregaController@index')->name('buscar');
+Route::get('/admin2020/entrega','P2020\Admin\EntregaController@index')->name('buscar');
 
-Route::post('/admin/findPersonaEntrega', 'Admin\EntregaController@findPersonaEntrega');
+Route::post('/admin2020/findPersonaEntrega', 'P2020\Admin\EntregaController@findPersonaEntrega');
 
-Route::post('/admin/findListaEntregas/{entrega}', 'Admin\EntregaController@findEntregas');
+Route::post('/admin2020/findListaEntregas/{entrega}', 'P2020\Admin\EntregaController@findEntregas');
 
-Route::get('/admin/entrega/{entrega}/edit','Admin\EntregaController@editarEntrega');// editar una entrega
+Route::get('/admin2020/entrega/{entrega}/edit','P2020\Admin\EntregaController@editarEntrega');
 
-Route::put('/admin/entrega/{entrega}','Admin\EntregaController@actualizarEntrega');// editar una entrega
+Route::put('/admin2020/entrega/{entrega}','P2020\Admin\EntregaController@actualizarEntrega');// editar una entrega
 
-Route::delete('/admin/entrega/revertirEntrega/{entrega}', 'Admin\EntregaController@revertirEntrega');//revertir las entregas por admins
+Route::delete('/admin2020/entrega/revertirEntrega/{entrega}', 'P2020\Admin\EntregaController@revertirEntrega');//revertir las entregas por admins
 
-Route::post('/admin/entrega/{entrega}', 'Admin\EntregaController@registrarEntrega');
+Route::post('/admin2020/entrega/{entrega}', 'P2020\Admin\EntregaController@registrarEntrega');
 
-Route::post('/admin/entrega/documentacion/{entrega}', 'Admin\EntregaController@registrarDocumentacion');
+Route::post('/admin2020/entrega/documentacion/{entrega}', 'P2020\Admin\EntregaController@registrarDocumentacion');
 
-Route::post('/admin/findDocumentacion/{entrega}', 'Admin\EntregaController@findDocumentacion');
+Route::post('/admin2020/findDocumentacion/{entrega}', 'P2020\Admin\EntregaController@findDocumentacion');
 
 
 
-Route::get('/admin/entrega/xx','Admin\EntregaController@contra');//PARA LAS CONTRASEÑAS
+Route::get('/admin2020/entrega/xx','P2020\Admin\EntregaController@contra');//PARA LAS CONTRASEÑAS
 
 //REPORTES------------------------------------------------------------------------------------------------------------------------------------------------
-Route::get('/admin/reporte','Admin\ReporteController@index')->name('reporte');
-Route::post('/admin/reporte/findcolonias/{reporte}','Admin\ReporteController@findcolonias');
-Route::post('/admin/reporte/findReporte','Admin\ReporteController@findReporte');
+Route::get('/admin2020/reporte','P2020\Admin\ReporteController@index')->name('reporte');
+Route::post('/admin2020/reporte/findcolonias/{reporte}','P2020\Admin\ReporteController@findcolonias');
+Route::post('/admin2020/reporte/findReporte','P2020\Admin\ReporteController@findReporte');
 
 //USUARIOS------------------------------------------------------------------------------------------------------------------------------------------------
-Route::get('/admin/user','Admin\UsuarioController@index')->name('usuarios');
-Route::get('/admin/user/{user}/edit','Admin\UsuarioController@editarUsuario');
-Route::get('/admin/user/pass/{user}/edit','Admin\UsuarioController@editarcontraseña');
-Route::put('/admin/user/{user}', 'Admin\UsuarioController@actualizarUsuario');//actualizar datos de usuario
-Route::put('/admin/user/pass/{user}', 'Admin\UsuarioController@actualizarContraseña');//actualizar contraseña
-Route::put('/admin/user/deshabilitar/{user}', 'Admin\UsuarioController@deshabilitarUsuario');//deshabilita al usuario
+Route::get('/admin2020/user','P2020\Admin\UsuarioController@index')->name('usuarios');
+Route::get('/admin2020/user/{user}/edit','P2020\Admin\UsuarioController@editarUsuario');
+Route::get('/admin2020/user/pass/{user}/edit','P2020\Admin\UsuarioController@editarcontraseña');
+Route::put('/admin2020/user/{user}', 'P2020\Admin\UsuarioController@actualizarUsuario');//actualizar datos de usuario
+Route::put('/admin2020/user/pass/{user}', 'P2020\Admin\UsuarioController@actualizarContraseña');//actualizar contraseña
+Route::put('/admin2020/user/deshabilitar/{user}', 'P2020\Admin\UsuarioController@deshabilitarUsuario');//deshabilita al usuario
 
 //ESPECIAL---------------------------------------------------------------------------------------------------
-Route::get('/especial/direccion','LayoutController@direccion');/// especial para pasar la direccion concatenada a la direccion en la bitacora
+Route::get('/especial2020/direccion','P2020\LayoutController@direccion');/// especial para pasar la direccion concatenada a la direccion en la bitacora
+
+
+/////2021/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////2021/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////2021/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+Route::resource('/registro', 'P2021\CuestionarioController');
+
+Route::post('/findPersona', 'P2021\CuestionarioController@findPersona');
+
+Route::get('/registro/pass/{user}/edit','P2021\CuestionarioController@editPasswordPersona');
+Route::put('/registro/pass/{user}', 'P2021\CuestionarioController@updatePasswordPersona');
+
+Route::post('/registro/Entrega/solicitar/{user}', 'P2021\CuestionarioController@storeDocumentacion');
+
+
 
