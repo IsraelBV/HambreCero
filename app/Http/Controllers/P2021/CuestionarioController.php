@@ -138,13 +138,19 @@ class CuestionarioController extends Controller
      */
     public function create()
     {   
+        $colonias = DB::table('c_colonias')
+        ->select('c_colonias.*')
+        ->whereNotIn('c_colonias.LocalidadId','!=', [57,249])
+        ->get();
+
         return view('2021.cuestionario.encuesta',[
             'preguntas'=> C_Pregunta::all(),
             'estados'=> C_Estado::all(),
-            'colonias'=> C_Colonia::all(),
+            'colonias'=> $colonias,
+            // 'colonias'=> C_Colonia::all(),
             'localidades'=> C_Localidad::findMany([326,330,346,347,58,59,157,158,68,71,76,69,1,11]),   
             // 'localidades'=> C_Localidad::findMany([57,249]),   
-            'municipios'=> C_Municipio::findMany([1,2,3,6,7,8,9]),
+            'municipios'=> C_Municipio::findMany([1,2,3,6,7,8,9,10,11]),
             // 'municipios'=> C_Municipio::findMany([5,4]),
             'estadosCiviles' => C_EstadoCivil::all(),
             'estudios'=> C_GradoDeEstudio::all(),
@@ -193,6 +199,7 @@ class CuestionarioController extends Controller
         $persona->EncuestadorId = (Auth::check())?Auth::user()->id:0;
         $persona->Intentos = 0;
         $persona->password = Hash::make($request->get('contraseña'));
+        $persona->PeriodoId = 3;
         
         $encuesta = new Encuesta();
         $encuesta->Pregunta_33 = $request->get('cuantas_per_viven_casa');
@@ -227,6 +234,11 @@ class CuestionarioController extends Controller
      */
     public function edit($id)
     {   
+        $colonias = DB::table('c_colonias')
+        ->select('c_colonias.*')
+        ->whereNotIn('c_colonias.LocalidadId','!=', [57,249])
+        ->get();
+
         $personaCollection = DB::table('personas')
         ->leftjoin('encuestas', 'personas.id', '=', 'encuestas.personaId')
         ->select('personas.*', 'encuestas.Pregunta_33')
@@ -251,10 +263,11 @@ class CuestionarioController extends Controller
         return view('2021.cuestionario.encuestaUpdate',[
             'preguntas'=> C_Pregunta::all(),
             'estados'=> C_Estado::all(),
-            'colonias'=> C_Colonia::all(),
+            'colonias'=> $colonias,
+            // 'colonias'=> C_Colonia::all(),
             'localidades'=> C_Localidad::findMany([326,330,346,347,58,59,157,158,68,71,76,69,1,11]),   
             // 'localidades'=> C_Localidad::findMany([57,249]),   
-            'municipios'=> C_Municipio::findMany([1,2,3,6,7,8,9]),
+            'municipios'=> C_Municipio::findMany([1,2,3,6,7,8,9,10,11]),
             // 'municipios'=> C_Municipio::findMany([5,4]),
             'estadosCiviles' => C_EstadoCivil::all(),
             'estudios'=> C_GradoDeEstudio::all(),
