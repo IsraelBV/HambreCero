@@ -16,7 +16,7 @@ class CreateCColoniasTable extends Migration
         Schema::create('C_Colonias', function (Blueprint $table) {
             $table->id();
             $table->string('Descripcion');
-            $table->integer('CentroEntregaId');
+            $table->integer('CentroEntregaId')->nullable();
             $table->integer('LocalidadId');
             $table->timestamps();
         });

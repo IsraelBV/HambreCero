@@ -15,7 +15,7 @@ class CreateColumnsFirst2021InPersonas extends Migration
     {
         Schema::table('personas', function (Blueprint $table) {
             $table->string('password')->nullable();
-            $table->string('PeriodoId');
+            $table->string('PeriodoId')->nullable();
         });
     }
 

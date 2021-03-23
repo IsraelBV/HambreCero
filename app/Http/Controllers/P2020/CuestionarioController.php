@@ -166,6 +166,7 @@ class CuestionarioController extends Controller
             $persona->EstadoCivilId = $request->get('estadocivil');
             $persona->EncuestadorId = (Auth::check())?Auth::user()->id:0;
             $persona->Intentos = 0;
+            $persona->PeriodoId = session('periodo');
             
 
 
@@ -367,6 +368,7 @@ class CuestionarioController extends Controller
             $persona->EstadoCivilId = $request->get('estadocivil');
             $persona->EncuestadorId = (Auth::check())?Auth::user()->id:0;
             $persona->Intentos = 0;
+            $persona->PeriodoId = session('periodo');
            
             $encuesta = new Encuesta();
             $encuesta->Pregunta_33 = $request->get('cuantas_per_viven_casa');
