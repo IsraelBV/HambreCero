@@ -140,7 +140,7 @@ class CuestionarioController extends Controller
     {   
         $colonias = DB::table('c_colonias')
         ->select('c_colonias.*')
-        ->whereNotIn('c_colonias.LocalidadId','!=', [57,249])
+        ->whereNotIn('c_colonias.LocalidadId', [57,249])
         ->get();
 
         return view('2021.cuestionario.encuesta',[
@@ -236,7 +236,7 @@ class CuestionarioController extends Controller
     {   
         $colonias = DB::table('c_colonias')
         ->select('c_colonias.*')
-        ->whereNotIn('c_colonias.LocalidadId','!=', [57,249])
+        ->whereNotIn('c_colonias.LocalidadId', [57,249])
         ->get();
 
         $personaCollection = DB::table('personas')
