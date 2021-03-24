@@ -60,14 +60,14 @@
                         <select id="sexo" class="form-control" name="sexo">
                             @if ($persona[0]->Sexo == null)
                                 <option value="" selected>Seleccione una opcion</option>
-                                <option value="M">MASCULINO</option>
-                                <option value="F">FEMENINO</option>
+                                <option value="M">HOMBRE</option>
+                                <option value="F">MUJER</option>
                             @elseif ($persona[0]->Sexo == "M")
-                                <option selected value="M">MASCULINO</option>
-                                <option value="F">FEMENINO</option>
+                                <option selected value="M">HOMBRE</option>
+                                <option value="F">MUJER</option>
                             @else
-                                <option value="M">MASCULINO</option>
-                                <option selected value="F">FEMENINO</option>
+                                <option value="M">HOMBRE</option>
+                                <option selected value="F">MUJER</option>
                             @endif
 
                         </select>
