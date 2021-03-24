@@ -212,40 +212,56 @@
                         <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                     </div>
                 </div> --}}
+                <br>
+                <div class="form-row">
+                    <button type="submit" name="send" class="btn btn-success"><strong>Guardar</strong></button>
+                </div>
 
             </div>
         </div>
         <br><br>
-            <div class="container">
-                
-                <button type="submit" name="send" class="btn btn-success"><strong>Guardar</strong></button>
-                <div class="row justify-content-around">
-                    {{-- <a style="display: none;" href="" name="accion" class="btn btn-primary col-2" id="action" role="button" aria-pressed="true" target="_blank">Descargar Formato</a> --}}
-                    {{-- <a style="display: none;"  href="/registro/create" name="rel" class="btn btn-info col-2" role="button" aria-pressed="true">Recargar Formulario</a> --}}
-                    <a style="display: none;" href="/" name="rel" class="btn btn-secondary col-2" role="button" aria-pressed="true">Regresar</a>
-                    {{-- <a style="display: none;" href="https://qroo.gob.mx/sedeso/hambreceroquintanaroo" name="rel" class="btn btn-secondary col-2" role="button" aria-pressed="true">Salir</a> --}}
-                </div>
+    </form>
+
+        <div class="card">
+            <div class="card-body" id="entcont">
+                <a class="btn btn-success" id="solicitarD" name="solicitaD" role="button" aria-pressed="true" style="display: none;">Solicitar Despensa</a>
             </div>
         </div>
-    </form>
-    <br>
-    <!--FIN  FACTORES DE RIESGO-->
-    <a style="position: fixed; top: 10%; left: 10px;"  id="btnreturn" href="/registro" class="btn btn-dark" role="button" aria-pressed="true"><strong><span style="font-size: 1.5rem">&#8592; </span> Regresar</strong></a>
+        <br><br>
 
-    {{-- <div id="modal_alerta" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="container">
+            <div class="row justify-content-around">
+                <a style="display: none;" href="/" name="rel" class="btn btn-secondary col-2" role="button" aria-pressed="true">Regresar</a>
+                {{-- <a style="display: none;" href="https://qroo.gob.mx/sedeso/hambreceroquintanaroo" name="rel" class="btn btn-secondary col-2" role="button" aria-pressed="true">Salir</a> --}}
+            </div>
+        </div>
+
+    <div class="container">
+        <div class="row justify-content-around">
+            <a style="position: fixed; top: 10%; left: 10px;"  id="btnreturn" href="/registro" class="btn btn-dark" role="button" aria-pressed="true"><strong><span style="font-size: 1.5rem">&#8592; </span> Salir</strong></a>
+        </div>
+    </div>
+
+    <div class="modal fade" id="encuestaupdatemodal" tabindex="-1" role="dialog" aria-labelledby="encuestaupdatemodalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
+                    <h5 class="modal-title" id="encuestaupdatemodalLabel"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">×</span>
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <img src="{{asset('img/ventana emergente.png')}}" class="img-fluid img-thumbnail">
+                    
                 </div>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> 
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-btn="cpt">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" data-btn="cnl">Cancelar</button>
+                </div>
             </div>
         </div>
-    </div> --}}
+    </div>
+
+    
 
 @endsection

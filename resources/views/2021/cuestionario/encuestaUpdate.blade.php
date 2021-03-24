@@ -256,7 +256,7 @@
     </form>
 
         <div class="card">
-            <div class="card-body">
+            <div class="card-body" id="entcont">
 
                 @if (count($listaentregas) > 0)
 
@@ -282,11 +282,11 @@
                                 
                             @else
                                 <tr>
-                                    <td colspan="5">
+                                    <td colspan="4">
                                         {{"Folio: $entrega->idDocumentacion - Centro de Entrega: $entrega->centroentrega"}}
                                     </td>
-                                    <td >
-                                        <button disabled class="btn btn-info">Info</button>
+                                    <td colspan="2">
+                                        {{-- <button disabled class="btn btn-info">Info</button> --}}
                                         <button disabled class="btn btn-warning">Documentacion</button>
                                     </td>
                                 </tr>
@@ -314,9 +314,9 @@
             </div>
         </div>
         <br><br>
+        
     <div class="container">
         <div class="row justify-content-around">
-            {{-- <a style="display: none;" href="/imprimir/{{$persona[0]->id}}" name="accion" class="btn btn-primary col-2" id="action" role="button" aria-pressed="true" target="_blank">Descargar Formato</a> --}}
             <a href="/" name="rel" class="btn btn-secondary col-2" role="button" aria-pressed="true">Salir</a>
         </div>
     </div>

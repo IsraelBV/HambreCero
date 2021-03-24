@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Validator;
 use Auth;
 
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\Foreach_;
 
 use function PHPUnit\Framework\isNull;
 
@@ -384,26 +385,95 @@ class CuestionarioController extends Controller
         $documentacion->idCentroEntrega = $centroEntrega[0]->CentroEntregaId;
         $documentacion->idPeriodoEntrega = 1;
 
-        var_dump('qwerty3');
         $documentacion->save();
 
-            var_dump('qwerty0');
+        $path = "documentacion/$id/$documentacion->id";
 
-        if ($request->hasFile('xxx')) {
-            // $request->file('xxx')->storeAs('documentacion/'.$id.'/'.$documentacion->id,'identificacio_oficial');
-            var_dump('qwerty1');
+        if ($request->hasFile('IdentificacionFile')) {
+            $dataname1 = explode('.',$request->file('IdentificacionFile')->getClientOriginalName());
+            $request->file('IdentificacionFile')->storeAs($path,'identificacio_oficial'.'.'.$dataname1[1]);
         }
         if ($request->hasFile('CURPFile')) {
-            
+            $dataname2 = explode('.',$request->file('CURPFile')->getClientOriginalName());
+            $request->file('CURPFile')->storeAs($path,'curp'.'.'.$dataname2[1]);
         }
         if ($request->hasFile('CompDomFile')) {
-            
+            $dataname3 = explode('.',$request->file('CompDomFile')->getClientOriginalName());
+            $request->file('CompDomFile')->storeAs($path,'comprobantedomicilio'.'.'.$dataname3[1]);
         }
         if ($request->hasFile('ComPagFile')) {
-            
+            $dataname4 = explode('.',$request->file('ComPagFile')->getClientOriginalName());
+            $request->file('ComPagFile')->storeAs($path,'comprobantepago'.'.'.$dataname4[1]);
         }
         if ($request->hasFile('ConstAutFiled')) {
-            
+            $dataname5 = explode('.',$request->file('ConstAutFiled')->getClientOriginalName());
+            $request->file('ConstAutFiled')->storeAs($path,'constanciaautoridad'.'.'.$dataname5[1]);
         }
+
+        return $this->buildListaEntregas($id);
    }
+
+    public function buildListaEntregas($id){
+
+        $listaentregas = DB::table('documentacion') //lista de entregados
+        ->leftJoin('entregas', 'entregas.DocumentacionId', '=', 'documentacion.id')
+        ->leftJoin('c_periodos', 'entregas.PeriodoId', '=', 'c_periodos.id')
+        ->leftJoin('c_municipios', 'entregas.MunicipioId', '=', 'c_municipios.id')
+        ->leftJoin('c_localidades', 'entregas.LocalidadId', '=', 'c_localidades.id')
+        ->leftJoin('c_centrosdeentrega', 'documentacion.idCentroEntrega', '=', 'c_centrosdeentrega.id')
+        ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega')
+        ->where('documentacion.PersonaId',$id)
+        ->get();
+
+        if (count($listaentregas) > 0) {
+            $listaentregasstring = 
+                '<h5 class="card-title" align="center">LISTA DE ENTREGAS</h5>
+                    <br>
+                    <table class="table table-hover">
+                        <tr>
+                            <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th>
+                        </tr>';
+                        $validatelastent = 1;
+
+                        foreach ($listaentregas as $entrega ) {                        
+
+                            if ($entrega->idEntrega !== null){
+                                $listaentregasstring .='
+                                <tr>
+                                    <td> '.($entrega->idDocumentacion != null ? $entrega->idDocumentacion : "N/D").' </td>
+                                    <td> '.($entrega->municipio != null ? $entrega->municipio : "N/D").' </td>
+                                    <td> '.($entrega->localidad != null ? $entrega->localidad : "N/D").' </td>
+                                    <td> '.($entrega->Direccion != null? $entrega->Direccion : "N/D").'</td>
+                                    <td> '.($entrega->periodo != null ? $entrega->periodo : "N/D").'</td>
+                                    <td> '.($entrega->centroentrega != null ? $entrega->centroentrega : "N/D").'</td>
+                                </tr>';
+                                
+                            }else{
+                                $listaentregasstring .='
+                                <tr>
+                                    <td colspan="5">
+                                        '."Folio: $entrega->idDocumentacion - Centro de Entrega: $entrega->centroentrega".'
+                                    </td>
+                                    <td colspan="2">
+                                        <button disabled class="btn btn-warning">Documentacion</button>
+                                    </td>
+                                </tr>';
+
+                                $validatelastent = 0;
+
+                            }
+                        }
+                        $listaentregasstring .='</table>';
+
+                    if ($validatelastent == 1){
+                        $listaentregasstring .='
+                        <br>
+                        <a class="btn btn-success" id="solicitarD" name="solicitarD"  role="button" aria-pressed="true">Solicitar Despensa</a>';
+                    }
+        } else {
+            $listaentregasstring ='<a class="btn btn-success" id="solicitarD" name="solicitaD" role="button" aria-pressed="true">Solicitar Despensa</a>';
+        }
+
+        return $listaentregasstring;
+    }
 }
