@@ -142,6 +142,7 @@ class CuestionarioController extends Controller
         $colonias = DB::table('c_colonias')
         ->select('c_colonias.*')
         ->whereNotIn('c_colonias.LocalidadId', [57,249])
+        ->orderBy('c_colonias.Descripcion', 'ASC')
         ->get();
 
         return view('2021.cuestionario.encuesta',[
@@ -238,6 +239,7 @@ class CuestionarioController extends Controller
         $colonias = DB::table('c_colonias')
         ->select('c_colonias.*')
         ->whereNotIn('c_colonias.LocalidadId', [57,249])
+        ->orderBy('c_colonias.Descripcion', 'ASC')
         ->get();
 
         $personaCollection = DB::table('personas')
@@ -254,7 +256,7 @@ class CuestionarioController extends Controller
         ->leftJoin('c_municipios', 'entregas.MunicipioId', '=', 'c_municipios.id')
         ->leftJoin('c_localidades', 'entregas.LocalidadId', '=', 'c_localidades.id')
         ->leftJoin('c_centrosdeentrega', 'documentacion.idCentroEntrega', '=', 'c_centrosdeentrega.id')
-        ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega')
+        ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega','c_centrosdeentrega.Direccion as direccioncentroentrega')
         ->where('documentacion.PersonaId',$id)
         ->get();
 
@@ -421,18 +423,21 @@ class CuestionarioController extends Controller
         ->leftJoin('c_municipios', 'entregas.MunicipioId', '=', 'c_municipios.id')
         ->leftJoin('c_localidades', 'entregas.LocalidadId', '=', 'c_localidades.id')
         ->leftJoin('c_centrosdeentrega', 'documentacion.idCentroEntrega', '=', 'c_centrosdeentrega.id')
-        ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega')
+        ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega','c_centrosdeentrega.Direccion as direccioncentroentrega')
         ->where('documentacion.PersonaId',$id)
         ->get();
 
         if (count($listaentregas) > 0) {
             $listaentregasstring = 
-                '<h5 class="card-title" align="center">LISTA DE ENTREGAS</h5>
+                '<h5 class="card-title" align="center">CENTRO DE ENTREGA ASIGNADO</h5>
                     <br>
-                    <table class="table table-hover">
-                        <tr>
-                            <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th>
-                        </tr>';
+                    <table class="table table-hover">';
+                        if (count($listaentregas) > 1 || $listaentregas[0]->idEntrega !== null) {
+                            $listaentregasstring .='<tr>
+                                    <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th>
+                                </tr>';
+                        }
+
                         $validatelastent = 1;
 
                         foreach ($listaentregas as $entrega ) {                        
@@ -450,12 +455,21 @@ class CuestionarioController extends Controller
                                 
                             }else{
                                 $listaentregasstring .='
+                                <tr class="table-dark">
+                                    <td colspan="6"></td>
+                                </tr>
                                 <tr>
-                                    <td colspan="5">
-                                        '."Folio: $entrega->idDocumentacion - Centro de Entrega: $entrega->centroentrega".'
+                                    <td colspan="6">
+                                        Folio: '.$entrega->idDocumentacion.' - Centro de Entrega: <strong>'.$entrega->centroentrega.'</strong> - Direcccion: '.$entrega->direccioncentroentrega.'
                                     </td>
-                                    <td colspan="2">
-                                        <button disabled class="btn btn-warning">Documentacion</button>
+                                </tr>
+                                <tr class="table-dark">
+                                    <td colspan="6"></td>
+                                </tr>
+                                <tr>
+                                <td colspan="6">
+                                        <p>Favor de estar pendiente de las fechas de entrega de despensas que serán publicadas en la página oficial de la Secretaría de Desarrollo Social de Quintana Roo <a href="https://qroo.gob.mx/sedeso">https://qroo.gob.mx/sedeso</a></p> 
+                                        <p>En ellas se le indicará cuando y en donde realizar el pago de la cuota de recuperación y deberá presentarse al centro de entrega asignado con los documento registrados en original, únicamente para su cotejo de información. (Solo el recibo de pago se quedará en el centro)</p>
                                     </td>
                                 </tr>';
 
@@ -468,10 +482,10 @@ class CuestionarioController extends Controller
                     if ($validatelastent == 1){
                         $listaentregasstring .='
                         <br>
-                        <a class="btn btn-success" id="solicitarD" name="solicitarD"  role="button" aria-pressed="true">Solicitar Despensa</a>';
+                        <a class="btn btn-success" id="solicitarD" name="solicitarD"  role="button" aria-pressed="true">Subir Documentos</a>';
                     }
         } else {
-            $listaentregasstring ='<a class="btn btn-success" id="solicitarD" name="solicitaD" role="button" aria-pressed="true">Solicitar Despensa</a>';
+            $listaentregasstring ='<a class="btn btn-success" id="solicitarD" name="solicitaD" role="button" aria-pressed="true">Subir Documentos</a>';
         }
 
         return $listaentregasstring;
