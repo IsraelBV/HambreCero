@@ -40,19 +40,6 @@
                         <input type="tex" class="form-control" id="curp" name="curp" onkeyup="mayusculas(this);" required="" value="{{ $persona[0]->CURP != null?$persona[0]->CURP:'' }}">
                     </div>
                     <div class="form-group col-md-4">
-                        <label for="rfc">{{ $preguntas[4]['Descripcion'] }}</label>
-                        <input type="text" class="form-control" id="rfc" name="rfc" onkeyup="mayusculas(this);" value="{{ $persona[0]->RFC != null?$persona[0]->RFC:'' }}">
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="clave_elector" for="clave_e">{{ $preguntas[5]['Descripcion'] }}</label>
-                        <input type="text" class="form-control" id="clave_elector" name="clave_elector" onkeyup="mayusculas(this);" value="{{ $persona[0]->ClaveElector != null?$persona[0]->ClaveElector:'' }}">
-                    </div>
-                </div>
-                <!--fin de fila 2-->
-              
-                <!-- Fila 3-->
-                <div class="form-row">
-                    <div class="form-group col-md-3">
                         <label for="estadocivil">Estado Civil</label>
                         <br>
                         <select id="estadocivil" class="form-control" name="estadocivil" required="">
@@ -68,7 +55,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="sexo">{{ $preguntas[7]['Descripcion'] }}</label>
                         <select id="sexo" class="form-control" name="sexo">
                             @if ($persona[0]->Sexo == null)
@@ -82,13 +69,22 @@
                                 <option value="M">MASCULINO</option>
                                 <option selected value="F">FEMENINO</option>
                             @endif
-                            
+
                         </select>
                     </div>
-                    <div class="form-group col-md-3">
-                        <label for="ciudad_nac">{{ $preguntas[8]['Descripcion'] }}</label>
-                        <input type="text" class="form-control" id="ciudad_nac" name="ciudad_nac" onkeyup="mayusculas(this);" required="" value="{{ $persona[0]->CiudadNacimiento != null?$persona[0]->CiudadNacimiento	:'' }}">
+                    {{-- <div class="form-group col-md-4">
+                        <label for="rfc">{{ $preguntas[4]['Descripcion'] }}</label>
+                        <input type="text" class="form-control" id="rfc" name="rfc" onkeyup="mayusculas(this);" value="{{ $persona[0]->RFC != null?$persona[0]->RFC:'' }}">
                     </div>
+                    <div class="form-group col-md-4">
+                        <label for="clave_elector" for="clave_e">{{ $preguntas[5]['Descripcion'] }}</label>
+                        <input type="text" class="form-control" id="clave_elector" name="clave_elector" onkeyup="mayusculas(this);" value="{{ $persona[0]->ClaveElector != null?$persona[0]->ClaveElector:'' }}">
+                    </div> --}}
+                </div>
+                <!--fin de fila 2-->
+
+                <!-- Fila 3-->
+                <div class="form-row">
                     <div class="form-group col-md-3">
                         <label for="estado_nac">{{ $preguntas[9]['Descripcion'] }}</label>
                         <select id="estado_nac" class="form-control" name="estado_nac" required="">
@@ -104,49 +100,43 @@
                             @endforeach
                         </select>
                     </div>
-                </div>
-                <!-- Fin de Fila 3-->
-                <!--fila4-->
-                <div class="form-row">
-
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-3">
+                        <label for="ciudad_nac">{{ $preguntas[8]['Descripcion'] }}</label>
+                        <input type="text" class="form-control" id="ciudad_nac" name="ciudad_nac" onkeyup="mayusculas(this);" required="" value="{{ $persona[0]->CiudadNacimiento != null?$persona[0]->CiudadNacimiento	:'' }}">
+                    </div>
+                    <div class="form-group col-md-3">
                         <label for="fecha_na">{{ $preguntas[10]['Descripcion'] }}</label><br>
                         <input type="date" class="form-control" id="fecha_na" name="fecha_na" required="" value="{{ $persona[0]->FechaNacimiento != null?$persona[0]->FechaNacimiento:'' }}"><br>
                     </div>
-                    <div class="form-group col-md-4">
-                        <label for="grado_estudios">{{ $preguntas[11]['Descripcion'] }}</label>
-                        <select value="" id="grado_estudios" class="form-control" name="grado_estudios">
-                            @if ($persona[0]->GradoEstudiosId == null)
-                                <option value="" selected>Seleccione una opcion</option>
-                            @endif
-                            @foreach ($estudios as $estudio)
-                                @if ($estudio->id == $persona[0]->GradoEstudiosId)
-                                    <option selected value="{{$estudio->id}}">{{$estudio->Descripcion}}</option>
-                                @else
-                                    <option value="{{$estudio->id}}">{{$estudio->Descripcion}}</option>
-                                @endif
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="colonia">{{ $preguntas[12]['Descripcion'] }}</label><br>
-                        <select for id="colonia" class="form-control" name="colonia" required="">
-                            @if ($persona[0]->ColoniaId == null)
-                                <option value="" selected>Seleccione una opcion</option>
-                            @endif
-                            @foreach ($colonias as $colonia)
-                                @if ($colonia->id == $persona[0]->ColoniaId)
-                                    <option selected value="{{$colonia->id}}">{{$colonia->Descripcion}}</option>
-                                @else
-                                    <option value="{{$colonia->id}}">{{$colonia->Descripcion}}</option>
-                                @endif
-                            @endforeach
-                        </select>
-                        <br>
+                    <div class="form-group col-md-3">
+                        <label for="cod_postal">{{ $preguntas[21]['Descripcion'] }}</label>
+                        <input id="cod_postal" type="number" class="form-control" name="cod_postal" value="{{ $persona[0]->CP != null?$persona[0]->CP:'' }}">
                     </div>
                 </div>
-                <!--fin fila 4-->
-                <!--fila5-->
+                        <!-- Fin de Fila 3-->
+                        <!--fila4-->
+                        {{-- <div class="form-row"> --}}
+
+
+                            {{-- <div class="form-group col-md-4">
+                                <label for="grado_estudios">{{ $preguntas[11]['Descripcion'] }}</label>
+                                <select value="" id="grado_estudios" class="form-control" name="grado_estudios">
+                                    @if ($persona[0]->GradoEstudiosId == null)
+                                        <option value="" selected>Seleccione una opcion</option>
+                                    @endif
+                                    @foreach ($estudios as $estudio)
+                                        @if ($estudio->id == $persona[0]->GradoEstudiosId)
+                                            <option selected value="{{$estudio->id}}">{{$estudio->Descripcion}}</option>
+                                        @else
+                                            <option value="{{$estudio->id}}">{{$estudio->Descripcion}}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div> --}}
+
+                        {{-- </div> --}}
+                        <!--fin fila 4-->
+                        <!--fila5-->
                 <div class="form-row">
 
                     <div class="form-group col-md-4">
@@ -211,9 +201,22 @@
                         </select>
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="cod_postal">{{ $preguntas[21]['Descripcion'] }}</label>
-                        <input id="cod_postal" type="number" class="form-control" name="cod_postal" value="{{ $persona[0]->CP != null?$persona[0]->CP:'' }}">
+                        <label for="colonia">{{ $preguntas[12]['Descripcion'] }}</label><br>
+                        <select for id="colonia" class="form-control" name="colonia" required="">
+                            @if ($persona[0]->ColoniaId == null)
+                                <option value="" selected>Seleccione una opcion</option>
+                            @endif
+                            @foreach ($colonias as $colonia)
+                                @if ($colonia->id == $persona[0]->ColoniaId)
+                                    <option selected value="{{$colonia->id}}">{{$colonia->Descripcion}}</option>
+                                @else
+                                    <option value="{{$colonia->id}}">{{$colonia->Descripcion}}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                        <br>
                     </div>
+
                 </div>
                 <!-- fin fila 6-->
                 <!--FILA 7-->
@@ -260,12 +263,16 @@
 
                 @if (count($listaentregas) > 0)
 
-                    <h5 class="card-title" align="center">LISTA DE ENTREGAS</h5>
+                    <h5 class="card-title" align="center">CENTRO DE ENTREGA ASIGNADO</h5>
                     <br>
                     <table class="table table-hover">
-                        <tr>
-                            <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th>
-                        </tr>
+
+                        @if (count($listaentregas) > 1 || $listaentregas[0]->idEntrega !== null)
+                            <tr>
+                                <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th>
+                            </tr>
+                        @endif
+
                         @php($validatelastent = 1)
 
                         @foreach ($listaentregas as $entrega)
@@ -279,17 +286,31 @@
                                     <td> {{$entrega->periodo != null ? $entrega->periodo : "N/D" }}</td>
                                     <td> {{$entrega->centroentrega != null ? $entrega->centroentrega : "N/D" }}</td>
                                 </tr>
-                                
+
                             @else
+                                <tr class="table-dark">
+                                    <td colspan="6"></td>
+                                </tr>
                                 <tr>
-                                    <td colspan="4">
-                                        {{"Folio: $entrega->idDocumentacion - Centro de Entrega: $entrega->centroentrega"}}
+                                    <td colspan="6">
+                                        Folio: {{$entrega->idDocumentacion}} - Centro de Entrega: <strong>{{$entrega->centroentrega}}</strong> - Direcccion: {{$entrega->direccioncentroentrega}}
                                     </td>
-                                    <td colspan="2">
-                                        {{-- <button disabled class="btn btn-info">Info</button> --}}
+
+                                    {{-- <td colspan="2">
+                                        <button disabled class="btn btn-info">Info</button>
                                         <button disabled class="btn btn-warning">Documentacion</button>
+                                    </td> --}}
+                                </tr>
+                                <tr class="table-dark">
+                                    <td colspan="6"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">
+                                        <p>Favor de estar pendiente de las fechas de entrega de despensas que serán publicadas en la página oficial de la Secretaría de Desarrollo Social de Quintana Roo <a href="https://qroo.gob.mx/sedeso">https://qroo.gob.mx/sedeso</a></p> 
+                                        <p>En ellas se le indicará cuando y en donde realizar el pago de la cuota de recuperación y deberá presentarse al centro de entrega asignado con los documento registrados en original, únicamente para su cotejo de información. (Solo el recibo de pago se quedará en el centro)</p>
                                     </td>
                                 </tr>
+
 
                                 @php($validatelastent = 0)
 
@@ -302,19 +323,19 @@
                         {{-- <tr>
                             <td colspan="2"></td>
                             <td colspan="2"> --}}
-                                <a class="btn btn-success" id="solicitarD" name="solicitarD"  role="button" aria-pressed="true">Solicitar Despensa</a>
+                                <a class="btn btn-success" id="solicitarD" name="solicitarD"  role="button" aria-pressed="true">Subir Documentos</a>
                             {{-- </td>
                             <td colspan="2"></td>
                         </tr> --}}
                     @endif
                 @else
-                    <a class="btn btn-success" id="solicitarD" name="solicitaD" role="button" aria-pressed="true">Solicitar Despensa</a>
+                    <a class="btn btn-success" id="solicitarD" name="solicitaD" role="button" aria-pressed="true">Subir Documentos</a>
                 @endif
 
             </div>
         </div>
         <br><br>
-        
+
     <div class="container">
         <div class="row justify-content-around">
             <a href="/" name="rel" class="btn btn-secondary col-2" role="button" aria-pressed="true">Salir</a>
@@ -332,7 +353,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-btn="cpt">Guardar</button>

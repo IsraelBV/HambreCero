@@ -39,19 +39,6 @@
                         <input type="tex" class="form-control" id="curp" name="curp" onkeyup="mayusculas(this);" required="">
                     </div>
                     <div class="form-group col-md-4">
-                        <label for="rfc">{{ $preguntas[4]['Descripcion'] }}</label>
-                        <input type="text" class="form-control" id="rfc" name="rfc" onkeyup="mayusculas(this);">
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="clave_elector" for="clave_e">{{ $preguntas[5]['Descripcion'] }}</label>
-                        <input type="text" class="form-control" id="clave_elector" name="clave_elector" onkeyup="mayusculas(this);" >
-                    </div>
-                </div>
-                <!--fin de fila 2-->
-                    <!-- aqui estaba lo de ser extranjero -->
-                <!-- Fila 3-->
-                <div class="form-row">
-                    <div class="form-group col-md-3">
                         <label for="estadocivil">Estado Civil</label>
                         <br>
                         <select id="estadocivil" class="form-control" name="estadocivil" required="">
@@ -61,7 +48,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-4">
                         <label for="sexo">{{ $preguntas[7]['Descripcion'] }}</label>
                         <select id="sexo" class="form-control" name="sexo">
                             <option value="" selected>Seleccione una opcion</option>
@@ -69,10 +56,19 @@
                             <option value="F">FEMENINO</option>
                         </select>
                     </div>
-                    <div class="form-group col-md-3">
-                        <label for="ciudad_nac">{{ $preguntas[8]['Descripcion'] }}</label>
-                        <input type="text" class="form-control" id="ciudad_nac" name="ciudad_nac" onkeyup="mayusculas(this);" required="">
+                    {{-- <div class="form-group col-md-4">
+                        <label for="rfc">{{ $preguntas[4]['Descripcion'] }}</label>
+                        <input type="text" class="form-control" id="rfc" name="rfc" onkeyup="mayusculas(this);">
                     </div>
+                    <div class="form-group col-md-4">
+                        <label for="clave_elector" for="clave_e">{{ $preguntas[5]['Descripcion'] }}</label>
+                        <input type="text" class="form-control" id="clave_elector" name="clave_elector" onkeyup="mayusculas(this);" >
+                    </div> --}}
+                </div>
+                <!--fin de fila 2-->
+                    <!-- aqui estaba lo de ser extranjero -->
+                <!-- Fila 3-->
+                <div class="form-row">
                     <div class="form-group col-md-3">
                         <label for="estado_nac">{{ $preguntas[9]['Descripcion'] }}</label>
                         <select id="estado_nac" class="form-control" name="estado_nac" required="">
@@ -82,37 +78,37 @@
                             @endforeach
                         </select>
                     </div>
-                </div>
-                <!-- Fin de Fila 3-->
-                <!--fila4-->
-                <div class="form-row">
-
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-3">
+                        <label for="ciudad_nac">{{ $preguntas[8]['Descripcion'] }}</label>
+                        <input type="text" class="form-control" id="ciudad_nac" name="ciudad_nac" onkeyup="mayusculas(this);" required="">
+                    </div>
+                    <div class="form-group col-md-3">
                         <label for="fecha_na">{{ $preguntas[10]['Descripcion'] }}</label><br>
                         <input type="date" class="form-control" id="fecha_na" name="fecha_na" required=""><br>
                     </div>
-                    <div class="form-group col-md-4">
-                        <label for="grado_estudios">{{ $preguntas[11]['Descripcion'] }}</label>
-                        <select value="" id="grado_estudios" class="form-control" name="grado_estudios">
-                            <option value="" selected>Seleccione una opcion</option>
-                            @foreach ($estudios as $estudio)
-                                <option value="{{$estudio->id}}">{{$estudio->Descripcion}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="colonia">{{ $preguntas[12]['Descripcion'] }}</label><br>
-                        <select for id="colonia" class="form-control" name="colonia" required="">
-                            <option value="" selected>Seleccione una opcion</option>
-                            @foreach ($colonias as $colonia)
-                                <option value="{{$colonia->id}}">{{$colonia->Descripcion}}</option>
-                            @endforeach
-                        </select>
-                        <br>
+                    <div class="form-group col-md-3">
+                        <label for="cod_postal">{{ $preguntas[21]['Descripcion'] }}</label>
+                        <input id="cod_postal" type="number" class="form-control" name="cod_postal">
                     </div>
                 </div>
-                <!--fin fila 4-->
-                <!--fila5-->
+                        <!-- Fin de Fila 3-->
+                        <!--fila4-->
+                        {{-- <div class="form-row"> --}}
+
+                            
+                            {{-- <div class="form-group col-md-4">
+                                <label for="grado_estudios">{{ $preguntas[11]['Descripcion'] }}</label>
+                                <select value="" id="grado_estudios" class="form-control" name="grado_estudios">
+                                    <option value="" selected>Seleccione una opcion</option>
+                                    @foreach ($estudios as $estudio)
+                                        <option value="{{$estudio->id}}">{{$estudio->Descripcion}}</option>
+                                    @endforeach
+                                </select>
+                            </div> --}}
+                            
+                        {{-- </div> --}}
+                        <!--fin fila 4-->
+                        <!--fila5-->
                 <div class="form-row">
 
                     <div class="form-group col-md-4">
@@ -165,8 +161,14 @@
                         </select>
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="cod_postal">{{ $preguntas[21]['Descripcion'] }}</label>
-                        <input id="cod_postal" type="number" class="form-control" name="cod_postal">
+                        <label for="colonia">{{ $preguntas[12]['Descripcion'] }}</label><br>
+                        <select for id="colonia" class="form-control" name="colonia" >
+                            <option value="" selected>Seleccione una opcion</option>
+                            @foreach ($colonias as $colonia)
+                                <option value="{{$colonia->id}}">{{$colonia->Descripcion}}</option>
+                            @endforeach
+                        </select>
+                        <br>
                     </div>
                 </div>
                 <!-- fin fila 6-->
