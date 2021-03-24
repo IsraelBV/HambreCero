@@ -52,8 +52,8 @@
                         <label for="sexo">{{ $preguntas[7]['Descripcion'] }}</label>
                         <select id="sexo" class="form-control" name="sexo">
                             <option value="" selected>Seleccione una opcion</option>
-                            <option value="M">MASCULINO</option>
-                            <option value="F">FEMENINO</option>
+                            <option value="M">HOMBRE</option>
+                            <option value="F">MUJER</option>
                         </select>
                     </div>
                     {{-- <div class="form-group col-md-4">
