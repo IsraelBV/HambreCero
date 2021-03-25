@@ -109,7 +109,7 @@ Route::resource('/registro', 'P2021\CuestionarioController');
 
 Route::post('/findPersona', 'P2021\CuestionarioController@findPersona');
 
-Route::get('/registro/pass/{user}/edit','P2021\CuestionarioController@editPasswordPersona');
+Route::post('/registro/pass/{user}/edit','P2021\CuestionarioController@editPasswordPersona');
 Route::put('/registro/pass/{user}', 'P2021\CuestionarioController@updatePasswordPersona');
 
 Route::post('/registro/Entrega/solicitar/{user}', 'P2021\CuestionarioController@storeDocumentacion');

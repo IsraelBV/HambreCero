@@ -8,7 +8,7 @@
                     <div class="card-header">{{ __('Nueva contraseña') }}</div>
 
                     <div class="card-body">
-                        <form method="POST" action="/registro/pass/{{$usuario}}">
+                        <form id="passpersonacreate" method="" action="" data-user="{{$usuario}}">
                             @csrf
                             @method('put')
                             <div class="form-group row">
