@@ -58,7 +58,7 @@ class CuestionarioController extends Controller
     }
 
     public function findPersona(Request $request){
-
+        
         $curp = $request->get('curp');
         $pass = $request->get('pass');
 
@@ -72,7 +72,8 @@ class CuestionarioController extends Controller
                     if(is_null($persona[0]->password)){
 
                         if ($pass == $persona[0]->CURP) {
-                            return redirect("/registro/pass/{$persona[0]->id}/edit");
+                            return $this->editPasswordPersona($persona[0]->id);
+                            //return redirect("/registro/pass/{$persona[0]->id}/edit");
                         } else {
                             return view('2021.cuestionario.index',[
                                 'errmsg'=> 'CURP o Contraseña incorrectos',
@@ -81,7 +82,8 @@ class CuestionarioController extends Controller
                         }
                     } else {
                         if (Hash::check($pass, $persona[0]->password)) {// verificar que sea la contraseña
-                            return redirect("/registro/{$persona[0]->id}/edit");
+                            return $this->edit($persona[0]->id);
+                            //return redirect("/registro/{$persona[0]->id}/edit");
                         } else {
                             return view('2021.cuestionario.index',[
                                 'errmsg'=> 'CURP o Contraseña incorrectos',
@@ -96,7 +98,8 @@ class CuestionarioController extends Controller
                         ]);
                 }
             } else {
-                return redirect('/registro/create');
+                return $this->create($curp);//redirecciona a crate pero con la curp
+                // return redirect('/registro/create');
             }
     }
 
@@ -112,19 +115,21 @@ class CuestionarioController extends Controller
     }
 
     public function updatePasswordPersona(Request $request, $id){
-        $persona = Persona::find($id);
+
+        $persona = Persona::where('id',$id)->first();
+        
         if (is_null($persona->password)) {
 
             Validator::make($request->all(), [
                 'contraseña' => ['required', 'string', 'min:8', 'confirmed'],
             ])->validate();
 
-            $persona = Persona::where('id',$id)->first();
             $persona->password = Hash::make($request->get('contraseña'));
             $persona->save();
 
             return view('2021.cuestionario.index',[
-                'scssmsg'=>  'Se ha cambiado la contraseña del usuario, vuelva a ingresar.'
+                'scssmsg'=>  'Se ha cambiado la contraseña del usuario, vuelva a ingresar.',
+                'curp'=> $persona->CURP
                 ]);
 
         } else {
@@ -137,7 +142,7 @@ class CuestionarioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($curp = NULL)    
     {   
         $colonias = DB::table('c_colonias')
         ->select('c_colonias.*')
@@ -156,6 +161,7 @@ class CuestionarioController extends Controller
             // 'municipios'=> C_Municipio::findMany([5,4]),
             'estadosCiviles' => C_EstadoCivil::all(),
             'estudios'=> C_GradoDeEstudio::all(),
+            'curp' => $curp
             ]);
     }
 

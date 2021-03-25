@@ -172,7 +172,6 @@
 		
 		$(document).ready(function() {
 
-			
 			$("[name='tel_cel'],[name='tel_casa']").attr({pattern:'[1-9]{1}[0-9]{9}', type:'text', title:'10 NUMEROS'});//validacion para numero de telefono 
 			$("[name='cod_postal']").attr({pattern:'[7]{2}[0-9]{3}', type:'text', title:'5 NUMEROS'});//codigo postal validacion
 			$("[name='curp']").attr({pattern:'[A-Z]{4}[0-9]{6}[HM]{1}[A-Z]{5}[A-Z0-9]{1}[0-9]{1}', type:'text', title:'FORMATO DE CURP VALIDA'});//codigo postal validacion
@@ -191,7 +190,7 @@
 
 
 
-            $("#solicitarD").off().click(function(){//tare la lista de entregas
+            $("#solicitarD").off().click(function(){//trae la lista de entregas
 				$("#encuestaupdatemodal .modal-title").html('Subir documentacion');
 
 				var documentoshtml = '';
@@ -221,11 +220,10 @@
 				$("#encuestaupdatemodal .modal-body").html(documentoshtml);
 				bsCustomFileInput.init();
 				$("#encuestaupdatemodal").modal('show');
-				$('#encuestaupdatemodal [data-btn="cpt"]').attr('form','documentosForm').attr('type','submit');
+				$('#encuestaupdatemodal [data-btn="cpt"]').attr({form:'documentosForm',type:'submit'});
 
 				$('#documentosForm').off().submit(function(e){
 					e.preventDefault();
-					console.log(new FormData(this));
 
 					$.ajax({
 						type: "POST",
@@ -234,16 +232,57 @@
 						contentType: false,
 						cache: false,
 						processData:false,
-						success: function(data) {
-							$("#encuestaupdatemodal").modal('hide');
-							$('#encuestaupdatemodal [data-btn="cpt"]').attr('type','button').removeAttr( "form" );
-
-							$("#entcont").html(data);                     
+						beforeSend: function(){
+							$("#encuestaupdatemodal .modal-body").html('<div class="text-center"></br></br><div class="spinner-border text-info" style="width: 6rem; height: 6rem;" role="status"><span class="sr-only">Loading...</span></div></div>');
+							$('#encuestaupdatemodal [data-btn="cpt"]').attr("disabled", true);
 						}
+					}).done(function(data) {
+						$("#encuestaupdatemodal").modal('hide');//se cierra el modal 
+
+						$('#encuestaupdatemodal [data-btn="cpt"]').attr('type','button').removeAttr("form disabled");
+						$("#encuestaupdatemodal .modal-body").html('');
+
+						$("#entcont").html(data);                     
+					}).fail(function(jqXHR, textStatus, errorThrown){
+						$("#encuestaupdatemodal").modal('hide');//se cierra el modal 
+
+						$('#encuestaupdatemodal [data-btn="cpt"]').attr('type','button').removeAttr("form disabled");
+						("#encuestaupdatemodal .modal-body").html('');
+						alert('Ocurrio un error favor de reportarlo');
 					});
 				});
 					
 				
+			});
+
+			$("#passpersonacreate").off().submit(function(e) { //cambia la contraseña de la persona
+				e.preventDefault();
+				
+				$.ajax({
+					type: "POST",
+					url: "/registro/pass/"+$("#passpersonacreate").data("user"),
+					data: $("#passpersonacreate").serialize(),
+					beforeSend: function(){
+						if ($("#password").hasClass("is-invalid")) { //verifica si hay alguna alerta de error
+								$("#password").removeClass("is-invalid")
+								$(".invalid-feedback").remove();
+						}
+					},
+					success: function(data) {
+						$(document.body).html(data);
+					}, 
+					error: function( jqXHR, textStatus, errorThrown){
+						// console.log(jqXHR.responseJSON.errors.contraseña[0]);
+						if ($("#password").hasClass("is-invalid")) {//si hay una alerta de error solo elimina y pone una nueva
+							$(".invalid-feedback").remove();
+							$("#password").after('<span class="invalid-feedback" role="alert"><strong>'+jqXHR.responseJSON.errors.contraseña[0]+'</strong></span>');
+							
+						} else {// si no hay alertas agrega la clase de rror y la alerta
+							$("#password").addClass('is-invalid')
+							$("#password").after('<span class="invalid-feedback" role="alert"><strong>'+jqXHR.responseJSON.errors.contraseña[0]+'</strong></span>');
+						}
+					}
+				});
 			});
 		   
 			$("#encuesta").off().submit(function(e) { //envia los datos para registro
