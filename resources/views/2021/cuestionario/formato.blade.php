@@ -70,7 +70,7 @@
     </head>
     <body>
         
-        <img id="headerimg" src="{{public_path('img/logo_nesesidades2.jpg')}}">
+        <img id="headerimg" src="{{public_path('img/logo_nesesidades2021.jpeg')}}">
         <!--Datos Personales-->
            
         <h4>DATOS PERSONALES</h4>

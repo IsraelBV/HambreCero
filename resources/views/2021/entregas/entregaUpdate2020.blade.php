@@ -5,7 +5,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12 col-md-12">
-                <img src="{{asset('img/logo_nesesidades.jpg')}}" class="img-fluid img-thumbnail">
+                <img src="{{asset('img/logo_nesesidades2021.jpeg')}}" class="img-fluid img-thumbnail">
             </div>
         </div>
     </div>
