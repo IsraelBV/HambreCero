@@ -5,7 +5,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12 col-md-12">
-                <img src="{{asset('img/logo_nesesidades.jpg')}}" class="img-fluid img-thumbnail">
+                <img src="{{asset('img/logo_nesesidades2021.jpeg')}}" class="img-fluid img-thumbnail">
             </div>
         </div>
     </div>
@@ -201,20 +201,21 @@
                     </div>
                 </div>
                 <div class="form-row">
-                    <label for="password">Ingrese una contraseña por favor.</label>
+                    <label for="password">Registre y guarde una contraseña de al menos 8 caracteres (números y/o letras; esta le servirá para actualizaciones de datos o para complementar su documentación)</label>
+                    <!-- <label for="password">Ingrese una contraseña por favor.</label> -->
 
                     <input id="password" type="password" class="form-control " name="contraseña" autocomplete="new-password">
                     
                 </div>
 
-                {{-- <div class="form-row">
+                <!-- <div class="form-row">
                     
                     <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirmar contraseña') }}</label>
 
                     <div class="col-md-6">
                         <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                     </div>
-                </div> --}}
+                </div> -->
                 <br>
                 <div class="form-row">
                     <button type="submit" name="send" class="btn btn-success"><strong>Guardar</strong></button>
