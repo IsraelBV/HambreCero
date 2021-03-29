@@ -314,7 +314,7 @@
                             
                         $("#encuesta").append('<input type="hidden" data-persona="'+data+'" id="ntn">');       
 
-                        $("#entcont").html('<a class="btn btn-success" id="solicitarD" name="solicitaD" role="button" aria-pressed="true" style="display: none;">Subir Documentos</a>');       
+                        $("#entcont").html('<a class="btn btn-success" id="solicitarD" name="solicitaD" role="button" aria-pressed="true">Subir Documentos</a>');       
 					}, 
 					error: function( jqXHR, textStatus, errorThrown){
 						// console.log(jqXHR.responseJSON.errors.contraseña[0]);
