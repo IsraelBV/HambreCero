@@ -292,16 +292,18 @@
 					type: "POST",
 					url: "/registro",
 					data: $("#encuesta").serialize(),
-					success: function(data) {
+					beforeSend: function(){
+						$("[name = 'send']").hide();
 
 						if ($("#password").hasClass("is-invalid")) { //verifica si hay alguna alerta de error
 								$("#password").removeClass("is-invalid")
 								$(".invalid-feedback").remove();
 						}
 
-						$("[name = 'send']").hide();
-						// $("[name='accion']").prop('href','/imprimir/'+data);
-						// $("[name='accion']").show();
+						$("#entcont").html('<div class="text-center"></br></br><div class="spinner-border text-info" style="width: 6rem; height: 6rem;" role="status"><span class="sr-only">Loading...</span></div></div>');
+					},
+					success: function(data) {
+
 						$("[name='rel']").show();
 
 						$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">Datos Guardados, ID: '+data+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -312,7 +314,7 @@
                             
                         $("#encuesta").append('<input type="hidden" data-persona="'+data+'" id="ntn">');       
 
-                        $("#solicitarD").show();       
+                        $("#entcont").html('<a class="btn btn-success" id="solicitarD" name="solicitaD" role="button" aria-pressed="true" style="display: none;">Subir Documentos</a>');       
 					}, 
 					error: function( jqXHR, textStatus, errorThrown){
 						// console.log(jqXHR.responseJSON.errors.contraseña[0]);
@@ -336,8 +338,10 @@
 					type: "PUT",
 					url: "/registro/"+idpersona,
 					data: $("#encuestaupdate").serialize(),
-					success: function(data) {
+					beforeSend: function(){
 						$("[name='send']").hide();
+					},
+					success: function(data) {
 						// window.location.href = "/imprimir/"+idpersona; //no imprimir automaticamente
 						//window.print();// formato anterior de impresion de pdf
 						$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
