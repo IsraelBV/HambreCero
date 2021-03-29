@@ -300,7 +300,7 @@
 								$(".invalid-feedback").remove();
 						}
 
-						$("#entcont").html('<div class="text-center"></br></br><div class="spinner-border text-info" style="width: 6rem; height: 6rem;" role="status"><span class="sr-only">Loading...</span></div></div>');
+						$("#entcont").append('<div id="spinnerprov" class="text-center"></br></br><div class="spinner-border text-info" style="width: 6rem; height: 6rem;" role="status"><span class="sr-only">Loading...</span></div></div>');
 					},
 					success: function(data) {
 
@@ -314,7 +314,9 @@
                             
                         $("#encuesta").append('<input type="hidden" data-persona="'+data+'" id="ntn">');       
 
-                        $("#entcont").html('<a class="btn btn-success" id="solicitarD" name="solicitaD" role="button" aria-pressed="true">Subir Documentos</a>');       
+                        $("#spinnerprov").remove();
+						   
+                        $("#solicitarD").show();       
 					}, 
 					error: function( jqXHR, textStatus, errorThrown){
 						// console.log(jqXHR.responseJSON.errors.contraseña[0]);
