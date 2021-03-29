@@ -228,7 +228,7 @@
 
         <div class="card">
             <div class="card-body" id="entcont">
-                <a class="btn btn-success" id="solicitarD" name="solicitaD" role="button" aria-pressed="true" style="display: none;">Subir Documentos</a>
+                
             </div>
         </div>
         <br><br>
