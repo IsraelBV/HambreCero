@@ -173,6 +173,12 @@ class CuestionarioController extends Controller
      */
     public function store(Request $request)
     {   
+        $curpExiste = $this->findCurp($request->get('curp'));
+
+        if ($curpExiste->count() > 0) {
+            return [0,"La persona que intenta registrar ya existe. </br> Por Favor regrese a la vista principal o espere la redireccion."];
+        }
+
         Validator::make($request->all(), [
             'contraseña' => ['required', 'string', 'min:8'],
         ])->validate();
@@ -496,4 +502,12 @@ class CuestionarioController extends Controller
 
         return $listaentregasstring;
     }
+
+    public function findCurp($curp){
+        return DB::table('personas')
+        ->select('personas.password','personas.id','personas.CURP')
+        ->where("personas.CURP", $curp)
+        ->get();
+    }
+
 }
