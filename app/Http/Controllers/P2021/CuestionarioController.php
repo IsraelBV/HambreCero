@@ -173,6 +173,12 @@ class CuestionarioController extends Controller
      */
     public function store(Request $request)
     {   
+        $curpExiste = $this->findCurp($request->get('curp'));
+
+        if ($curpExiste->count() > 0) {
+            return [0,"La persona que intenta registrar ya existe. </br> Por Favor regrese a la vista principal o espere la redireccion."];
+        }
+
         Validator::make($request->all(), [
             'contraseña' => ['required', 'string', 'min:8'],
         ])->validate();
@@ -379,46 +385,61 @@ class CuestionarioController extends Controller
 
    public function storeDocumentacion(Request $request, $id){
 
-        $centroEntrega = DB::table('personas')
-                ->leftjoin('c_colonias', 'personas.ColoniaId', '=', 'c_colonias.id')
-                // ->leftjoin('c_colonias', 'personas.ColoniaId', '=', 'c_colonias.id')
-                ->select('c_colonias.CentroEntregaId')
-                ->where('personas.id', $id)
+        $periodoEntregaId =1; // varible provicional para saber el periodo de entrega
+        $documentacionExistente = DB::table('documentacion') // busca si existe una documentacion con ese id de persona y en ese periodo de entrega
+                ->select('documentacion.id')
+                ->where('documentacion.PersonaId', $id)
+                ->where('documentacion.idPeriodoEntrega', $periodoEntregaId)
                 ->get();
 
+        if ($documentacionExistente->count() > 0) {
+            return $this->buildListaEntregas($id);
+        } else {
 
-        $documentacion = new Documentacion();
-        
-        $documentacion->PersonaId = $id;
-        $documentacion->idCentroEntrega = $centroEntrega[0]->CentroEntregaId;
-        $documentacion->idPeriodoEntrega = 1;
-
-        $documentacion->save();
-
-        $path = "documentacion/$id/$documentacion->id";
-
-        if ($request->hasFile('IdentificacionFile')) {
-            $dataname1 = explode('.',$request->file('IdentificacionFile')->getClientOriginalName());
-            $request->file('IdentificacionFile')->storeAs($path,'identificacio_oficial'.'.'.$dataname1[1]);
+            $centroEntrega = DB::table('personas')
+                    ->leftjoin('c_colonias', 'personas.ColoniaId', '=', 'c_colonias.id')
+                    // ->leftjoin('c_colonias', 'personas.ColoniaId', '=', 'c_colonias.id')
+                    ->select('c_colonias.CentroEntregaId')
+                    ->where('personas.id', $id)
+                    ->get();
+                    
+    
+            $documentacion = new Documentacion();
+            
+            $documentacion->PersonaId = $id;
+            $documentacion->idCentroEntrega = $centroEntrega[0]->CentroEntregaId;
+            $documentacion->idPeriodoEntrega = 1;
+    
+            $documentacion->save();
+    
+            $path = "documentacion/$id/$documentacion->id";
+    
+            if ($request->hasFile('IdentificacionFile')) {
+                $dataname1 = explode('.',$request->file('IdentificacionFile')->getClientOriginalName());
+                $request->file('IdentificacionFile')->storeAs($path,'identificacio_oficial'.'.'.$dataname1[1]);
+            }
+            if ($request->hasFile('IdentificacionatrasFile')) {
+                $dataname1 = explode('.',$request->file('IdentificacionatrasFile')->getClientOriginalName());
+                $request->file('IdentificacionatrasFile')->storeAs($path,'identificacio_oficial'.'.'.$dataname1[1]);
+            }
+            if ($request->hasFile('CompDomFile')) {
+                $dataname3 = explode('.',$request->file('CompDomFile')->getClientOriginalName());
+                $request->file('CompDomFile')->storeAs($path,'comprobantedomicilio'.'.'.$dataname3[1]);
+            }
+            if ($request->hasFile('CURPFile')) {
+                $dataname2 = explode('.',$request->file('CURPFile')->getClientOriginalName());
+                $request->file('CURPFile')->storeAs($path,'curp'.'.'.$dataname2[1]);
+            }
+            // if ($request->hasFile('ComPagFile')) {
+            //     $dataname4 = explode('.',$request->file('ComPagFile')->getClientOriginalName());
+            //     $request->file('ComPagFile')->storeAs($path,'comprobantepago'.'.'.$dataname4[1]);
+            // }
+            // if ($request->hasFile('ConstAutFiled')) {
+            //     $dataname5 = explode('.',$request->file('ConstAutFiled')->getClientOriginalName());
+            //     $request->file('ConstAutFiled')->storeAs($path,'constanciaautoridad'.'.'.$dataname5[1]);
+            // }
+            return $this->buildListaEntregas($id);
         }
-        if ($request->hasFile('CURPFile')) {
-            $dataname2 = explode('.',$request->file('CURPFile')->getClientOriginalName());
-            $request->file('CURPFile')->storeAs($path,'curp'.'.'.$dataname2[1]);
-        }
-        if ($request->hasFile('CompDomFile')) {
-            $dataname3 = explode('.',$request->file('CompDomFile')->getClientOriginalName());
-            $request->file('CompDomFile')->storeAs($path,'comprobantedomicilio'.'.'.$dataname3[1]);
-        }
-        if ($request->hasFile('ComPagFile')) {
-            $dataname4 = explode('.',$request->file('ComPagFile')->getClientOriginalName());
-            $request->file('ComPagFile')->storeAs($path,'comprobantepago'.'.'.$dataname4[1]);
-        }
-        if ($request->hasFile('ConstAutFiled')) {
-            $dataname5 = explode('.',$request->file('ConstAutFiled')->getClientOriginalName());
-            $request->file('ConstAutFiled')->storeAs($path,'constanciaautoridad'.'.'.$dataname5[1]);
-        }
-
-        return $this->buildListaEntregas($id);
    }
 
     public function buildListaEntregas($id){
@@ -496,4 +517,12 @@ class CuestionarioController extends Controller
 
         return $listaentregasstring;
     }
+
+    public function findCurp($curp){
+        return DB::table('personas')
+        ->select('personas.password','personas.id','personas.CURP')
+        ->where("personas.CURP", $curp)
+        ->get();
+    }
+
 }

@@ -197,24 +197,28 @@
 				documentoshtml +='<form id="documentosForm" action="" method="" enctype="multipart/form-data">@csrf';
                     documentoshtml +='  <div class="custom-file">';
                     documentoshtml +='      <input type="file" class="custom-file-input" id="IdentificacionFile" name="IdentificacionFile" >';
-                    documentoshtml +='      <label class="custom-file-label" for="IdentificacionFile">Seleccionar Identificacion</label>';
+                    documentoshtml +='      <label class="custom-file-label" for="IdentificacionFile">Seleccionar Identificacion (parte frontal)</label>';
                     documentoshtml +='  </div><br><br>';
-                    documentoshtml +='  <div class="custom-file">';
-                    documentoshtml +='      <input type="file" class="custom-file-input" id="CURPFile" name="CURPFile" lang="es">';
-                    documentoshtml +='      <label class="custom-file-label" for="CURPFile">Seleccionar CURP</label>';
+					documentoshtml +='  <div class="custom-file">';
+                    documentoshtml +='      <input type="file" class="custom-file-input" id="IdentificacionatrasFile" name="IdentificacionatrasFile" >';
+                    documentoshtml +='      <label class="custom-file-label" for="IdentificacionatrasFile">Seleccionar Identificacion (parte trasera)</label>';
                     documentoshtml +='  </div><br><br>';
                     documentoshtml +='  <div class="custom-file">';
                     documentoshtml +='      <input type="file" class="custom-file-input" id="CompDomFile" name="CompDomFile" lang="es">';
                     documentoshtml +='      <label class="custom-file-label" for="CompDomFile">Seleccionar Comprobante de Domicilio</label>';
                     documentoshtml +='  </div><br><br>';
                     documentoshtml +='  <div class="custom-file">';
-                    documentoshtml +='      <input type="file" class="custom-file-input" id="ComPagFile" name="ComPagFile" lang="es">';
-                    documentoshtml +='      <label class="custom-file-label" for="ComPagFile">Seleccionar Comprobante de pago </label>';
+                    documentoshtml +='      <input type="file" class="custom-file-input" id="CURPFile" name="CURPFile" lang="es">';
+                    documentoshtml +='      <label class="custom-file-label" for="CURPFile">Seleccionar CURP</label>';
                     documentoshtml +='  </div><br><br>';
-                    documentoshtml +='  <div class="custom-file">';
-                    documentoshtml +='      <input type="file" class="custom-file-input" id="ConstAutFiled" name="ConstAutFiled" lang="es">';
-                    documentoshtml +='      <label class="custom-file-label" for="ConstAutFiled">Seleccionar constancia de la autoridad local </label>';
-                    documentoshtml +='  </div>';
+                    // documentoshtml +='  <div class="custom-file">';
+                    // documentoshtml +='      <input type="file" class="custom-file-input" id="ComPagFile" name="ComPagFile" lang="es">';
+                    // documentoshtml +='      <label class="custom-file-label" for="ComPagFile">Seleccionar Comprobante de pago </label>';
+                    // documentoshtml +='  </div><br><br>';
+                    // documentoshtml +='  <div class="custom-file">';
+                    // documentoshtml +='      <input type="file" class="custom-file-input" id="ConstAutFiled" name="ConstAutFiled" lang="es">';
+                    // documentoshtml +='      <label class="custom-file-label" for="ConstAutFiled">Seleccionar constancia de la autoridad local </label>';
+                    // documentoshtml +='  </div>';
 				documentoshtml +='</form>';
 
 				$("#encuestaupdatemodal .modal-body").html(documentoshtml);
@@ -303,22 +307,32 @@
 						$("#entcont").append('<div id="spinnerprov" class="text-center"></br></br><div class="spinner-border text-info" style="width: 6rem; height: 6rem;" role="status"><span class="sr-only">Loading...</span></div></div>');
 					},
 					success: function(data) {
-
 						$("[name='rel']").show();
 
-						$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">Datos Guardados, ID: '+data+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+						if (data[0] != 0) {
+
+							$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">Datos Guardados, ID: '+data+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+							
+							$("#encuesta").append('<input type="hidden" data-persona="'+data+'" id="ntn">');       
+
+							$("#spinnerprov").remove();
+							
+							$("#solicitarD").show();  
+						} else {
+							$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-danger alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data[1]+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+							
+							setTimeout(function() { 
+								window.location.href = "/registro";
+							}, 14000);
+						}
 
 						setTimeout(function() { 
 							$("#sccs").alert('close');
 						}, 12000);
-                            
-                        $("#encuesta").append('<input type="hidden" data-persona="'+data+'" id="ntn">');       
-
-                        $("#spinnerprov").remove();
-						   
-                        $("#solicitarD").show();       
 					}, 
 					error: function( jqXHR, textStatus, errorThrown){
+						$("[name = 'send']").show();
+						$("#spinnerprov").remove();
 						// console.log(jqXHR.responseJSON.errors.contraseña[0]);
 						if ($("#password").hasClass("is-invalid")) {//si hay una alerta de error solo elimina y pone una nueva
 							$(".invalid-feedback").remove();
