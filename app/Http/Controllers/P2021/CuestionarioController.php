@@ -144,25 +144,30 @@ class CuestionarioController extends Controller
      */
     public function create($curp = NULL)    
     {   
-        $colonias = DB::table('c_colonias')
-        ->select('c_colonias.*')
-        ->whereNotIn('c_colonias.LocalidadId', [57,249])
-        ->orderBy('c_colonias.Descripcion', 'ASC')
-        ->get();
+        if (Auth::check()) {//cambio por beda electoral
+        
+            $colonias = DB::table('c_colonias')
+            ->select('c_colonias.*')
+            ->whereNotIn('c_colonias.LocalidadId', [57,249])
+            ->orderBy('c_colonias.Descripcion', 'ASC')
+            ->get();
 
-        return view('2021.cuestionario.encuesta',[
-            'preguntas'=> C_Pregunta::all(),
-            'estados'=> C_Estado::all(),
-            'colonias'=> $colonias,
-            // 'colonias'=> C_Colonia::all(),
-            'localidades'=> C_Localidad::findMany([326,330,346,347,58,59,157,158,68,71,76,69,1,11,66]),   
-            // 'localidades'=> C_Localidad::findMany([57,249]),   
-            'municipios'=> C_Municipio::findMany([1,2,3,6,7,8,9,10,11]),
-            // 'municipios'=> C_Municipio::findMany([5,4]),
-            'estadosCiviles' => C_EstadoCivil::all(),
-            'estudios'=> C_GradoDeEstudio::all(),
-            'curp' => $curp
-            ]);
+            return view('2021.cuestionario.encuesta',[
+                'preguntas'=> C_Pregunta::all(),
+                'estados'=> C_Estado::all(),
+                'colonias'=> $colonias,
+                // 'colonias'=> C_Colonia::all(),
+                'localidades'=> C_Localidad::findMany([326,330,346,347,58,59,157,158,68,71,76,69,1,11,66]),   
+                // 'localidades'=> C_Localidad::findMany([57,249]),   
+                'municipios'=> C_Municipio::findMany([1,2,3,6,7,8,9,10,11]),
+                // 'municipios'=> C_Municipio::findMany([5,4]),
+                'estadosCiviles' => C_EstadoCivil::all(),
+                'estudios'=> C_GradoDeEstudio::all(),
+                'curp' => $curp
+                ]);
+        } else {
+            return view('2021.cuestionario.index');        
+        }
     }
 
     /**
@@ -248,50 +253,54 @@ class CuestionarioController extends Controller
      */
     public function edit($id)
     {   
-        $colonias = DB::table('c_colonias')
-        ->select('c_colonias.*')
-        ->whereNotIn('c_colonias.LocalidadId', [57,249])
-        ->orderBy('c_colonias.Descripcion', 'ASC')
-        ->get();
+        if (Auth::check()) {// cambio por beda electoral
 
-        $personaCollection = DB::table('personas')
-        ->leftjoin('encuestas', 'personas.id', '=', 'encuestas.personaId')
-        ->select('personas.*', 'encuestas.Pregunta_33')
-        ->where('personas.id', $id)
-        ->get();
+            $colonias = DB::table('c_colonias')
+            ->select('c_colonias.*')
+            ->whereNotIn('c_colonias.LocalidadId', [57,249])
+            ->orderBy('c_colonias.Descripcion', 'ASC')
+            ->get();
 
-        $personaCollection[0]->Intentos = 1;
+            $personaCollection = DB::table('personas')
+            ->leftjoin('encuestas', 'personas.id', '=', 'encuestas.personaId')
+            ->select('personas.*', 'encuestas.Pregunta_33')
+            ->where('personas.id', $id)
+            ->get();
 
-        $listaentregas = DB::table('documentacion') //lista de entregados
-        ->leftJoin('entregas', 'entregas.DocumentacionId', '=', 'documentacion.id')
-        ->leftJoin('c_periodos', 'entregas.PeriodoId', '=', 'c_periodos.id')
-        ->leftJoin('c_municipios', 'entregas.MunicipioId', '=', 'c_municipios.id')
-        ->leftJoin('c_localidades', 'entregas.LocalidadId', '=', 'c_localidades.id')
-        ->leftJoin('c_centrosdeentrega', 'documentacion.idCentroEntrega', '=', 'c_centrosdeentrega.id')
-        ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega','c_centrosdeentrega.Direccion as direccioncentroentrega')
-        ->where('documentacion.PersonaId',$id)
-        ->get();
+            $personaCollection[0]->Intentos = 1;
 
-        // $documentacion = Documentacion::where('PersonaId',$id)->orderBy('id', 'DESC')->first();
-        // $entrega = Entrega::where('DocumentacionId',$documentacion->id)->first();
+            $listaentregas = DB::table('documentacion') //lista de entregados
+            ->leftJoin('entregas', 'entregas.DocumentacionId', '=', 'documentacion.id')
+            ->leftJoin('c_periodos', 'entregas.PeriodoId', '=', 'c_periodos.id')
+            ->leftJoin('c_municipios', 'entregas.MunicipioId', '=', 'c_municipios.id')
+            ->leftJoin('c_localidades', 'entregas.LocalidadId', '=', 'c_localidades.id')
+            ->leftJoin('c_centrosdeentrega', 'documentacion.idCentroEntrega', '=', 'c_centrosdeentrega.id')
+            ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega','c_centrosdeentrega.Direccion as direccioncentroentrega')
+            ->where('documentacion.PersonaId',$id)
+            ->get();
 
-        return view('2021.cuestionario.encuestaUpdate',[
-            'preguntas'=> C_Pregunta::all(),
-            'estados'=> C_Estado::all(),
-            'colonias'=> $colonias,
-            // 'colonias'=> C_Colonia::all(),
-            'localidades'=> C_Localidad::findMany([326,330,346,347,58,59,157,158,68,71,76,69,1,11,66]),   
-            // 'localidades'=> C_Localidad::findMany([57,249]),   
-            'municipios'=> C_Municipio::findMany([1,2,3,6,7,8,9,10,11]),
-            // 'municipios'=> C_Municipio::findMany([5,4]),
-            'estadosCiviles' => C_EstadoCivil::all(),
-            'estudios'=> C_GradoDeEstudio::all(),
-            'persona'=>$personaCollection,
-            'listaentregas'=>$listaentregas
-            // 'ultimaentrega'=>$entrega,
-            // 'ultimadocumentacion'=>$documentacion
-            ]);
+            // $documentacion = Documentacion::where('PersonaId',$id)->orderBy('id', 'DESC')->first();
+            // $entrega = Entrega::where('DocumentacionId',$documentacion->id)->first();
 
+            return view('2021.cuestionario.encuestaUpdate',[
+                'preguntas'=> C_Pregunta::all(),
+                'estados'=> C_Estado::all(),
+                'colonias'=> $colonias,
+                // 'colonias'=> C_Colonia::all(),
+                'localidades'=> C_Localidad::findMany([326,330,346,347,58,59,157,158,68,71,76,69,1,11,66]),   
+                // 'localidades'=> C_Localidad::findMany([57,249]),   
+                'municipios'=> C_Municipio::findMany([1,2,3,6,7,8,9,10,11]),
+                // 'municipios'=> C_Municipio::findMany([5,4]),
+                'estadosCiviles' => C_EstadoCivil::all(),
+                'estudios'=> C_GradoDeEstudio::all(),
+                'persona'=>$personaCollection,
+                'listaentregas'=>$listaentregas
+                // 'ultimaentrega'=>$entrega,
+                // 'ultimadocumentacion'=>$documentacion
+                ]);
+        } else {
+            return view('2021.cuestionario.index');        
+        }
     }
 
     /**
