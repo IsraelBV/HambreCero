@@ -7,7 +7,7 @@
     @guest
         <br><br>
         <div class="alert alert-danger alert-dismissible fade show" role="alert"> 
-                <h2 align="center">REGISTRO TEMPORALMENTE SUSPENDIDO</h2>
+                <h4 align="justify">Con fundamento en los artículos 41, fracción III, apartado C y 134, párrafos séptimo y octavo de la Constitución Política de los Estados Unidos Mexicanos; 209, numeral 1 y 449, numeral 1, incisos c) y e) de la Ley General de Instituciones y Procedimientos Electorales; 49 fracción III, numeral 6, segundo párrafo, 160 fracción IV, 166 y 166 BIS de la Constitución Política del Estado Libre y Soberano de Quintana Roo; 290 tercer y cuarto párrafo, 293 tercer párrafo, 394 fracción VI y 400 de la Ley de Instituciones y Procedimientos Electorales para el Estado de Quintana Roo; 5, 7 y II de la Ley General en Materia de Delitos Electorales, <strong>el registro al programa Hambre Cero Quintana Roo ha quedado suspendido temporalmente</strong> desde el día 4 de abril con el propósito de cumplir estrictamente con la legislación en materia electoral durante el periodo en que se lleven a cabo las campañas electorales. Para mayor información respecto al programa visite: <a href="https://qroo.gob.mx/sedeso/hambreceroquintanaroo">https://qroo.gob.mx/sedeso/hambreceroquintanaroo</a></h4>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
