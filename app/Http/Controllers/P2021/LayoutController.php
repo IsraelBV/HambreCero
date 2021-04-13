@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\P2020;
+namespace App\Http\Controllers\P2021;
 
 use App\Http\Controllers\Controller;
 
 use App\Models\C_Colonia;
 use App\Models\C_Localidad;
+use App\Models\Persona;
+use App\Models\Encuesta;
 use App\Models\Entrega;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
@@ -118,6 +120,57 @@ class LayoutController extends Controller
         echo 'Cambiados:'.$x;
             echo '<br/>';
             echo 'iguales:'.$i;
+    }
+
+    public function importePersonas(Request $request) {
+        $file = $request->file('xcl');
+        $theArray = Excel::toArray([], $file);
+        
+        // dd($theArray);
+        $werty = 1;
+        foreach($theArray[0] as $qwer){
+
+            // $curpExiste = DB::table('personas')
+            // ->select('personas.password','personas.id','personas.CURP')
+            // ->where("personas.CURP", $qwer[3])
+            // ->get();
+
+            // echo '<table>';
+        
+            // if ($curpExiste->count() > 0) {
+                // echo '<tr>';
+                    echo '<pre>';
+                    echo($werty.'-'. $qwer[0].' - '. $qwer[1]." - ". $qwer[2].' - '. $qwer[3]);
+                    echo '</pre>---------------';
+                // echo '</tr>';
+            // } 
+            // else {
+            //     echo '<tr>';
+            //     // echo '<pre>';
+            //     echo('<td> X </td><td>'.$werty.'</td><td> X </td>');
+            //     // echo '</pre>---------------';
+            //     echo '</tr>';
+            // }
+            // echo '</table>';
+            $persona = new persona();
+            $encuesta = new Encuesta();
+
+            $persona->Nombre = $qwer[0];
+            $persona->APaterno = $qwer[1];
+            $persona->AMaterno = $qwer[2];
+            $persona->CURP = $qwer[3];
+            // $persona->save();
+            $encuesta->PersonaId = $persona->id;
+            // $encuesta->save();
+
+            $werty ++;
+            if ($werty == 2125) {
+                break;
+            }
+        }
+        var_dump('</br> si forco');
+        
+        // return view();
     }
 
     // public function LectorExel(Request $request) {
