@@ -127,7 +127,6 @@ class LayoutController extends Controller
         $theArray = Excel::toArray([], $file);
         
         // dd($theArray);
-        $werty = 1;
         foreach($theArray[0] as $qwer){
 
             // $curpExiste = DB::table('personas')
@@ -159,14 +158,10 @@ class LayoutController extends Controller
             $persona->APaterno = $qwer[1];
             $persona->AMaterno = $qwer[2];
             $persona->CURP = $qwer[3];
-            // $persona->save();
+            $persona->save();
             $encuesta->PersonaId = $persona->id;
-            // $encuesta->save();
+            $encuesta->save();
 
-            $werty ++;
-            if ($werty == 2125) {
-                break;
-            }
         }
         var_dump('</br> si forco');
         
