@@ -127,6 +127,7 @@ class LayoutController extends Controller
         $theArray = Excel::toArray([], $file);
         
         // dd($theArray);
+        $werty = 1;
         foreach($theArray[0] as $qwer){
 
             // $curpExiste = DB::table('personas')
@@ -162,6 +163,7 @@ class LayoutController extends Controller
             $encuesta->PersonaId = $persona->id;
             $encuesta->save();
 
+            $werty ++;
         }
         var_dump('</br> si forco');
         
