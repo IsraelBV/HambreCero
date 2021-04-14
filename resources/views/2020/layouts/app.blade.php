@@ -226,11 +226,12 @@
 
                         if(data.length > 0){
                             
-                            var listastring =  '<br/><table class="table"><tr><th>NOMBRE</th><th>CURP</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>COLONIA</th></tr>';
+                            var listastring =  '<br/><table class="table"><tr><th>ID</th><th>NOMBRE</th><th>CURP</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>COLONIA</th></tr>';
                                 
                                 $.each(data, function(k, v) {
                                 listastring +='<tr>';
-                                    listastring +='<td>'+(v['Nombre']!= null?v['Nombre']:"")+(v['APaterno']!= null?v['APaterno']:"")+(v['AMaterno']!= null?v['AMaterno']:"")+'</td>';
+                                    listastring +='<td>'+(v['id']!= null?v['id']:"N/D")+'</td>';
+                                    listastring +='<td>'+(v['Nombre']!= null?v['Nombre']:"")+' '+(v['APaterno']!= null?v['APaterno']:"")+' '+(v['AMaterno']!= null?v['AMaterno']:"")+'</td>';
                                     listastring +='<td>'+(v['CURP']!= null?v['CURP']:"N/D")+'</td>';
                                     listastring +='<td>'+(v['municipio']!= null?v['municipio']:"N/D")+'</td>';
                                     listastring +='<td>'+(v['localidad']!= null?v['localidad']:"N/D")+'</td>';
