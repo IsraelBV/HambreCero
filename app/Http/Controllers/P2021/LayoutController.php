@@ -155,6 +155,7 @@ class LayoutController extends Controller
             $persona = new persona();
             $encuesta = new Encuesta();
 
+            $persona->id = $qwer[4];
             $persona->Nombre = $qwer[0];
             $persona->APaterno = $qwer[1];
             $persona->AMaterno = $qwer[2];
