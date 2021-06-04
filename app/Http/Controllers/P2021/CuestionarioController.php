@@ -3,34 +3,30 @@
 namespace App\Http\Controllers\P2021;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\P2020\Admin\EntregaController;
 use Illuminate\Http\Request;
 use App\Models\C_Pregunta;
-use App\Models\C_Alimento;
 use App\Models\C_Colonia;
 use App\Models\C_Estado;
 use App\Models\C_GradoDeEstudio;
 use App\Models\C_Municipio;
-use App\Models\C_SSInstitucion;
-use App\Models\C_TipoDeViolencia;
-use App\Models\C_TipoMaterial;
 use App\Models\C_Localidad;
 use App\Models\Persona;
 use App\Models\Encuesta;
-use App\Models\C_GrupoSocial;
 use App\Models\C_EstadoCivil;
-use Faker\Provider\ar_JO\Person;
+
+use App\Http\Controllers\P2021\Admin\EntregaController;
 
 use App\Models\Documentacion;
-use App\Models\Entrega;
 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
+use Illuminate\Support\Facades\Storage;
+
 use Auth;
 
 use Illuminate\Support\Facades\DB;
-use PhpParser\Node\Stmt\Foreach_;
+use Svg\Tag\Path;
 
 use function PHPUnit\Framework\isNull;
 
@@ -60,7 +56,6 @@ class CuestionarioController extends Controller
     public function findPersona(Request $request){
         
         $curp = $request->get('curp');
-        $pass = $request->get('pass');
 
         $persona = DB::table('personas')
             ->select('personas.password','personas.id','personas.CURP')
@@ -69,37 +64,56 @@ class CuestionarioController extends Controller
 
             if ($persona->count() > 0) {
                 if ($persona->count() == 1) {
-                    if(is_null($persona[0]->password)){
-
-                        if ($pass == $persona[0]->CURP) {
-                            return $this->editPasswordPersona($persona[0]->id);
-                            //return redirect("/registro/pass/{$persona[0]->id}/edit");
-                        } else {
-                            return view('2021.cuestionario.index',[
-                                'errmsg'=> 'CURP o Contraseña incorrectos',
-                                'curp'=> $curp
-                                ]);
-                        }
+                    if (Auth::check()) { // verifica que sea un usuario con cuenta o un usuario publico
+                        return $this->edit($persona[0]->id);
                     } else {
-                        if (Hash::check($pass, $persona[0]->password)) {// verificar que sea la contraseña
-                            return $this->edit($persona[0]->id);
-                            //return redirect("/registro/{$persona[0]->id}/edit");
+                        if ($request->has('pass')) {
+                            $pass = $request->get('pass');
+
+                            if(is_null($persona[0]->password)){
+                                
+                                // if ($pass == $persona[0]->CURP) {
+                                    return $this->editPasswordPersona($persona[0]->id);
+                                    // //return redirect("/registro/pass/{$persona[0]->id}/edit");
+                                // } else {
+                                //     return view('2021.cuestionario.index',[
+                                //         'errmsg'=> 'CURP o Contraseña incorrectos',
+                                //         'curp'=> $curp
+                                //         ]);
+                                // }
+                            } else {
+                                if (Hash::check($pass, $persona[0]->password)) {// verificar que sea la contraseña
+                                    return $this->edit($persona[0]->id);
+                                    //return redirect("/registro/{$persona[0]->id}/edit");
+                                } else {
+                                    return view('2021.cuestionario.index',[
+                                        'errmsg'=> 'CURP o Contraseña incorrectos',
+                                        'verify'=> 1,
+                                        'curp'=> $curp
+                                        ]);
+                                }
+                            }
                         } else {
                             return view('2021.cuestionario.index',[
-                                'errmsg'=> 'CURP o Contraseña incorrectos',
-                                'curp'=> $curp
+                                'curp'=> $curp,
+                                'verify'=> 1,
+                                'scssmsg'=> 'Verificado, ingrese su contraseña'
                                 ]);
                         }
-                    } 
+                    }
                 } else {
                     return view('2021.cuestionario.index',[
                         'errmsg'=>  "La persona registrada con este CURP presenta un inconveniente, favor de reportarlo",
                         'curp'=> $curp
-                        ]);
+                    ]);
                 }
             } else {
-                return $this->create($curp);//redirecciona a crate pero con la curp
-                // return redirect('/registro/create');
+                //BLOQUEDO POR VEDA ELECTORAL
+                return view('2021.cuestionario.index',[
+                    'errmsg'=> 'Esta curp no se encuentra registrada dentro del padron.',
+                    'curp'=> $curp
+                    ]);
+                // return $this->create($curp);//redirecciona a crate pero con la curp
             }
     }
 
@@ -129,12 +143,33 @@ class CuestionarioController extends Controller
 
             return view('2021.cuestionario.index',[
                 'scssmsg'=>  'Se ha cambiado la contraseña del usuario, vuelva a ingresar.',
-                'curp'=> $persona->CURP
+                'curp'=> $persona->CURP,
+                'verify'=> 1
                 ]);
 
         } else {
             return redirect('/registro');
         }
+    }
+
+    public function passwordRecover(Request $request){
+        $curp = $request->get('persona');
+        
+        $persona = Persona::where('CURP',$curp)->first();
+
+        if ($persona->TelefonoCelular == $request->get('phone')|| $persona->TelefonoCasa == $request->get('phone')) {
+            $persona->password = null;
+            $persona->save();
+            
+            return $this->editPasswordPersona($persona->id);
+        } else {
+            return view('2021.cuestionario.index',[
+                'curp'=> $curp,
+                'verify'=> 1,
+                'errmsg'=> 'Informacion incorrecta, pongase en contacto con los encargados del programa.'
+                ]);
+        }
+        
     }
 
     /**
@@ -253,7 +288,7 @@ class CuestionarioController extends Controller
      */
     public function edit($id)
     {   
-        if (Auth::check()) {// cambio por beda electoral
+        // if (Auth::check()) {// cambio por beda electoral
 
             $colonias = DB::table('c_colonias')
             ->select('c_colonias.*')
@@ -281,6 +316,17 @@ class CuestionarioController extends Controller
 
             // $documentacion = Documentacion::where('PersonaId',$id)->orderBy('id', 'DESC')->first();
             // $entrega = Entrega::where('DocumentacionId',$documentacion->id)->first();
+            $listo = null;
+            $entregacontroller = new EntregaController;
+            
+            foreach($listaentregas as $entrega ) {
+               if ($entrega->idEntrega == null) {
+                    $listo = [
+                        "completo" => $entregacontroller->verifyRequiredDocuments($entrega->idDocumentacion,$id),
+                        "folio" => $entrega->idDocumentacion
+                    ];
+               } 
+            }
 
             return view('2021.cuestionario.encuestaUpdate',[
                 'preguntas'=> C_Pregunta::all(),
@@ -294,13 +340,13 @@ class CuestionarioController extends Controller
                 'estadosCiviles' => C_EstadoCivil::all(),
                 'estudios'=> C_GradoDeEstudio::all(),
                 'persona'=>$personaCollection,
-                'listaentregas'=>$listaentregas
-                // 'ultimaentrega'=>$entrega,
+                'listaentregas'=>$listaentregas,
+                'listo'=>$listo
                 // 'ultimadocumentacion'=>$documentacion
                 ]);
-        } else {
-            return view('2021.cuestionario.index');        
-        }
+        // } else {
+        //     return view('2021.cuestionario.index');        
+        // }
     }
 
     /**
@@ -390,9 +436,15 @@ class CuestionarioController extends Controller
             // return $pdf->download('Cuestionario.pdf');
         
        
-   }
+    }
 
-   public function storeDocumentacion(Request $request, $id){
+
+
+
+
+
+
+    public function storeDocumentacion(Request $request, $id){
 
         $periodoEntregaId =1; // varible provicional para saber el periodo de entrega
         $documentacionExistente = DB::table('documentacion') // busca si existe una documentacion con ese id de persona y en ese periodo de entrega
@@ -417,39 +469,43 @@ class CuestionarioController extends Controller
             
             $documentacion->PersonaId = $id;
             $documentacion->idCentroEntrega = $centroEntrega[0]->CentroEntregaId;
-            $documentacion->idPeriodoEntrega = 1;
+            // $documentacion->idPeriodoEntrega = 1;
     
             $documentacion->save();
+            
+            $this->storeDocuments($request, $documentacion->id); // se utilza para actualizar los documentos pero su funcion es recibir los documentos y guardarlos
     
-            $path = "documentacion/$id/$documentacion->id";
-    
-            if ($request->hasFile('IdentificacionFile')) {
-                $dataname1 = explode('.',$request->file('IdentificacionFile')->getClientOriginalName());
-                $request->file('IdentificacionFile')->storeAs($path,'identificacio_oficial'.'.'.$dataname1[1]);
-            }
-            if ($request->hasFile('IdentificacionatrasFile')) {
-                $dataname1 = explode('.',$request->file('IdentificacionatrasFile')->getClientOriginalName());
-                $request->file('IdentificacionatrasFile')->storeAs($path,'identificacio_oficial'.'.'.$dataname1[1]);
-            }
-            if ($request->hasFile('CompDomFile')) {
-                $dataname3 = explode('.',$request->file('CompDomFile')->getClientOriginalName());
-                $request->file('CompDomFile')->storeAs($path,'comprobantedomicilio'.'.'.$dataname3[1]);
-            }
-            if ($request->hasFile('CURPFile')) {
-                $dataname2 = explode('.',$request->file('CURPFile')->getClientOriginalName());
-                $request->file('CURPFile')->storeAs($path,'curp'.'.'.$dataname2[1]);
-            }
-            // if ($request->hasFile('ComPagFile')) {
-            //     $dataname4 = explode('.',$request->file('ComPagFile')->getClientOriginalName());
-            //     $request->file('ComPagFile')->storeAs($path,'comprobantepago'.'.'.$dataname4[1]);
+            // $pathIdPersona = "documentacion/$id";
+                // $pathIdDocumentacion = "documentacion/$id/$documentacion->id";
+        
+                // if ($request->hasFile('IdentificacionFile')) {
+                //     $dataname1 = explode('.',$request->file('IdentificacionFile')->getClientOriginalName());
+                //     $request->file('IdentificacionFile')->storeAs($pathIdDocumentacion,'identificacio_oficial'.'.'.$dataname1[1]);
+                // }
+                // if ($request->hasFile('IdentificacionatrasFile')) {
+                //     $dataname1 = explode('.',$request->file('IdentificacionatrasFile')->getClientOriginalName());
+                //     $request->file('IdentificacionatrasFile')->storeAs($pathIdDocumentacion,'identificacion_atras_oficial'.'.'.$dataname1[1]);
+                // }
+                // if ($request->hasFile('CompDomFile')) {
+                //     $dataname3 = explode('.',$request->file('CompDomFile')->getClientOriginalName());
+                //     $request->file('CompDomFile')->storeAs($pathIdDocumentacion,'comprobantedomicilio'.'.'.$dataname3[1]);
+                // }
+                // if ($request->hasFile('CURPFile')) {
+                //     $dataname2 = explode('.',$request->file('CURPFile')->getClientOriginalName());
+                //     $request->file('CURPFile')->storeAs($pathIdDocumentacion,'curp'.'.'.$dataname2[1]);
+                // }
+                // if ($request->hasFile('ComPagFile')) {
+                //     $dataname4 = explode('.',$request->file('ComPagFile')->getClientOriginalName());
+                //     $request->file('ComPagFile')->storeAs($pathIdDocumentacion,'comprobantepago'.'.'.$dataname4[1]);
+                // }
+                // if ($request->hasFile('ConstAutFiled')) {
+                //     $dataname5 = explode('.',$request->file('ConstAutFiled')->getClientOriginalName());
+                //     $request->file('ConstAutFiled')->storeAs($pathIdDocumentacion,'constanciaautoridad'.'.'.$dataname5[1]);
             // }
-            // if ($request->hasFile('ConstAutFiled')) {
-            //     $dataname5 = explode('.',$request->file('ConstAutFiled')->getClientOriginalName());
-            //     $request->file('ConstAutFiled')->storeAs($path,'constanciaautoridad'.'.'.$dataname5[1]);
-            // }
+            
             return $this->buildListaEntregas($id);
         }
-   }
+    }
 
     public function buildListaEntregas($id){
 
@@ -465,7 +521,7 @@ class CuestionarioController extends Controller
 
         if (count($listaentregas) > 0) {
             $listaentregasstring = 
-                '<h5 class="card-title" align="center">CENTRO DE ENTREGA ASIGNADO</h5>
+                '<h5 class="card-title" align="center">LISTA DE ENTREGAS</h5>
                     <br>
                     <table class="table table-hover">';
                         if (count($listaentregas) > 1 || $listaentregas[0]->idEntrega !== null) {
@@ -532,6 +588,392 @@ class CuestionarioController extends Controller
         ->select('personas.password','personas.id','personas.CURP')
         ->where("personas.CURP", $curp)
         ->get();
+    }
+
+
+    ////dibuja el html de los documentos
+    public function buildFormDocumentos(Request $request){
+        $folio = $request->get('folio');
+       
+        $documentacion = Documentacion::find($folio);
+
+        $pathIdPersona = "documentacion/$documentacion->PersonaId";
+        $pathIdDocumentacion = $pathIdPersona."/$folio";
+
+        $htmlDocumentos = '
+            <h5 class="card-title" align="center">EDICION DE DOCUMENTOS</h5>
+			<form id="editDocumentosForm" action="#" method="#" enctype="multipart/form-data">
+                <input type="hidden" name="_token" value="'.csrf_token().'" />';
+
+            if(Auth::check()){
+                $htmlDocumentos .= '
+                <div class="form-row pb-2">
+                    <div class="col-md-12">
+                        <input type="checkbox" id="donado" name="donado" '.($documentacion->Donado == 1?'checked':'').' class="chkToggle" data-onstyle="info" data-offstyle="success" data-on="Donado" data-off="Pagado">
+                    </div>
+                </div>';
+            }
+            $htmlDocumentos .= '<div class="form-row pb-2">';
+            if (Storage::disk('public')->exists($pathIdPersona."/identificacio_oficial.pdf")) {
+                $htmlDocumentos .= '
+                    <div class="col-md-11 pt-2">
+                        <a href="/documentacion/download/identificacio_oficial.pdf/'.$documentacion->PersonaId.'" class="link-info" target="_blank">identificacion frente</a>
+                    </div><div class="col-md-1">
+                        <button data-name="IdentificacionFile" data-docname="identificacio_oficial.pdf" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
+                    </div>';
+            } elseif (Storage::disk('public')->exists($pathIdPersona."/identificacio_oficial.jpeg")) {
+                $htmlDocumentos .= '
+                    <div class="col-md-11 pt-2">
+                        <a href="/documentacion/download/identificacio_oficial.jpeg/'.$documentacion->PersonaId.'" class="link-info" target="_blank">Identificacion frente</a>
+                    </div>
+                    <div class="col-md-1">
+                        <button data-name="IdentificacionFile" data-docname="identificacio_oficial.jpeg" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
+                    </div>';
+            } else {
+                $htmlDocumentos .= '
+                    <div class="col-md-11">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="IdentificacionFile" name="IdentificacionFile" >
+                            <label class="custom-file-label" for="IdentificacionFile" data-browse="Buscar documento">Identificacion (parte frontal)</label>
+                        </div>
+                    </div>';
+                if(Auth::check()){
+                    $htmlDocumentos .= '<div class="col-md-1">
+                        <button data-name="IdentificacionFile" class="btn btn-warning btncamera" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-camera"></span></button>
+                    </div>';
+                }
+            }
+            $htmlDocumentos .= '</div>
+                                <div class="form-row pb-2">';
+
+            if (Storage::disk('public')->exists("$pathIdPersona/identificacion_atras_oficial.pdf")) {
+                $htmlDocumentos .= '
+                    <div class="col-md-11 pt-2">
+                        <a href="/documentacion/download/identificacion_atras_oficial.pdf/'.$documentacion->PersonaId.'" class="link-info" target="_blank">Identificacion atras</a>
+                    </div>
+                    <div class="col-md-1">
+                        <button data-name="IdentificacionatrasFile" data-docname="identificacion_atras_oficial.pdf" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
+                    </div>';
+            } elseif (Storage::disk('public')->exists("$pathIdPersona/identificacion_atras_oficial.jpeg")) {
+                $htmlDocumentos .= '
+                    <div class="col-md-11 pt-2">
+                        <a href="/documentacion/download/identificacion_atras_oficial.jpeg/'.$documentacion->PersonaId.'" class="link-info" target="_blank">Identificacion atras</a>
+                    </div>
+                    <div class="col-md-1">
+                        <button data-name="IdentificacionatrasFile" data-docname="identificacion_atras_oficial.jpeg" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
+                    </div>';
+            } else {
+                $htmlDocumentos .= '
+                    <div class="col-md-11">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="IdentificacionatrasFile" name="IdentificacionatrasFile" >
+                            <label class="custom-file-label" for="IdentificacionatrasFile" data-browse="Buscar documento">Identificacion (parte trasera)</label>
+                        </div>
+                    </div>';
+                if(Auth::check()){
+                    $htmlDocumentos .= '<div class="col-md-1">
+                        <button data-name="IdentificacionatrasFile" class="btn btn-warning btncamera" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-camera"></span></button>
+                    </div>';
+                }
+            }
+
+            $htmlDocumentos .= '</div>
+                                <div class="form-row pb-2">';
+
+            if (Storage::disk('public')->exists("$pathIdPersona/comprobantedomicilio.pdf")) {
+                $htmlDocumentos .= '
+                        <div class="col-md-11 pt-2">
+                            <a href="/documentacion/download/comprobantedomicilio.pdf/'.$documentacion->PersonaId.'" class="link-info" target="_blank">Comprobante de domicilio</a>
+                        </div>
+                        <div class="col-md-1">
+                            <button data-name="CompDomFile" data-docname="comprobantedomicilio.pdf" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
+                        </div>';
+            } elseif (Storage::disk('public')->exists("$pathIdPersona/comprobantedomicilio.jpeg")) {
+                $htmlDocumentos .= '
+                        <div class="col-md-11 pt-2">
+                            <a href="/documentacion/download/comprobantedomicilio.jpeg/'.$documentacion->PersonaId.'" class="link-info" target="_blank">Comprobante de domicilio</a>
+                        </div>
+                        <div class="col-md-1">
+                            <button data-name="CompDomFile" data-docname="comprobantedomicilio.jpeg" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
+                        </div>';
+            } else {
+                $htmlDocumentos .= '
+                        <div class="col-md-11">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="CompDomFile" name="CompDomFile" lang="es">
+                                <label class="custom-file-label" for="CompDomFile" data-browse="Buscar documento">Comprobante de Domicilio</label>
+                            </div>
+                        </div>';
+                    if(Auth::check()){
+                        $htmlDocumentos .= '<div class="col-md-1">
+                            <button data-name="CompDomFile" class="btn btn-warning btncamera" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-camera"></span></button>
+                        </div>';
+                    }
+            }
+
+            $htmlDocumentos .= '</div>
+                                <div class="form-row pb-2">';
+
+            if (Storage::disk('public')->exists("$pathIdPersona/curp.pdf")) {
+                $htmlDocumentos .= '
+                        <div class="col-md-11 pt-2">
+                            <a href="/documentacion/download/curp.pdf/'.$documentacion->PersonaId.'" class="link-info" target="_blank">CURP</a>
+                        </div>
+                        <div class="col-md-1">
+                            <button data-name="CURPFile" data-docname="curp.pdf" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
+                        </div>';
+            } elseif (Storage::disk('public')->exists("$pathIdPersona/curp.jpeg")) {
+                $htmlDocumentos .= '
+                        <div class="col-md-11 pt-2">
+                            <a href="/documentacion/download/curp.jpeg/'.$documentacion->PersonaId.'" class="link-info" target="_blank">CURP</a>
+                        </div>
+                        <div class="col-md-1">
+                            <button data-name="CURPFile" data-docname="curp.jpeg" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
+                        </div>';
+            } else {
+                $htmlDocumentos .= '
+                        <div class="col-md-11">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="CURPFile" name="CURPFile" lang="es">
+                                <label class="custom-file-label" for="CURPFile" data-browse="Buscar documento">CURP</label>
+                            </div>
+                        </div>';
+                    if(Auth::check()){
+                        $htmlDocumentos .= '<div class="col-md-1">
+                            <button data-name="CURPFile" class="btn btn-warning btncamera" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-camera"></span></button>
+                        </div>';
+                    }
+            }
+
+            $htmlDocumentos .= '</div>
+                                <div class="form-row pb-2">';
+
+            if (Storage::disk('public')->exists("$pathIdDocumentacion/comprobantepago.pdf")) {
+                $htmlDocumentos .= '
+                        <div class="col-md-11 pt-2">
+                            <a href="/documentacion/download/comprobantepago.pdf/'.$documentacion->PersonaId.'/'.$folio.'" class="link-info" target="_blank">comprobante de pago</a>
+                        </div>
+                        <div class="col-md-1">
+                            <button data-name="ComPagFile" data-docname="comprobantepago.pdf" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
+                        </div>';
+            } elseif (Storage::disk('public')->exists("$pathIdDocumentacion/comprobantepago.jpeg")) {
+                $htmlDocumentos .= '
+                        <div class="col-md-11 pt-2">
+                            <a href="/documentacion/download/comprobantepago.jpeg/'.$documentacion->PersonaId.'/'.$folio.'" class="link-info" target="_blank">comprobante de pago</a>
+                        </div>
+                        <div class="col-md-1">
+                            <button data-name="ComPagFile" data-docname="comprobantepago.jpeg" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
+                        </div>';
+            } else {
+                $htmlDocumentos .= '
+                        <div class="col-md-11">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="ComPagFile" name="ComPagFile" lang="es">
+                                <label class="custom-file-label" for="ComPagFile" data-browse="Buscar documento">Comprobante de pago </label>
+                            </div>
+                        </div>';
+                    if(Auth::check()){
+                        $htmlDocumentos .= '<div class="col-md-1">
+                            <button data-name="ComPagFile" class="btn btn-warning btncamera" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-camera"></span></button>
+                        </div>';
+                    }
+            }
+            
+            $htmlDocumentos .= '</div>
+                                <div class="form-row pb-2">';
+
+            if (Storage::disk('public')->exists("$pathIdPersona/constanciaautoridad.pdf")) {
+                $htmlDocumentos .= '
+                        <div class="col-md-11 pt-2">
+                            <a href="/documentacion/download/constanciaautoridad.pdf/'.$documentacion->PersonaId.'" class="link-info" target="_blank">constancia de autoridad local</a>
+                        </div>
+                        <div class="col-md-1">
+                            <button data-name="ConstAutFiled" data-docname="constanciaautoridad.pdf" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
+                        </div>';
+            } elseif (Storage::disk('public')->exists("$pathIdPersona/constanciaautoridad.jpeg")) {
+                $htmlDocumentos .= '
+                        <div class="col-md-11 pt-2">
+                            <a href="/documentacion/download/constanciaautoridad.jpeg/'.$documentacion->PersonaId.'" class="link-info" target="_blank">constancia de autoridad local</a>
+                        </div>
+                        <div class="col-md-1">
+                            <button data-name="ConstAutFiled" data-docname="constanciaautoridad.jpeg" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
+                        </div>';
+            } else {
+                $htmlDocumentos .= '
+                        <div class="col-md-11">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="ConstAutFiled" name="ConstAutFiled" lang="es">
+                                <label class="custom-file-label" for="ConstAutFiled" data-browse="Buscar documento">Constancia de la autoridad local </label>
+                            </div>
+                        </div>';
+                    if(Auth::check()){
+                        $htmlDocumentos .= '<div class="col-md-1">
+                            <button data-name="ConstAutFiled" class="btn btn-warning btncamera" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-camera"></span></button>
+                        </div>';
+                    }
+            }
+
+            $htmlDocumentos .= '</div>
+                </br>
+                <button type="submit" class="btn btn-success">Guardar Documentos</button>
+            </form>';
+
+        return  $htmlDocumentos;
+    }
+
+    ////manda a buscar otro metodo que guarda los documentos
+    public function updateDocumentacion(Request $request, $idDocumentacion){
+
+        $documentacion = Documentacion::find($idDocumentacion);
+
+        $documentacion->Donado = ($request->get('donado') == 'on')?1:0;
+        $documentacion->EncuestadorId = (Auth::check())?Auth::user()->id:0;
+        $documentacion->save();
+
+        return $this->storeDocuments($request, $idDocumentacion);
+    }
+
+    ////
+    public function storeDocuments($request, $idDocumentacion){
+
+        $documentacion = Documentacion::find($idDocumentacion);
+
+        $pathIdPersona = "documentacion/$documentacion->PersonaId";
+        $pathIdDocumentacion = "documentacion/$documentacion->PersonaId/$idDocumentacion";
+
+        if ($request->hasFile('IdentificacionFile')) {
+            $dataname1 = explode('.',$request->file('IdentificacionFile')->getClientOriginalName());
+            $request->file('IdentificacionFile')->storeAs($pathIdPersona,'identificacio_oficial'.'.'.$dataname1[1]);
+        } elseif ($request->has('IdentificacionFile')) {
+            $image = $request->get('IdentificacionFile'); 
+            $image = str_replace('data:image/jpeg;base64,', '', $image);
+            $image = str_replace(' ', '+', $image);
+            $imageName = 'identificacio_oficial.jpeg';
+            Storage::disk('public')->put($pathIdPersona."/".$imageName, base64_decode($image));
+        }
+
+        if ($request->hasFile('IdentificacionatrasFile')) {
+            $dataname1 = explode('.',$request->file('IdentificacionatrasFile')->getClientOriginalName());
+            $request->file('IdentificacionatrasFile')->storeAs($pathIdPersona,'identificacion_atras_oficial'.'.'.$dataname1[1]);
+        } elseif ($request->has('IdentificacionatrasFile')) {
+            $image = $request->get('IdentificacionatrasFile'); 
+            $image = str_replace('data:image/jpeg;base64,', '', $image);
+            $image = str_replace(' ', '+', $image);
+            $imageName = 'identificacion_atras_oficial.jpeg';
+            Storage::disk('public')->put($pathIdPersona."/".$imageName, base64_decode($image));
+        }
+
+        if ($request->hasFile('CompDomFile')) {
+            $dataname3 = explode('.',$request->file('CompDomFile')->getClientOriginalName());
+            $request->file('CompDomFile')->storeAs($pathIdPersona,'comprobantedomicilio'.'.'.$dataname3[1]);
+        } elseif ($request->has('CompDomFile')) {
+            $image = $request->get('CompDomFile'); 
+            $image = str_replace('data:image/jpeg;base64,', '', $image);
+            $image = str_replace(' ', '+', $image);
+            $imageName = 'comprobantedomicilio.jpeg';
+            Storage::disk('public')->put($pathIdPersona."/".$imageName, base64_decode($image));
+        }
+
+        if ($request->hasFile('CURPFile')) {
+            $dataname2 = explode('.',$request->file('CURPFile')->getClientOriginalName());
+            $request->file('CURPFile')->storeAs($pathIdPersona,'curp'.'.'.$dataname2[1]);
+        } elseif ($request->has('CURPFile')) {
+            $image = $request->get('CURPFile'); 
+            $image = str_replace('data:image/jpeg;base64,', '', $image);
+            $image = str_replace(' ', '+', $image);
+            $imageName = 'curp.jpeg';
+            Storage::disk('public')->put($pathIdPersona."/".$imageName, base64_decode($image));
+        }
+
+        if ($request->hasFile('ComPagFile')) {
+            $dataname4 = explode('.',$request->file('ComPagFile')->getClientOriginalName());
+            $request->file('ComPagFile')->storeAs($pathIdDocumentacion,'comprobantepago'.'.'.$dataname4[1]);
+        } elseif ($request->has('ComPagFile')) {
+            $image = $request->get('ComPagFile'); 
+            $image = str_replace('data:image/jpeg;base64,', '', $image);
+            $image = str_replace(' ', '+', $image);
+            $imageName = 'comprobantepago.jpeg';
+            Storage::disk('public')->put($pathIdDocumentacion."/".$imageName, base64_decode($image));
+        }
+
+        if ($request->hasFile('ConstAutFiled')) {
+            $dataname5 = explode('.',$request->file('ConstAutFiled')->getClientOriginalName());
+            $request->file('ConstAutFiled')->storeAs($pathIdPersona,'constanciaautoridad'.'.'.$dataname5[1]);
+        } elseif ($request->has('ConstAutFiled')) {
+            $image = $request->get('ConstAutFiled'); 
+            $image = str_replace('data:image/jpeg;base64,', '', $image);
+            $image = str_replace(' ', '+', $image);
+            $imageName = 'constanciaautoridad.jpeg';
+            Storage::disk('public')->put($pathIdPersona."/".$imageName, base64_decode($image));
+        }
+        // if ($request->hasFile('FotoEntrega')) {
+        //     $dataname5 = explode('.',$request->file('FotoEntrega')->getClientOriginalName());
+        //     $request->file('FotoEntrega')->storeAs($pathIdDocumentacion,'fotoentrega'.'.'.$dataname5[1]);
+        // }
+
+        $entregacontroller = new EntregaController;
+        return [$entregacontroller->verifyRequiredDocuments($idDocumentacion,$documentacion->PersonaId),'Se guardaron lo documentos adjuntados']; //$this->buildListaEntregas($id);
+    }
+
+    public function downloadDocument($document,$idPersona,$idDocumentacion = null){       
+        return  response()->file(Storage::path("documentacion/".$idPersona.($idDocumentacion?"/".$idDocumentacion:"")."/".$document));
+    }
+
+    public function deleteDocument(Request $request, $document){    
+        
+        $folio = $request->get('folio');
+        $nameatribute = $request->get('nameatr');
+        $nombreDocumento = '';
+
+        $documentacion = Documentacion::find($folio);
+        $pathDelete = "documentacion/$documentacion->PersonaId";
+        
+        switch ($nameatribute) {
+            case 'IdentificacionFile':
+                $nombreDocumento = "Identificacion (parte frontal)";
+                break;
+            case 'IdentificacionatrasFile':
+                $nombreDocumento = "Identificacion (parte trasera)";
+                break;
+            case 'CompDomFile':
+                $nombreDocumento = "Comprobante de Domicilio";
+                break;
+            case 'CURPFile':
+                $nombreDocumento = "CURP";
+                break;
+            case 'ComPagFile':
+                $nombreDocumento = "Comprobante de pago ";
+                $pathDelete = "documentacion/$documentacion->PersonaId/$folio";
+                break;
+            case 'ConstAutFiled':
+                $nombreDocumento = "Constancia de la autoridad local ";
+                break;
+            case 'FotoEntrega':
+                $nombreDocumento = "Foto Entrega";
+                $pathDelete = "documentacion/$documentacion->PersonaId/$folio";
+                break;
+            default:
+                $nombreDocumento = "";
+                break;
+        }
+        
+        Storage::disk('public')->delete($pathDelete.'/'.$document);
+
+        $htmlReturn='<div class="col-md-11">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="'.$nameatribute.'" name="'.$nameatribute.'" >
+                            <label class="custom-file-label" for="'.$nameatribute.'" data-browse="Buscar documento">'.$nombreDocumento.'</label>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                        <button data-name="'.$nameatribute.'" class="btn btn-warning btncamera" type="button" aria-pressed="true" ><span style="font-size: 1.2em; color: white;" class="fa fa-camera"></span></button>
+                    </div>';
+
+        $respuesta = 'Se elimino exitosamente el documento: </br>'.$nombreDocumento;
+
+        $entregacontroller = new EntregaController;
+        
+        return [$htmlReturn,$respuesta,$entregacontroller->verifyRequiredDocuments($folio,$documentacion->PersonaId)];
     }
 
 }

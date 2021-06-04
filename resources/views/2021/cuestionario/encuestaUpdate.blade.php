@@ -263,7 +263,7 @@
 
                 @if (count($listaentregas) > 0)
 
-                    <h5 class="card-title" align="center">CENTRO DE ENTREGA ASIGNADO</h5>
+                    <h5 class="card-title" align="center">LISTA DE ENTREGAS</h5>
                     <br>
                     <table class="table table-hover">
 
@@ -292,14 +292,22 @@
                                     <td colspan="6"></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="6">
+                                    <td colspan="5">
                                         Folio: {{$entrega->idDocumentacion}} - Centro de Entrega: <strong>{{$entrega->centroentrega}}</strong> - Direcccion: {{$entrega->direccioncentroentrega}}
                                     </td>
 
-                                    {{-- <td colspan="2">
-                                        <button disabled class="btn btn-info">Info</button>
-                                        <button disabled class="btn btn-warning">Documentacion</button>
-                                    </td> --}}
+                                    <td colspan="1">
+                                    {{-- <button disabled class="btn btn-info">Info</button>--}}
+                                        <button style="color: white" id="editarDoc" class="btn btn-warning mb-1" data-folio="{{$entrega->idDocumentacion}}">Documentacion</button>
+                                        @if (auth()->check())
+                                            @if ($listo['folio'] == $entrega->idDocumentacion && $listo['completo'] == 1)
+                                                <button style="color: white" id="entregaenupdatebtn" class="btn btn-success" data-folio="{{$entrega->idDocumentacion}}">Entrega</button>
+                                            @elseif ($listo['folio'] != $entrega->idDocumentacion)
+                                                <label>Algo anda mal 
+                                                    favor de reportar los folios: {{$listo['folio']}} y {{$entrega->idDocumentacion}} </label>
+                                            @endif
+                                        @endif
+                                    </td> 
                                 </tr>
                                 <tr class="table-dark">
                                     <td colspan="6"></td>
@@ -332,6 +340,17 @@
                     <a class="btn btn-success" id="solicitarD" name="solicitaD" role="button" aria-pressed="true">Subir Documentos</a>
                 @endif
 
+            </div>
+        </div>
+        <br><br>
+        <div class="card" style="display: none">
+            <div class="card-body" id="documentacionEdit">
+                
+            </div>
+        </div>
+        <div class="card" style="display: none">
+            <div class="card-body" id="entregaEnUpdate">
+                
             </div>
         </div>
         <br><br>
