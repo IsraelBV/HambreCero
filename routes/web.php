@@ -50,7 +50,7 @@ Route::get('/imprimir2020/{imprimir}', 'P2020\CuestionarioController@imprimir');
 
 //LOGIN/REGISTRO-------------------------------------------------------------------------------------------------------------------------------------
 Auth::routes();
-Route::get('/home', [App\Http\Controllers\P2020\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\P2021\HomeController::class, 'index'])->name('home');
 Route::get('/register/success', 'Auth\RegisterController@success');
 
 // Auth::routes();
@@ -60,7 +60,7 @@ Route::get('/register/success', 'Auth\RegisterController@success');
 // Route::get('/qwerty',function(){
 //     return view('layouts.sidebar');
 // });
-//ADMIN/ENTRGAS----------------------------------------------------------------------------------------------------------------------------------------
+//ADMIN/ENTRGAS 2020----------------------------------------------------------------------------------------------------------------------------------------
 Route::get('/admin2020/entrega','P2020\Admin\EntregaController@index')->name('buscar');
 
 Route::post('/admin2020/findPersonaEntrega', 'P2020\Admin\EntregaController@findPersonaEntrega');
@@ -112,15 +112,48 @@ Route::post('/findPersona', 'P2021\CuestionarioController@findPersona');
 Route::post('/registro/pass/{user}/edit','P2021\CuestionarioController@editPasswordPersona');
 Route::put('/registro/pass/{user}', 'P2021\CuestionarioController@updatePasswordPersona');
 
+Route::post('/registro/passlost','P2021\CuestionarioController@passwordRecover');//recuperacion de contraseña
+
 Route::post('/registro/Entrega/solicitar/{user}', 'P2021\CuestionarioController@storeDocumentacion');
 
 /////especial/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////especial/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////especial/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Route::get('/especial/import', function () {
+     Route::get('/especial/import', function () {
           return view('2021.layouts.import');
-});
-Route::post('/especial/importepersonas', 'P2021\LayoutController@importePersonas');
+     });
+     Route::post('/especial/importepersonas', 'P2021\CuestionarioController@importePersonas');
+/////especial/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Route::post('/documentacion/edit','P2021\CuestionarioController@buildFormDocumentos');
+
+Route::get('/documentacion/download/{documento}/{idpersona}','P2021\CuestionarioController@downloadDocument');
+Route::get('/documentacion/download/{documento}/{idpersona}/{iddocumentacion}','P2021\CuestionarioController@downloadDocument');
+
+Route::post('/documentacion/update/{iddocumentacion}', 'P2021\CuestionarioController@updateDocumentacion');
+
+Route::post('/documentacion/delete/{documento}', 'P2021\CuestionarioController@deleteDocument');
 
 
+Route::get('/entrega/enUpdate','P2021\Admin\EntregaController@buildFormEntregaEnUpdate');
 
+Route::post('/entrega/enUpdate/{entrega}', 'P2021\Admin\EntregaController@EntregaEnUpdate');
+
+
+//ADMIN/ENTRGAS 2020----------------------------------------------------------------------------------------------------------------------------------------
+// Route::get('/admin2020/entrega','P2020\Admin\EntregaController@index')->name('buscar');
+
+// Route::post('/admin2020/findPersonaEntrega', 'P2020\Admin\EntregaController@findPersonaEntrega');
+
+// Route::post('/admin2020/findListaEntregas/{entrega}', 'P2020\Admin\EntregaController@findEntregas');
+
+// Route::get('/admin2020/entrega/{entrega}/edit','P2020\Admin\EntregaController@editarEntrega');
+
+// Route::put('/admin2020/entrega/{entrega}','P2020\Admin\EntregaController@actualizarEntrega');// editar una entrega
+
+// Route::delete('/admin2020/entrega/revertirEntrega/{entrega}', 'P2020\Admin\EntregaController@revertirEntrega');//revertir las entregas por admins
+
+// Route::post('/admin2020/entrega/{entrega}', 'P2020\Admin\EntregaController@registrarEntrega');
+
+// Route::post('/admin2020/entrega/documentacion/{entrega}', 'P2020\Admin\EntregaController@registrarDocumentacion');
+
+// Route::post('/admin2020/findDocumentacion/{entrega}', 'P2020\Admin\EntregaController@findDocumentacion');

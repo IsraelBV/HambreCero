@@ -11,6 +11,8 @@
 	<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">  
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
 	{{-- <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css"> --}}
+	<link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/fontawesome.min.css" />
 
 	<title>{{ config('app.name', 'Hambre Cero') }}</title>
 
@@ -55,7 +57,7 @@
 		.nav-link{
 			color: white !important;
 		}
-
+		
 	</style>
 </head>
 <body>
@@ -108,8 +110,13 @@
 								<a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
 									{{ Auth::user()->name }}
 								</a>
-
 								<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+									@if (session()->has('centroEntrega'))
+											<h5 class="dropdown-header" href="#">
+												{{__(session('centroEntregaNombre'))}}
+											</h5>
+											<div class="dropdown-divider"></div>
+									@endif
 									<a class="dropdown-item" href="{{ route('logout') }}"
 									   onclick="event.preventDefault();
 													 document.getElementById('logout-form').submit();">
@@ -149,6 +156,8 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script> --}}
 	<script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
+	<script src="{{asset('js/webcam.js')}}"></script>
+	
 	<script> //se utiliza para cuestionario
 		function printHTML() {  
 			if (window.print) {
@@ -187,10 +196,8 @@
 				// $("[name='accion']").show();
 				$("[name='rel']").show();
 			}
-
-
-
-            $("#solicitarD").off().click(function(){//trae la lista de entregas
+			
+            $("#solicitarD").off().click(function(){//abre y escribe el modal para subir los documentos y solicitar una despensa
 				$("#encuestaupdatemodal .modal-title").html('Subir documentacion');
 
 				var documentoshtml = '';
@@ -251,13 +258,257 @@
 						$("#encuestaupdatemodal").modal('hide');//se cierra el modal 
 
 						$('#encuestaupdatemodal [data-btn="cpt"]').attr('type','button').removeAttr("form disabled");
-						("#encuestaupdatemodal .modal-body").html('');
+						$("#encuestaupdatemodal .modal-body").html('');
 						alert('Ocurrio un error favor de reportarlo');
 					});
 				});
 					
 				
 			});
+
+			$("#editarDoc").off().click(function(){//trae el html de los archivos existentes y los no existentes
+				$("#documentacionEdit").closest('.card').show();
+				var folio = $(this).data('folio');
+				// // alert(folio);
+				// console.log($(this).data('folio'));
+
+				// bsCustomFileInput.init();
+
+				$.ajax({
+					type: "POST",
+					url: "/documentacion/edit",
+					data:{
+						'folio':folio,
+						"_token": "{{ csrf_token() }}"
+						},
+					beforeSend: function(){
+						$("#documentacionEdit").html('<div class="text-center"></br></br><div class="spinner-border text-info" style="width: 6rem; height: 6rem;" role="status"><span class="sr-only">Loading...</span></div></div>');
+						$(this).attr("disabled", true);
+					}
+				}).done(function(data) {
+
+					$("#documentacionEdit").html(data);
+
+					$('.chkToggle').bootstrapToggle();
+					bsCustomFileInput.init();
+
+					$(document).on('click','.btncamera',function(){//boton de camara
+					// $(".btncamera").off().click(function(){//
+						var namedoc = $(this).data('name');
+						$("#encuestaupdatemodal .modal-title").html('Tomar foto');
+						$("#encuestaupdatemodal .modal-dialog").addClass('modal-lg');//<<------------------------corregir de nuevo 
+						var htmlfoto = '<div id="camera" style="display:block;margin:auto;"></div>';
+							htmlfoto += '<button id="take_photo" class="btn btn-info btn-block mt-2 mb-2" type=button>Tomar foto</button>';
+							htmlfoto += '<div id="resultPhoto"></div>';
+
+
+						$("#encuestaupdatemodal .modal-body").html(htmlfoto);
+
+						$('#encuestaupdatemodal [data-btn="cpt"]').attr("disabled", true);
+
+						Webcam.set({
+							width: 640,
+							height: 480,
+							image_format: 'jpeg',
+							jpeg_quality: 98
+						});
+						Webcam.attach('#camera');
+
+						$("#take_photo").off().click(function(){//solo captura la imagen
+							Webcam.snap(function(data_uri) {
+								$('#resultPhoto').html('<img style="display:block;margin:auto;" src="'+data_uri+'"/>');
+							});
+							$('#encuestaupdatemodal [data-btn="cpt"]').removeAttr("disabled");
+						});
+
+						$('#encuestaupdatemodal [data-btn="cpt"]').off().click(function(){//guarda el base64 de la imagen en un hidden
+							var imgbase64 = $('#resultPhoto img').attr('src');
+							$('#'+namedoc).attr('type','hidden').removeClass('custom-file-input');
+							$('#'+namedoc).val(imgbase64);
+							$('#'+namedoc).next().removeClass('custom-file-label');
+							$("#encuestaupdatemodal").modal('hide');//se cierra el modal 
+							$("#encuestaupdatemodal .modal-dialog").removeClass('modal-lg');
+						});
+
+						$("#encuestaupdatemodal").modal('show');							
+					});
+
+					$(".btndelfile").off().click(function(){//sirve para eliminar un documento
+						var delbtn = $(this);
+
+						$.ajax({
+							type: "POST",
+							url: "/documentacion/delete/"+delbtn.data('docname'),//se manda el nombre del documento
+							data:{
+								'folio':folio,
+								'nameatr':delbtn.data('name'),
+								"_token": "{{ csrf_token() }}"
+								},
+							beforeSend: function(){
+								delbtn.attr("disabled", true);
+							}
+						}).done(function(data) {
+							if (data[2] == 0 ) {//si es igual a 0 quiere decir que se descompletaron los documentos obligarios 
+								if ($('#entregaenupdatebtn').length) {//entonces verifica si ya existia el boton de entrega 
+									$('#entregaenupdatebtn').remove();//si existe lo borra
+								}
+							}
+
+							delbtn.closest('.form-row').html(data[0]);
+							$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data[1]+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+							bsCustomFileInput.init();
+				
+							setTimeout(function() { 
+								$("#sccs").alert('close');
+								$("#sccs").remove();
+							}, 4500);
+
+						}).fail(function(jqXHR, textStatus, errorThrown){
+							delbtn.removeAttr("disabled");
+							alert('Ocurrio un error al borrar el documento favor de reportarlo');
+						});
+					});
+
+					$('#editDocumentosForm').off().submit(function(e){//manda a guardar
+						e.preventDefault();
+						$.ajax({
+							type: "POST",
+							url: "/documentacion/update/"+folio,
+							data: new FormData(this),
+							contentType: false,
+							cache: false,
+							processData:false,
+							beforeSend: function(){
+								$("#documentacionEdit").html('<div class="text-center"></br></br><div class="spinner-border text-info" style="width: 6rem; height: 6rem;" role="status"><span class="sr-only">Loading...</span></div></div>');
+								// $('#encuestaupdatemodal [data-btn="cpt"]').attr("disabled", true);
+							}
+						}).done(function(data) {
+							// $('#encuestaupdatemodal [data-btn="cpt"]').attr('type','button').removeAttr("form disabled");
+							$("#documentacionEdit").html('');
+							if (data[0] == 1) {
+
+								if ($('#entregaenupdatebtn').length) {//entonces verifica si ya existia el boton de entrega 
+									// $('#entregaenupdatebtn').remove();//si existe lo borra
+								} else {
+									$('#editarDoc').after('<button style="color: white" id="entregaenupdatebtn" class="btn btn-success" data-folio="'+folio+'">Entrega</button>');
+								}
+								
+							}
+
+							$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data[1]+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+				
+							setTimeout(function() { 
+								$("#sccs").alert('close');
+								$("#sccs").remove();
+							}, 4500);
+
+							$("#documentacionEdit").closest('.card').hide();
+
+							// $("#entcont").html(data);                     
+						}).fail(function(jqXHR, textStatus, errorThrown){
+
+							// $('#encuestaupdatemodal [data-btn="cpt"]').attr('type','button').removeAttr("form disabled");
+							$("#documentacionEdit").html('');
+							$("#documentacionEdit").closest('.card').hide();
+							alert('Ocurrio un error favor de reportarlo');
+						});
+					});
+            
+				}).fail(function(jqXHR, textStatus, errorThrown){
+					
+					$("#documentacionEdit").html('');
+					alert('Ocurrio un error favor de reportarlo');
+				});								
+			});
+
+			$(document).on('click',"#entregaenupdatebtn",function(){//trae el html de la subida de foto de entrega
+			// $("#entregaenupdatebtn").off().click(function(){
+				$("#entregaEnUpdate").closest('.card').show();
+				var folio = $(this).data('folio');
+				
+				$.ajax({
+					type: "GET",
+					url: "/entrega/enUpdate",
+					beforeSend: function(){
+						$("#documentacionEdit").html('<div class="text-center"></br></br><div class="spinner-border text-info" style="width: 6rem; height: 6rem;" role="status"><span class="sr-only">Loading...</span></div></div>');
+						$(this).attr("disabled", true);
+					}
+				}).done(function(data) {
+
+					$("#entregaEnUpdate").html(data);
+
+					Webcam.set({
+							width: 680,
+							height: 510,
+							image_format: 'jpeg',
+							jpeg_quality: 100
+						});
+					Webcam.attach('#camara');
+
+					$("#tomar_foto").off().click(function(){//solo captura la imagen
+						Webcam.snap(function(data_uri) {
+							$('#foto').html('<img style="display:block;margin:auto;" src="'+data_uri+'"/>');
+							if ($('#fotoentrega').length) {
+								$('#fotoentrega').remove();
+								$('#entregaEnUpdateForm').append('<input id="fotoentrega" name="fotoentrega" type="hidden" value="'+data_uri+'">');
+							} else {
+								$('#entregaEnUpdateForm').append('<input id="fotoentrega" name="fotoentrega" type="hidden" value="'+data_uri+'">');
+							}
+						});
+						$('#guardarEntrega').removeAttr("disabled");
+					});
+
+					$('#entregaEnUpdateForm').off().submit(function(e){//manda a guardar la entrega
+						e.preventDefault();
+
+						$.ajax({
+							type: "POST",
+							url: "/entrega/enUpdate/"+folio,
+							data: $('#entregaEnUpdateForm').serialize(),						
+							// data: new FormData(this),// para enviar documentos
+							// contentType: false,
+							// cache: false,
+							// processData:false,
+							beforeSend: function(){
+								$("#entregaEnUpdate").html('<div class="text-center"></br></br><div class="spinner-border text-info" style="width: 6rem; height: 6rem;" role="status"><span class="sr-only">Loading...</span></div></div>');
+								// $('#encuestaupdatemodal [data-btn="cpt"]').attr("disabled", true);
+							}
+						}).done(function(data) {
+							// $('#encuestaupdatemodal [data-btn="cpt"]').attr('type','button').removeAttr("form disabled");
+							$("#entregaEnUpdate").html('');
+
+							if (data[0] == 1) {
+								$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data[1]+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+								$("#entcont").html(data[2]);
+							} else {
+								$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-danger alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data[1]+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+							}
+				
+							setTimeout(function() { 
+								$("#sccs").alert('close');
+								$("#sccs").remove();
+							}, 4500);
+
+							$("#entregaEnUpdate").closest('.card').hide();
+
+							// $("#entcont").html(data);                     
+						}).fail(function(jqXHR, textStatus, errorThrown){
+
+							// $('#encuestaupdatemodal [data-btn="cpt"]').attr('type','button').removeAttr("form disabled");
+							$("#entregaEnUpdate").html('');
+							$("#entregaEnUpdate").closest('.card').hide();
+							alert('Ocurrio un error favor de reportarlo');
+						});
+					});
+            
+				}).fail(function(jqXHR, textStatus, errorThrown){
+					
+					$("#documentacionEdit").html('');
+					alert('Ocurrio un error favor de reportarlo');
+				});								
+			});
+
+
 
 			$("#passpersonacreate").off().submit(function(e) { //cambia la contraseña de la persona
 				e.preventDefault();
