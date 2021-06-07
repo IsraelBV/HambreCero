@@ -11,6 +11,8 @@ use App\Models\C_CentroDeEntrega;
 use Auth;
 use Illuminate\Support\Facades\Validator;
 
+use Illuminate\Support\Facades\DB;
+
 
 class PeriodosController extends Controller
 {
@@ -20,7 +22,17 @@ class PeriodosController extends Controller
             if (session()->has('periodo') && session()->has('periodo')) {
                 return redirect('/');
             } else {
-                return view('auth.periodos',['periodos'=> C_Periodo::all()],['centros'=> C_CentroDeEntrega::all()]);
+                $centrosdeentrega  = DB::table('c_centrosdeentrega') 
+                    ->leftJoin('c_colonias', 'c_centrosdeentrega.id', '=', 'c_colonias.CentroEntregaId')
+                    ->leftJoin('c_localidades', 'c_localidades.id', '=', 'c_colonias.LocalidadId')
+                    ->leftJoin('c_municipios', 'c_municipios.id', '=', 'c_localidades.MunicipioId')
+                    ->select('c_centrosdeentrega.id','c_centrosdeentrega.Descripcion','c_municipios.Descripcion as municipio')
+                    ->groupBy('c_centrosdeentrega.id','c_centrosdeentrega.Descripcion','c_municipios.Descripcion')
+                    ->get();
+
+                    // dd($centrosdeentrega);
+
+                return view('auth.periodos',['periodos'=> C_Periodo::all()],['centros'=> $centrosdeentrega]);
             }
         } else {
             return redirect('/');

@@ -27,7 +27,7 @@
                 <select class="form-control" name="centroe" class="form-control" required> {{--@error('centroe') is-invalid @enderror --}}
                     <option value="" selected>Seleccione un centro de entrega</option>
                     @foreach ($centros as $centro)
-                        <option value="{{$centro->id}}">{{$centro->Descripcion}}</option>
+                        <option value="{{$centro->id}}">{{$centro->municipio}} - {{$centro->Descripcion}}</option>
                     @endforeach
                 </select>
                 {{-- @error('centroe')
