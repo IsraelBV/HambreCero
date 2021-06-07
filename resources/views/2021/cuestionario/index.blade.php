@@ -10,7 +10,7 @@
         </div>
     </div>
     @guest
-        {{-- <br><br>
+        {{-- <br><br> // mensaje de veda electoral se retiro el 07/06/2021
         <div class="alert alert-danger alert-dismissible fade show" role="alert"> 
                 <h4 align="justify">Con fundamento en los artículos 41, fracción III, apartado C y 134, párrafos séptimo y octavo de la Constitución Política de los Estados Unidos Mexicanos; 209, numeral 1 y 449, numeral 1, incisos c) y e) de la Ley General de Instituciones y Procedimientos Electorales; 49 fracción III, numeral 6, segundo párrafo, 160 fracción IV, 166 y 166 BIS de la Constitución Política del Estado Libre y Soberano de Quintana Roo; 290 tercer y cuarto párrafo, 293 tercer párrafo, 394 fracción VI y 400 de la Ley de Instituciones y Procedimientos Electorales para el Estado de Quintana Roo; 5, 7 y II de la Ley General en Materia de Delitos Electorales, <strong>el registro al programa Hambre Cero Quintana Roo ha quedado suspendido temporalmente</strong> desde el día 4 de abril con el propósito de cumplir estrictamente con la legislación en materia electoral durante el periodo en que se lleven a cabo las campañas electorales. Para mayor información respecto al programa visite: <a href="https://qroo.gob.mx/sedeso/hambreceroquintanaroo">https://qroo.gob.mx/sedeso/hambreceroquintanaroo</a></h4>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -18,7 +18,6 @@
             </button>
         </div> --}}
         
-
         <br><br>
     
         <form id="findpersona" action="/findPersona" method="POST">
@@ -39,28 +38,7 @@
             
             <button type="submit" class="btn btn-info col-md-2 offset-md-5 col-sm-4 offset-sm-4 col-12 "><strong>Buscar</strong></button>
         </form>
-    
-        {{-- 
-        @isset($errmsg)
-            <div style="position: fixed; top: 15%; right: 30px;" class="alertDefault alert alert-danger alert-dismissible fade show" role="alert"> 
-                <label class="alert-heading" style="font-weight: bold; font-size: 14pt;">
-                        {{$errmsg}}
-                </label>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endisset
-        @isset($scssmsg)
-            <div style="position: fixed; top: 15%; right: 30px;" class="alertDefault alert alert-success alert-dismissible fade show" role="alert"> 
-                <label class="alert-heading" style="font-weight: bold; font-size: 14pt;">
-                        {{$scssmsg}}
-                </label>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        @endisset --}}
+        
     @else
 
         <br><br>

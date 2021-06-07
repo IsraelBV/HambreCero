@@ -297,14 +297,12 @@
                                     </td>
 
                                     <td colspan="1">
-                                    {{-- <button disabled class="btn btn-info">Info</button>--}}
                                         <button style="color: white" id="editarDoc" class="btn btn-warning mb-1" data-folio="{{$entrega->idDocumentacion}}">Documentacion</button>
                                         @if (auth()->check())
                                             @if ($listo['folio'] == $entrega->idDocumentacion && $listo['completo'] == 1)
-                                                <button style="color: white" id="entregaenupdatebtn" class="btn btn-success" data-folio="{{$entrega->idDocumentacion}}">Entrega</button>
+                                                <button style="color: white" id="entregaenupdatebtn" class="btn btn-success mb-1" data-folio="{{$entrega->idDocumentacion}}">Entrega</button>
                                             @elseif ($listo['folio'] != $entrega->idDocumentacion)
-                                                <label>Algo anda mal 
-                                                    favor de reportar los folios: {{$listo['folio']}} y {{$entrega->idDocumentacion}} </label>
+                                                <label>Algo anda mal favor de reportar los folios: {{$listo['folio']}} y {{$entrega->idDocumentacion}} </label>
                                             @endif
                                         @endif
                                     </td> 
