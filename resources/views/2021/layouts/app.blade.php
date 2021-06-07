@@ -197,7 +197,8 @@
 				$("[name='rel']").show();
 			}
 			
-            $("#solicitarD").off().click(function(){//abre y escribe el modal para subir los documentos y solicitar una despensa
+			$(document).on('click','#solicitarD',function(){
+            // $("#solicitarD").off().click(function(){//abre y escribe el modal para subir los documentos y solicitar una despensa
 				$("#encuestaupdatemodal .modal-title").html('Subir documentacion');
 
 				var documentoshtml = '';
@@ -233,6 +234,13 @@
 				$("#encuestaupdatemodal").modal('show');
 				$('#encuestaupdatemodal [data-btn="cpt"]').attr({form:'documentosForm',type:'submit'});
 
+				$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-info alert-dismissible fade show" role="alert"> <h3 class="alert-heading">Los documentos adjuntados deben de estar en formato PDF o JPG</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+				
+				setTimeout(function() { 
+					$("#sccs").alert('close');
+					$("#sccs").remove();
+				}, 5500);
+
 				$('#documentosForm').off().submit(function(e){
 					e.preventDefault();
 
@@ -266,7 +274,8 @@
 				
 			});
 
-			$("#editarDoc").off().click(function(){//trae el html de los archivos existentes y los no existentes
+			$(document).on('click','#editarDoc',function(){
+			//$("#editarDoc").off().click(function(){//trae el html de los archivos existentes y los no existentes
 				$("#documentacionEdit").closest('.card').show();
 				var folio = $(this).data('folio');
 				// // alert(folio);
@@ -282,12 +291,21 @@
 						"_token": "{{ csrf_token() }}"
 						},
 					beforeSend: function(){
+						$("#entregaEnUpdate").html('').closest('.card').hide();
 						$("#documentacionEdit").html('<div class="text-center"></br></br><div class="spinner-border text-info" style="width: 6rem; height: 6rem;" role="status"><span class="sr-only">Loading...</span></div></div>');
 						$(this).attr("disabled", true);
 					}
 				}).done(function(data) {
 
 					$("#documentacionEdit").html(data);
+
+					$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-info alert-dismissible fade show" role="alert"> <h3 class="alert-heading">Los documentos adjuntados deben de estar en formato PDF o JPG</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+				
+					setTimeout(function() { 
+						$("#sccs").alert('close');
+						$("#sccs").remove();
+					}, 5500);
+
 
 					$('.chkToggle').bootstrapToggle();
 					bsCustomFileInput.init();
@@ -385,15 +403,17 @@
 						}).done(function(data) {
 							// $('#encuestaupdatemodal [data-btn="cpt"]').attr('type','button').removeAttr("form disabled");
 							$("#documentacionEdit").html('');
-							if (data[0] == 1) {
 
-								if ($('#entregaenupdatebtn').length) {//entonces verifica si ya existia el boton de entrega 
-									// $('#entregaenupdatebtn').remove();//si existe lo borra
-								} else {
-									$('#editarDoc').after('<button style="color: white" id="entregaenupdatebtn" class="btn btn-success" data-folio="'+folio+'">Entrega</button>');
-								}
-								
-							}
+							@if (auth()->check())
+								if (data[0] == 1) {
+									
+									if ($('#entregaenupdatebtn').length) {//entonces verifica si ya existia el boton de entrega 
+										// $('#entregaenupdatebtn').remove();//si existe lo borra
+									} else {
+										$('#editarDoc').after('<br><button style="color: white" id="entregaenupdatebtn" class="btn btn-success mb-1" data-folio="'+folio+'">Entrega</button>');
+									}
+								}	
+							@endif
 
 							$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data[1]+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 				
@@ -407,10 +427,32 @@
 							// $("#entcont").html(data);                     
 						}).fail(function(jqXHR, textStatus, errorThrown){
 
-							// $('#encuestaupdatemodal [data-btn="cpt"]').attr('type','button').removeAttr("form disabled");
 							$("#documentacionEdit").html('');
 							$("#documentacionEdit").closest('.card').hide();
-							alert('Ocurrio un error favor de reportarlo');
+							var errores = jqXHR.responseJSON.errors;
+							var msgerr = "";
+							if (errores.IdentificacionFile != undefined) {
+								msgerr = errores.IdentificacionFile [0];
+							} else if( errores.IdentificacionatrasFile != undefined){
+								msgerr = errores.IdentificacionatrasFile[0];
+							}else if( errores.CompDomFile != undefined){
+								msgerr = errores.CompDomFile[0];
+							}else if( errores.CURPFile != undefined){
+								msgerr = errores.CURPFile[0];
+							}else if( errores.ComPagFile != undefined){
+								msgerr = errores.ComPagFile[0];
+							}else if( errores.ConstAutFiled != undefined){
+								msgerr = errores.ConstAutFiled[0];
+							} else {
+								msgerr = "Sucedio algo inesperado, favor de reportarlo.";
+							}
+
+							$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-danger alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+msgerr+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+				
+							setTimeout(function() { 
+								$("#sccs").alert('close');
+								$("#sccs").remove();
+							}, 4500);
 						});
 					});
             
@@ -430,7 +472,8 @@
 					type: "GET",
 					url: "/entrega/enUpdate",
 					beforeSend: function(){
-						$("#documentacionEdit").html('<div class="text-center"></br></br><div class="spinner-border text-info" style="width: 6rem; height: 6rem;" role="status"><span class="sr-only">Loading...</span></div></div>');
+						$("#documentacionEdit").html('').closest('.card').hide();//por si se tiene abierto el lugar donde se suben documentos ya que se pueden borrar desde ahi 
+						$("#entregaEnUpdate").html('<div class="text-center"></br></br><div class="spinner-border text-info" style="width: 6rem; height: 6rem;" role="status"><span class="sr-only">Loading...</span></div></div>');
 						$(this).attr("disabled", true);
 					}
 				}).done(function(data) {
@@ -503,7 +546,7 @@
             
 				}).fail(function(jqXHR, textStatus, errorThrown){
 					
-					$("#documentacionEdit").html('');
+					$("#entregaEnUpdate").html('');
 					alert('Ocurrio un error favor de reportarlo');
 				});								
 			});

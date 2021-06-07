@@ -76,27 +76,27 @@ class EntregaController extends Controller
         $compag = 0;
         
 
-        if (Storage::disk('public')->exists($pathIdPersona."/identificacio_oficial.pdf") || Storage::disk('public')->exists($pathIdPersona."/identificacio_oficial.jpeg")) {
+        if (Storage::disk('public')->exists($pathIdPersona."/identificacio_oficial.pdf") || Storage::disk('public')->exists($pathIdPersona."/identificacio_oficial.jpg")) {
             $idfront = 1;
         } 
 
-        if (Storage::disk('public')->exists("$pathIdPersona/identificacion_atras_oficial.pdf") || Storage::disk('public')->exists("$pathIdPersona/identificacion_atras_oficial.jpeg")) {
+        if (Storage::disk('public')->exists("$pathIdPersona/identificacion_atras_oficial.pdf") || Storage::disk('public')->exists("$pathIdPersona/identificacion_atras_oficial.jpg")) {
             $idback = 1;
         }
 
-        if (Storage::disk('public')->exists("$pathIdPersona/comprobantedomicilio.pdf") || Storage::disk('public')->exists("$pathIdPersona/comprobantedomicilio.jpeg")) {
+        if (Storage::disk('public')->exists("$pathIdPersona/comprobantedomicilio.pdf") || Storage::disk('public')->exists("$pathIdPersona/comprobantedomicilio.jpg")) {
             $compdom = 1;
         }
         
-        // if (Storage::disk('public')->exists("$pathIdPersona/curp.pdf") || Storage::disk('public')->exists("$pathIdPersona/curp.jpeg")) {
+        // if (Storage::disk('public')->exists("$pathIdPersona/curp.pdf") || Storage::disk('public')->exists("$pathIdPersona/curp.jpg")) {
             
         // }
 
-        if (Storage::disk('public')->exists("$pathIdDocumentacion/comprobantepago.pdf") || Storage::disk('public')->exists("$pathIdDocumentacion/comprobantepago.jpeg")) {
+        if (Storage::disk('public')->exists("$pathIdDocumentacion/comprobantepago.pdf") || Storage::disk('public')->exists("$pathIdDocumentacion/comprobantepago.jpg")) {
             $compag = 1;
         }
 
-        // if (Storage::disk('public')->exists("$pathIdPersona/constanciaautoridad.pdf") || Storage::disk('public')->exists("$pathIdPersona/constanciaautoridad.jpeg")) {
+        // if (Storage::disk('public')->exists("$pathIdPersona/constanciaautoridad.pdf") || Storage::disk('public')->exists("$pathIdPersona/constanciaautoridad.jpg")) {
         // }
         if ($idfront && $idback && $compdom && $compag) {
             return 1;
@@ -153,7 +153,7 @@ class EntregaController extends Controller
                         $image = $request->get('fotoentrega'); 
                         $image = str_replace('data:image/jpeg;base64,', '', $image);
                         $image = str_replace(' ', '+', $image);
-                        $imageName = 'fotoentrega.jpeg';
+                        $imageName = 'fotoentrega.jpg';
                         Storage::disk('public')->put("documentacion/$personaId/$idDocumentacion/".$imageName, base64_decode($image));
                     } else {
                         return [0,"No se registro la entrega ya que no se ha adjuntado ninguna foto ."];
@@ -300,7 +300,7 @@ class EntregaController extends Controller
         ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega','c_centrosdeentrega.Direccion as direccioncentroentrega')
         ->where('documentacion.PersonaId',$id)
         ->get();
-
+                
         if (count($listaentregas) > 0) {
             $listaentregasstring = 
                 '<h5 class="card-title" align="center">LISTA DE ENTREGAS</h5>
@@ -333,9 +333,17 @@ class EntregaController extends Controller
                                     <td colspan="6"></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="6">
+                                    <td colspan="5">
                                         Folio: '.$entrega->idDocumentacion.' - Centro de Entrega: <strong>'.$entrega->centroentrega.'</strong> - Direcccion: '.$entrega->direccioncentroentrega.'
                                     </td>
+                                    <td colspan="1">
+                                        <button style="color: white" id="editarDoc" class="btn btn-warning mb-1" data-folio="'.$entrega->idDocumentacion.'">Documentacion</button>';
+                                        if (Auth::check()){
+                                            if( $this->verifyRequiredDocuments($entrega->idDocumentacion) == 1){
+                                                $listaentregasstring .='<button style="color: white" id="entregaenupdatebtn" class="btn btn-success mb-1" data-folio="'.$entrega->idDocumentacion.'">Entrega</button>';
+                                            }
+                                        }
+                                        $listaentregasstring .='</td> 
                                 </tr>
                                 <tr class="table-dark">
                                     <td colspan="6"></td>
