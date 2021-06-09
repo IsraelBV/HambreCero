@@ -237,13 +237,31 @@
                 <!-- FIN DE FILA 7-->
                 <!--fila 8-->
                 <div class="form-row">
-                    <div class="form-group col-md-8">
+                    <div class="form-group col-md-6">
                         <label for="extranjero">{{ $preguntas[6]['Descripcion'] }}</label>
                         <input type="text" class="form-control" id="extranjero" name="extranjero" onkeyup="mayusculas(this);" value="{{ $persona[0]->IdentificacionMigratoria != null?$persona[0]->IdentificacionMigratoria	:'' }}">
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-3">
                         <label for="cuantas_per_viven_casa">{{ $preguntas[32]['Descripcion'] }}</label>
                         <input type="number" class="form-control" id="cuantas_per_viven_casa" name="cuantas_per_viven_casa"  value="{{ $persona[0]->Pregunta_33 != null?$persona[0]->Pregunta_33:''}}">
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="menores_sin_acta">{{ $preguntas[101]['Descripcion'] }}</label>
+                        <select for id="menores_sin_acta" class="form-control" name="menores_sin_acta" >
+                            @if ($persona[0]->Pregunta_102 !== null)
+                                @if ($persona[0]->Pregunta_102 == 1)
+                                    <option selected value="{{$persona[0]->Pregunta_102}}">SI</option>
+                                    <option value="0">NO</option>
+                                @else 
+                                    <option value="1">SI</option>
+                                    <option selected value="{{$persona[0]->Pregunta_102}}">NO</option>
+                                @endif
+                            @else
+                                <option value="" selected>Seleccione una opcion</option>
+                                <option value="1">si</option>
+                                <option value="0">no</option>
+                            @endif
+                        </select>
                     </div>
                 </div>
                 <br>

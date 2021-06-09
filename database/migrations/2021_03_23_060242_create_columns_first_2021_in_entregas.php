@@ -14,6 +14,7 @@ class CreateColumnsFirst2021InEntregas extends Migration
     public function up()
     {
         Schema::table('entregas', function (Blueprint $table) {
+            $table->boolean('Pregunta_102')->nullable();
             $table->integer('idCentroEntrega')->nullable();
             $table->integer('idPeriodoEntrega')->nullable();
         });
@@ -27,6 +28,7 @@ class CreateColumnsFirst2021InEntregas extends Migration
     public function down()
     {
         Schema::table('entregas', function (Blueprint $table) {
+            $table->dropColumn('Pregunta_102');
             $table->dropColumn('idCentroEntrega');
             $table->dropColumn('idPeriodoEntrega');
         });
