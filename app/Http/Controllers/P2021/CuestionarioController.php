@@ -258,6 +258,7 @@ class CuestionarioController extends Controller
         
         $encuesta = new Encuesta();
         $encuesta->Pregunta_33 = $request->get('cuantas_per_viven_casa');
+        $encuesta->Pregunta_102 = $request->get('menores_sin_acta');
         $encuesta->EncuestadorId = (Auth::check())?Auth::user()->id:0;
 
         $persona->save();// guarda los datos de la persona
@@ -299,7 +300,7 @@ class CuestionarioController extends Controller
 
             $personaCollection = DB::table('personas')
             ->leftjoin('encuestas', 'personas.id', '=', 'encuestas.personaId')
-            ->select('personas.*', 'encuestas.Pregunta_33')
+            ->select('personas.*', 'encuestas.Pregunta_33', 'encuestas.Pregunta_102')
             ->where('personas.id', $id)
             ->get();
 
@@ -394,6 +395,7 @@ class CuestionarioController extends Controller
         $encuesta = Encuesta::where('PersonaId',$id)->first();
         
         $encuesta->Pregunta_33 = $request->get('cuantas_per_viven_casa');
+        $encuesta->Pregunta_102 = $request->get('menores_sin_acta');
         $encuesta->EncuestadorId = (Auth::check())?Auth::user()->id:0;
 
         $persona->save();//actualiza los registros de persona
