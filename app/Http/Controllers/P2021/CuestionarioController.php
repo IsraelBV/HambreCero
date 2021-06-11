@@ -971,37 +971,37 @@ class CuestionarioController extends Controller
 
         if ($request->hasFile('IdentificacionFile')) {
             Validator::make($request->all(), [
-                'IdentificacionFile' => ['mimes:jpg,pdf'],
+                'IdentificacionFile' => ['mimes:jpeg,pdf'],
             ])->validate();
         } 
 
         if ($request->hasFile('IdentificacionatrasFile')) {
             Validator::make($request->all(), [
-                'IdentificacionatrasFile' => ['mimes:jpg,pdf'],
+                'IdentificacionatrasFile' => ['mimes:jpeg,pdf'],
             ])->validate();
         } 
 
         if ($request->hasFile('CompDomFile')) {
             Validator::make($request->all(), [
-                'CompDomFile' => ['mimes:jpg,pdf'],
+                'CompDomFile' => ['mimes:jpeg,pdf'],
             ])->validate();
         }    
 
         if ($request->hasFile('CURPFile')) {
             Validator::make($request->all(), [
-                'CURPFile' => ['mimes:jpg,pdf'],
+                'CURPFile' => ['mimes:jpeg,pdf'],
             ])->validate();
         }
 
         if ($request->hasFile('ComPagFile')) {
             Validator::make($request->all(), [
-                'ComPagFile' => ['mimes:jpg,pdf'],
+                'ComPagFile' => ['mimes:jpeg,pdf'],
             ])->validate();
         } 
 
         if ($request->hasFile('ConstAutFiled')) {
             Validator::make($request->all(), [
-                'ConstAutFiled' => ['mimes:jpg,pdf'],
+                'ConstAutFiled' => ['mimes:jpeg,pdf'],
             ])->validate();
         } 
         
