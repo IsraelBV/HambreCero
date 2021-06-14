@@ -283,7 +283,7 @@
 
                     <h5 class="card-title" align="center">LISTA DE ENTREGAS</h5>
                     <br>
-                    <table class="table table-hover">
+                    <table class="table">
 
                         @if (count($listaentregas) > 1 || $listaentregas[0]->idEntrega !== null)
                             <tr>
@@ -307,7 +307,7 @@
 
                             @else
                                 <tr class="table-dark">
-                                    <td colspan="6"></td>
+                                    <td colspan="6" style="text-align: center; padding-top: 2px; padding-bottom: 0; color: black;"><h4> FECHA DE EMPADRONAMIENTO: {{$persona[0]->created_at}}</h4></td>
                                 </tr>
                                 <tr>
                                     <td colspan="5">
@@ -318,7 +318,10 @@
                                         <button style="color: white" id="editarDoc" class="btn btn-warning mb-1" data-folio="{{$entrega->idDocumentacion}}">Documentacion</button>
                                         @if (auth()->check())
                                             @if ($listo['folio'] == $entrega->idDocumentacion && $listo['completo'] == 1)
-                                                <button style="color: white" id="entregaenupdatebtn" class="btn btn-success mb-1" data-folio="{{$entrega->idDocumentacion}}">Entrega</button>
+                                            <button style="color: white" id="entregaenupdatebtn" class="btn btn-success mb-1" data-folio="{{$entrega->idDocumentacion}}">Entrega</button>
+                                                @if (Auth::user()->tipoUsuarioId == 0) 
+                                                    <button style="color: white" id="entregaenupdatedocbtn" class="btn btn-info mb-1" data-folio="{{$entrega->idDocumentacion}}">Entrega Posterior</button>
+                                                @endif
                                             @elseif ($listo['folio'] != $entrega->idDocumentacion)
                                                 <label>Algo anda mal favor de reportar los folios: {{$listo['folio']}} y {{$entrega->idDocumentacion}} </label>
                                             @endif
