@@ -411,9 +411,9 @@
 									if ($('#entregaenupdatebtn').length) {//entonces verifica si ya existia el boton de entrega 
 										// $('#entregaenupdatebtn').remove();//si existe lo borra
 									} else {
-										if (data[2] == 0) {
+										// if (data[2] == 0) {
 											$('#editarDoc').after('<br><button style="color: white" id="entregaenupdatedocbtn" class="btn btn-info mb-1" data-folio="'+folio+'">Entrega Posterior</button>');
-										}
+										// }
 										$('#editarDoc').after('<br><button style="color: white" id="entregaenupdatebtn" class="btn btn-success mb-1" data-folio="'+folio+'">Entrega</button>');
 									}
 								}	
