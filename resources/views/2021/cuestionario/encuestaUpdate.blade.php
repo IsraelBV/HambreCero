@@ -319,9 +319,9 @@
                                         @if (auth()->check())
                                             @if ($listo['folio'] == $entrega->idDocumentacion && $listo['completo'] == 1)
                                             <button style="color: white" id="entregaenupdatebtn" class="btn btn-success mb-1" data-folio="{{$entrega->idDocumentacion}}">Entrega</button>
-                                                @if (Auth::user()->tipoUsuarioId == 0) 
+                                                {{-- @if (Auth::user()->tipoUsuarioId == 0)  --}}
                                                     <button style="color: white" id="entregaenupdatedocbtn" class="btn btn-info mb-1" data-folio="{{$entrega->idDocumentacion}}">Entrega Posterior</button>
-                                                @endif
+                                                {{-- @endif --}}
                                             @elseif ($listo['folio'] != $entrega->idDocumentacion)
                                                 <label>Algo anda mal favor de reportar los folios: {{$listo['folio']}} y {{$entrega->idDocumentacion}} </label>
                                             @endif
