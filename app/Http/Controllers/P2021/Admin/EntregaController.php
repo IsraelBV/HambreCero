@@ -356,9 +356,9 @@ class EntregaController extends Controller
                                         if (Auth::check()){
                                             if( $this->verifyRequiredDocuments($entrega->idDocumentacion) == 1){
                                                 $listaentregasstring .='<button style="color: white" id="entregaenupdatebtn" class="btn btn-success mb-1" data-folio="'.$entrega->idDocumentacion.'">Entrega</button>';
-                                                if (Auth::user()->tipoUsuarioId == 0) {
+                                                // if (Auth::user()->tipoUsuarioId == 0) {
                                                     $listaentregasstring .='<button style="color: white" id="entregaenupdatedocbtn" class="btn btn-info mb-1" data-folio="'.$entrega->idDocumentacion.'">Entrega Posterior</button>';
-                                                }
+                                                // }
                                             }
                                         }
                                         $listaentregasstring .='</td> 
