@@ -369,6 +369,7 @@
 							if (data[2] == 0 ) {//si es igual a 0 quiere decir que se descompletaron los documentos obligarios 
 								if ($('#entregaenupdatebtn').length) {//entonces verifica si ya existia el boton de entrega 
 									$('#entregaenupdatebtn').remove();//si existe lo borra
+									$('#entregaenupdatedocbtn').remove();//si existe lo borra
 								}
 							}
 
@@ -410,6 +411,9 @@
 									if ($('#entregaenupdatebtn').length) {//entonces verifica si ya existia el boton de entrega 
 										// $('#entregaenupdatebtn').remove();//si existe lo borra
 									} else {
+										if (data[2] == 0) {
+											$('#editarDoc').after('<br><button style="color: white" id="entregaenupdatedocbtn" class="btn btn-info mb-1" data-folio="'+folio+'">Entrega Posterior</button>');
+										}
 										$('#editarDoc').after('<br><button style="color: white" id="entregaenupdatebtn" class="btn btn-success mb-1" data-folio="'+folio+'">Entrega</button>');
 									}
 								}	
@@ -541,6 +545,80 @@
 							$("#entregaEnUpdate").html('');
 							$("#entregaEnUpdate").closest('.card').hide();
 							alert('Ocurrio un error favor de reportarlo');
+						});
+					});
+            
+				}).fail(function(jqXHR, textStatus, errorThrown){
+					
+					$("#entregaEnUpdate").html('');
+					alert('Ocurrio un error favor de reportarlo');
+				});								
+			});
+			
+			////////////// aqui me quede estoy haciendo la funcion delñ segundo boton de entrega
+			$(document).on('click',"#entregaenupdatedocbtn",function(){//trae el html de la subida de el documento jpg que se va a subir
+			// $("#entregaenupdatebtn").off().click(function(){
+				$("#entregaEnUpdate").closest('.card').show();
+				var folio = $(this).data('folio');
+				
+				$.ajax({
+					type: "GET",
+					url: "/entrega/enUpdatePost",
+					beforeSend: function(){
+						$("#documentacionEdit").html('').closest('.card').hide();//por si se tiene abierto el lugar donde se suben documentos ya que se pueden borrar desde ahi 
+						$("#entregaEnUpdate").html('<div class="text-center"></br></br><div class="spinner-border text-info" style="width: 6rem; height: 6rem;" role="status"><span class="sr-only">Loading...</span></div></div>');
+						$(this).attr("disabled", true);
+					}
+				}).done(function(data) {
+
+					$("#entregaEnUpdate").html(data);
+					bsCustomFileInput.init();
+
+					$('#postEntregaEnUpdateForm').off().submit(function(e){//manda a guardar la entrega
+						e.preventDefault();
+
+						$.ajax({
+							type: "POST",
+							url: "/entrega/enUpdate/"+folio,						
+							data: new FormData(this),// para enviar documentos
+							contentType: false,
+							cache: false,
+							processData:false,
+							beforeSend: function(){
+								$("#entregaEnUpdate").html('<div class="text-center"></br></br><div class="spinner-border text-info" style="width: 6rem; height: 6rem;" role="status"><span class="sr-only">Loading...</span></div></div>');
+								// $('#encuestaupdatemodal [data-btn="cpt"]').attr("disabled", true);
+							}
+						}).done(function(data) {
+							$("#entregaEnUpdate").html('');
+
+							if (data[0] == 1) {
+								$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data[1]+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+								$("#entcont").html(data[2]);
+							} else {
+								$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-danger alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data[1]+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+							}
+				
+							setTimeout(function() { 
+								$("#sccs").alert('close');
+								$("#sccs").remove();
+							}, 4500);
+
+							$("#entregaEnUpdate").closest('.card').hide();
+            
+						}).fail(function(jqXHR, textStatus, errorThrown){
+
+							// $('#encuestaupdatemodal [data-btn="cpt"]').attr('type','button').removeAttr("form disabled");
+							$("#entregaEnUpdate").html('');
+							$("#entregaEnUpdate").closest('.card').hide();
+							var msgerr = jqXHR.responseJSON.errors.fotoentrega;
+
+							$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-danger alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+msgerr+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+				
+							setTimeout(function() { 
+								$("#sccs").alert('close');
+								$("#sccs").remove();
+							}, 4500);
+
 						});
 					});
             

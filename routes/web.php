@@ -139,6 +139,9 @@ Route::get('/entrega/enUpdate','P2021\Admin\EntregaController@buildFormEntregaEn
 Route::post('/entrega/enUpdate/{entrega}', 'P2021\Admin\EntregaController@EntregaEnUpdate');
 
 
+Route::get('/entrega/enUpdatePost','P2021\Admin\EntregaController@buildFormPostEntregaEnUpdate');
+
+
 //ADMIN/ENTRGAS 2020----------------------------------------------------------------------------------------------------------------------------------------
 // Route::get('/admin2020/entrega','P2020\Admin\EntregaController@index')->name('buscar');
 

@@ -110,11 +110,11 @@ class CuestionarioController extends Controller
                 }
             } else {
                 //BLOQUEDO POR VEDA ELECTORAL
-                return view('2021.cuestionario.index',[
-                    'errmsg'=> 'Esta curp no se encuentra registrada dentro del padron.',
-                    'curp'=> $curp
-                    ]);
-                // return $this->create($curp);//redirecciona a crate pero con la curp
+                // return view('2021.cuestionario.index',[
+                //     'errmsg'=> 'Esta curp no se encuentra registrada dentro del padron.',
+                //     'curp'=> $curp
+                //     ]);
+                return $this->create($curp);//redirecciona a crate pero con la curp
             }
     }
 
@@ -305,6 +305,15 @@ class CuestionarioController extends Controller
             ->get();
 
             $personaCollection[0]->Intentos = 1;
+
+            $fechaEmpaDisor = explode(" ",$personaCollection[0]->created_at);
+            $fechaEmpadArray = explode("-",$fechaEmpaDisor[0]);
+            $fechaEmpadronamiento = "$fechaEmpadArray[2]-$fechaEmpadArray[1]-$fechaEmpadArray[0]";
+
+            $personaCollection[0]->created_at = $fechaEmpadronamiento;
+
+
+
 
             $listaentregas = DB::table('documentacion') //lista de entregados
             ->leftJoin('entregas', 'entregas.DocumentacionId', '=', 'documentacion.id')
@@ -497,11 +506,17 @@ class CuestionarioController extends Controller
         ->where('documentacion.PersonaId',$id)
         ->get();
 
+        $persona = Persona::find($id);
+
+        $fechaEmpaDisor = explode(" ",$persona->created_at);
+        $fechaEmpadArray = explode("-",$fechaEmpaDisor[0]);
+        $fechaEmpadronamiento = "$fechaEmpadArray[2]-$fechaEmpadArray[1]-$fechaEmpadArray[0]";
+
         if (count($listaentregas) > 0) {
             $listaentregasstring = 
                 '<h5 class="card-title" align="center">LISTA DE ENTREGAS</h5>
                     <br>
-                    <table class="table table-hover">';
+                    <table class="table">';
                         if (count($listaentregas) > 1 || $listaentregas[0]->idEntrega !== null) {
                             $listaentregasstring .='<tr>
                                     <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th>
@@ -526,7 +541,7 @@ class CuestionarioController extends Controller
                             }else{
                                 $listaentregasstring .='
                                 <tr class="table-dark">
-                                    <td colspan="6"></td>
+                                    <td colspan="6" style="text-align: center; padding-top: 2px; padding-bottom: 0; color: black;"><h4> FECHA DE EMPADRONAMIENTO: '.$fechaEmpadronamiento.'</h4></td>
                                 </tr>
                                 <tr>
                                 <td colspan="5">
@@ -538,6 +553,9 @@ class CuestionarioController extends Controller
                                         $entregacontroller = new EntregaController;
                                         if($entregacontroller->verifyRequiredDocuments($entrega->idDocumentacion) == 1){
                                             $listaentregasstring .='<button style="color: white" id="entregaenupdatebtn" class="btn btn-success mb-1" data-folio="'.$entrega->idDocumentacion.'">Entrega</button>';
+                                            if (Auth::user()->tipoUsuarioId == 0) {
+                                                $listaentregasstring .='<button style="color: white" id="entregaenupdatedocbtn" class="btn btn-info mb-1" data-folio="'.$entrega->idDocumentacion.'">Entrega Posterior</button>';
+                                            }
                                         }
                                     }
                                 $listaentregasstring .='</td> 
@@ -901,7 +919,7 @@ class CuestionarioController extends Controller
         // }
 
         $entregacontroller = new EntregaController;
-        return [$entregacontroller->verifyRequiredDocuments($idDocumentacion,$documentacion->PersonaId),'Se guardaron lo documentos adjuntados']; //$this->buildListaEntregas($id);
+        return [$entregacontroller->verifyRequiredDocuments($idDocumentacion,$documentacion->PersonaId),'Se guardaron lo documentos adjuntados',Auth::user()->tipoUsuarioId]; //$this->buildListaEntregas($id);
     }
 
     public function downloadDocument($document,$idPersona,$idDocumentacion = null){       

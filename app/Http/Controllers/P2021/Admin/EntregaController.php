@@ -8,7 +8,9 @@ use App\Models\Documentacion;
 use App\Models\Entrega;
 use App\Models\C_PeriodosDeEntrega;
 use App\Models\StockDespensa;
+use App\Models\Persona;
 
+use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Support\Facades\DB;
 use Auth;
@@ -148,8 +150,15 @@ class EntregaController extends Controller
                         return [0,"Algo anda mal tu centro de entrega no tiene despensas asignadas."];
                     }
                     
+                    if ($request->hasFile('fotoentrega')) {
+                        Validator::make($request->all(), [
+                            'fotoentrega' => ['mimes:jpeg,pdf'],
+                        ])->validate();
 
-                    if ($request->has('fotoentrega')) {
+                        $dataname1 = explode('.',$request->file('fotoentrega')->getClientOriginalName());
+                        $request->file('fotoentrega')->storeAs("documentacion/$personaId/$idDocumentacion/",'fotoentrega'.'.'.$dataname1[1]);
+
+                    } elseif($request->has('fotoentrega')) {
                         $image = $request->get('fotoentrega'); 
                         $image = str_replace('data:image/jpeg;base64,', '', $image);
                         $image = str_replace(' ', '+', $image);
@@ -300,12 +309,18 @@ class EntregaController extends Controller
         ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega','c_centrosdeentrega.Direccion as direccioncentroentrega')
         ->where('documentacion.PersonaId',$id)
         ->get();
+
+        $persona = Persona::find($id);
+
+        $fechaEmpaDisor = explode(" ",$persona->created_at);
+        $fechaEmpadArray = explode("-",$fechaEmpaDisor[0]);
+        $fechaEmpadronamiento = "$fechaEmpadArray[2]-$fechaEmpadArray[1]-$fechaEmpadArray[0]";
                 
         if (count($listaentregas) > 0) {
             $listaentregasstring = 
                 '<h5 class="card-title" align="center">LISTA DE ENTREGAS</h5>
                     <br>
-                    <table class="table table-hover">';
+                    <table class="table">';
                         if (count($listaentregas) > 1 || $listaentregas[0]->idEntrega !== null) {
                             $listaentregasstring .='<tr>
                                     <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th>
@@ -330,7 +345,7 @@ class EntregaController extends Controller
                             }else{
                                 $listaentregasstring .='
                                 <tr class="table-dark">
-                                    <td colspan="6"></td>
+                                    <td colspan="6" style="text-align: center; padding-top: 2px; padding-bottom: 0; color: black;"><h4> FECHA DE EMPADRONAMIENTO: '.$fechaEmpadronamiento.'</h4></td>
                                 </tr>
                                 <tr>
                                     <td colspan="5">
@@ -341,6 +356,9 @@ class EntregaController extends Controller
                                         if (Auth::check()){
                                             if( $this->verifyRequiredDocuments($entrega->idDocumentacion) == 1){
                                                 $listaentregasstring .='<button style="color: white" id="entregaenupdatebtn" class="btn btn-success mb-1" data-folio="'.$entrega->idDocumentacion.'">Entrega</button>';
+                                                if (Auth::user()->tipoUsuarioId == 0) {
+                                                    $listaentregasstring .='<button style="color: white" id="entregaenupdatedocbtn" class="btn btn-info mb-1" data-folio="'.$entrega->idDocumentacion.'">Entrega Posterior</button>';
+                                                }
                                             }
                                         }
                                         $listaentregasstring .='</td> 
@@ -373,9 +391,26 @@ class EntregaController extends Controller
         return $listaentregasstring;
     }
 
-    
-    
-  
+    public function buildFormPostEntregaEnUpdate(){
+        
+        $htmlFoto = '
+            <h5 class="card-title" align="center">ENTREGA</h5>
+                </br>
+            <form id="postEntregaEnUpdateForm" action="#" method="#">
+                <input type="hidden" name="_token" value="'.csrf_token().'" />
+                <div class="col-md-12">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="fotoentrega" name="fotoentrega" lang="es" required>
+                        <label class="custom-file-label" for="fotoentrega" data-browse="Buscar documento">Foto de entrega</label>
+                    </div>
+                </div>
+                </br>
+                <button id="guardarPostEntrega" type="submit" class="btn btn-success">Hacer entrega</button>
+            </form>';
+
+        return  $htmlFoto;
+    }
+
 }
 
 
