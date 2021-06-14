@@ -919,7 +919,7 @@ class CuestionarioController extends Controller
         // }
 
         $entregacontroller = new EntregaController;
-        return [$entregacontroller->verifyRequiredDocuments($idDocumentacion,$documentacion->PersonaId),'Se guardaron lo documentos adjuntados']//,Auth::user()->tipoUsuarioId]; //$this->buildListaEntregas($id);
+        return [$entregacontroller->verifyRequiredDocuments($idDocumentacion,$documentacion->PersonaId),'Se guardaron lo documentos adjuntados'];//,Auth::user()->tipoUsuarioId]; //$this->buildListaEntregas($id);
     }
 
     public function downloadDocument($document,$idPersona,$idDocumentacion = null){       
