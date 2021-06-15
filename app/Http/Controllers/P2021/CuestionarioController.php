@@ -184,7 +184,7 @@ class CuestionarioController extends Controller
         
             $colonias = DB::table('c_colonias')
             ->select('c_colonias.*')
-            ->whereNotIn('c_colonias.LocalidadId', [57,249])
+            ->whereIn('c_colonias.LocalidadId', [1,11,57,58,59,66,68,69,71,76,249,326,330,346,347])
             ->orderBy('c_colonias.Descripcion', 'ASC')
             ->get();
 
@@ -193,9 +193,9 @@ class CuestionarioController extends Controller
                 'estados'=> C_Estado::all(),
                 'colonias'=> $colonias,
                 // 'colonias'=> C_Colonia::all(),
-                'localidades'=> C_Localidad::findMany([326,330,346,347,58,59,157,158,68,71,76,69,1,11,66]),   
+                'localidades'=> C_Localidad::findMany([1,11,57,58,59,66,68,69,71,76,249,326,330,346,347]),   
                 // 'localidades'=> C_Localidad::findMany([57,249]),   
-                'municipios'=> C_Municipio::findMany([1,2,3,6,7,8,9,10,11]),
+                'municipios'=> C_Municipio::findMany([1,2,3,4,5,7,8,9,10,11]),
                 // 'municipios'=> C_Municipio::findMany([5,4]),
                 'estadosCiviles' => C_EstadoCivil::all(),
                 'estudios'=> C_GradoDeEstudio::all(),
@@ -294,7 +294,7 @@ class CuestionarioController extends Controller
 
             $colonias = DB::table('c_colonias')
             ->select('c_colonias.*')
-            ->whereNotIn('c_colonias.LocalidadId', [57,249])
+            ->whereIn('c_colonias.LocalidadId', [1,11,57,58,59,66,68,69,71,76,249,326,330,346,347])
             ->orderBy('c_colonias.Descripcion', 'ASC')
             ->get();
 
@@ -344,9 +344,9 @@ class CuestionarioController extends Controller
                 'estados'=> C_Estado::all(),
                 'colonias'=> $colonias,
                 // 'colonias'=> C_Colonia::all(),
-                'localidades'=> C_Localidad::findMany([326,330,346,347,58,59,157,158,68,71,76,69,1,11,66]),   
+                'localidades'=> C_Localidad::findMany([1,11,57,58,59,66,68,69,71,76,249,326,330,346,347]),   
                 // 'localidades'=> C_Localidad::findMany([57,249]),   
-                'municipios'=> C_Municipio::findMany([1,2,3,6,7,8,9,10,11]),
+                'municipios'=> C_Municipio::findMany([1,2,3,4,5,7,8,9,10,11]),
                 // 'municipios'=> C_Municipio::findMany([5,4]),
                 'estadosCiviles' => C_EstadoCivil::all(),
                 'estudios'=> C_GradoDeEstudio::all(),
