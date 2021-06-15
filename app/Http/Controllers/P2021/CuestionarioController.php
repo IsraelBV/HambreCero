@@ -184,7 +184,7 @@ class CuestionarioController extends Controller
         
             $colonias = DB::table('c_colonias')
             ->select('c_colonias.*')
-            ->whereNotIn('c_colonias.LocalidadId', [1,11,57,58,59,66,68,69,71,76,249,326,330,346,347])
+            ->whereIn('c_colonias.LocalidadId', [1,11,57,58,59,66,68,69,71,76,249,326,330,346,347])
             ->orderBy('c_colonias.Descripcion', 'ASC')
             ->get();
 
@@ -294,7 +294,7 @@ class CuestionarioController extends Controller
 
             $colonias = DB::table('c_colonias')
             ->select('c_colonias.*')
-            ->whereNotIn('c_colonias.LocalidadId', [1,11,57,58,59,66,68,69,71,76,249,326,330,346,347])
+            ->whereIn('c_colonias.LocalidadId', [1,11,57,58,59,66,68,69,71,76,249,326,330,346,347])
             ->orderBy('c_colonias.Descripcion', 'ASC')
             ->get();
 
