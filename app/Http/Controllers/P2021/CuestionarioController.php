@@ -294,7 +294,7 @@ class CuestionarioController extends Controller
 
             $colonias = DB::table('c_colonias')
             ->select('c_colonias.*')
-            ->whereIn('c_colonias.LocalidadId', [1,11,57,58,59,66,68,69,71,76,249,326,330,346,347])
+            ->whereIn('c_colonias.LocalidadId', [1,11,57,58,59,66,68,69,71,76,157,158,249,326,330,346,347])
             ->orderBy('c_colonias.Descripcion', 'ASC')
             ->get();
 
@@ -344,9 +344,9 @@ class CuestionarioController extends Controller
                 'estados'=> C_Estado::all(),
                 'colonias'=> $colonias,
                 // 'colonias'=> C_Colonia::all(),
-                'localidades'=> C_Localidad::findMany([1,11,57,58,59,66,68,69,71,76,249,326,330,346,347]),   
+                'localidades'=> C_Localidad::findMany([1,11,57,58,59,66,68,69,71,76,157,158,249,326,330,346,347]),   
                 // 'localidades'=> C_Localidad::findMany([57,249]),   
-                'municipios'=> C_Municipio::findMany([1,2,3,4,5,7,8,9,10,11]),
+                'municipios'=> C_Municipio::findMany([1,2,3,4,5,6,7,8,9,10,11]),
                 // 'municipios'=> C_Municipio::findMany([5,4]),
                 'estadosCiviles' => C_EstadoCivil::all(),
                 'estudios'=> C_GradoDeEstudio::all(),
@@ -519,7 +519,7 @@ class CuestionarioController extends Controller
                     <table class="table">';
                         if (count($listaentregas) > 1 || $listaentregas[0]->idEntrega !== null) {
                             $listaentregasstring .='<tr>
-                                    <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th>
+                                    <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th><th>FOTO</th>
                                 </tr>';
                         }
 
@@ -536,18 +536,19 @@ class CuestionarioController extends Controller
                                     <td> '.($entrega->Direccion != null? $entrega->Direccion : "N/D").'</td>
                                     <td> '.($entrega->periodo != null ? $entrega->periodo : "N/D").'</td>
                                     <td> '.($entrega->centroentrega != null ? $entrega->centroentrega : "N/D").'</td>
+                                    <td> '.($entrega->periodo == 2021?'<a role="button" href="/documentacion/download/fotoentrega.jpg/'.$id.'/'.$entrega->idDocumentacion.'" class="btn btn-primary" target="_blank"><span style="font-size: 1.2em; color: white;" class="fa fa-eye"></span></a></td>':'N/D' ).'</td>
                                 </tr>';
                                 
                             }else{
                                 $listaentregasstring .='
                                 <tr class="table-dark">
-                                    <td colspan="6" style="text-align: center; padding-top: 2px; padding-bottom: 0; color: black;"><h4> FECHA DE EMPADRONAMIENTO: '.$fechaEmpadronamiento.'</h4></td>
+                                    <td colspan="7" style="text-align: center; padding-top: 2px; padding-bottom: 0; color: black;"><h4> FECHA DE EMPADRONAMIENTO: '.$fechaEmpadronamiento.'</h4></td>
                                 </tr>
                                 <tr>
                                 <td colspan="5">
                                     Folio: '.$entrega->idDocumentacion.' - Centro de Entrega: <strong>'.$entrega->centroentrega.'</strong> - Direcccion: '.$entrega->direccioncentroentrega.'
                                 </td>
-                                <td colspan="1">
+                                <td colspan="2">
                                     <button style="color: white" id="editarDoc" class="btn btn-warning mb-1" data-folio="'.$entrega->idDocumentacion.'">Documentacion</button>';
                                     if (Auth::check()){
                                         $entregacontroller = new EntregaController;
@@ -561,10 +562,10 @@ class CuestionarioController extends Controller
                                 $listaentregasstring .='</td> 
                                 </tr>
                                 <tr class="table-dark">
-                                    <td colspan="6"></td>
+                                    <td colspan="7"></td>
                                 </tr>
                                 <tr>
-                                <td colspan="6">
+                                <td colspan="7">
                                         <p>Favor de estar pendiente de las fechas de entrega de despensas que serán publicadas en la página oficial de la Secretaría de Desarrollo Social de Quintana Roo <a href="https://qroo.gob.mx/sedeso">https://qroo.gob.mx/sedeso</a></p> 
                                         <p>En ellas se le indicará cuando y en donde realizar el pago de la cuota de recuperación y deberá presentarse al centro de entrega asignado con los documento registrados en original, únicamente para su cotejo de información. (Solo el recibo de pago se quedará en el centro)</p>
                                     </td>
