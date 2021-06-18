@@ -234,7 +234,7 @@
 				$("#encuestaupdatemodal").modal('show');
 				$('#encuestaupdatemodal [data-btn="cpt"]').attr({form:'documentosForm',type:'submit'});
 
-				$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-info alert-dismissible fade show" role="alert"> <h3 class="alert-heading">Los documentos adjuntados deben de estar en formato PDF o JPG</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+				$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-info alert-dismissible fade show" role="alert"> <h3 class="alert-heading">Los documentos adjuntados deben de estar en formato PDF o JPG <br> y no exeder los 2 MB de tamaño</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 				
 				setTimeout(function() { 
 					$("#sccs").alert('close');
@@ -299,7 +299,7 @@
 
 					$("#documentacionEdit").html(data);
 
-					$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-info alert-dismissible fade show" role="alert"> <h3 class="alert-heading">Los documentos adjuntados deben de estar en formato PDF o JPG</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+					$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-info alert-dismissible fade show" role="alert"> <h3 class="alert-heading">Los documentos adjuntados deben de estar en formato PDF o JPG <br> y no exeder los 2 MB de tamaño</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 				
 					setTimeout(function() { 
 						$("#sccs").alert('close');
@@ -555,7 +555,6 @@
 				});								
 			});
 			
-			////////////// aqui me quede estoy haciendo la funcion delñ segundo boton de entrega
 			$(document).on('click',"#entregaenupdatedocbtn",function(){//trae el html de la subida de el documento jpg que se va a subir
 			// $("#entregaenupdatebtn").off().click(function(){
 				$("#entregaEnUpdate").closest('.card').show();
@@ -570,6 +569,12 @@
 						$(this).attr("disabled", true);
 					}
 				}).done(function(data) {
+					$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-info alert-dismissible fade show" role="alert"> <h3 class="alert-heading">La imagen adjuntada debe de estar en formato JPG <br> y no exeder los 2 MB de tamaño</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+				
+					setTimeout(function() { 
+						$("#sccs").alert('close');
+						$("#sccs").remove();
+					}, 5500);
 
 					$("#entregaEnUpdate").html(data);
 					bsCustomFileInput.init();
