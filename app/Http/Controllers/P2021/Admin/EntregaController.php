@@ -120,7 +120,7 @@ class EntregaController extends Controller
             } else {
                 $documentacion = Documentacion::find($idDocumentacion);
                 $personaId = $documentacion->PersonaId;
-
+                
                 $persona  = DB::table('personas') //se busca a la persona para sacar la direccion
                     ->join('encuestas', 'personas.id', '=', 'encuestas.personaId')
                     ->leftJoin('c_colonias', 'personas.ColoniaId', '=', 'c_colonias.id')
@@ -152,11 +152,11 @@ class EntregaController extends Controller
                     
                     if ($request->hasFile('fotoentrega')) {
                         Validator::make($request->all(), [
-                            'fotoentrega' => ['mimes:jpeg,pdf'],
+                            'fotoentrega' => ['mimes:jpeg,pdf',' required','max:2000'],
                         ])->validate();
 
-                        $dataname1 = explode('.',$request->file('fotoentrega')->getClientOriginalName());
-                        $request->file('fotoentrega')->storeAs("documentacion/$personaId/$idDocumentacion/",'fotoentrega'.'.'.$dataname1[1]);
+                        $extension = $request->file('fotoentrega')->getClientOriginalExtension();
+                        $request->file('fotoentrega')->storeAs("documentacion/$personaId/$idDocumentacion/",'fotoentrega'.'.'.$extension);
 
                     } elseif($request->has('fotoentrega')) {
                         $image = $request->get('fotoentrega'); 

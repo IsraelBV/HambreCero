@@ -849,8 +849,8 @@ class CuestionarioController extends Controller
         $pathIdDocumentacion = "documentacion/$documentacion->PersonaId/$idDocumentacion";
 
         if ($request->hasFile('IdentificacionFile')) {
-            $dataname1 = explode('.',$request->file('IdentificacionFile')->getClientOriginalName());
-            $request->file('IdentificacionFile')->storeAs($pathIdPersona,'identificacio_oficial'.'.'.$dataname1[1]);
+            $extension = $request->file('IdentificacionFile')->getClientOriginalExtension();
+            $request->file('IdentificacionFile')->storeAs($pathIdPersona,'identificacio_oficial'.'.'.$extension);
         } elseif ($request->has('IdentificacionFile')) {
             $image = $request->get('IdentificacionFile'); 
             $image = str_replace('data:image/jpeg;base64,', '', $image);
@@ -861,8 +861,8 @@ class CuestionarioController extends Controller
 
         if ($request->hasFile('IdentificacionatrasFile')) {
             
-            $dataname1 = explode('.',$request->file('IdentificacionatrasFile')->getClientOriginalName());
-            $request->file('IdentificacionatrasFile')->storeAs($pathIdPersona,'identificacion_atras_oficial'.'.'.$dataname1[1]);
+            $extension = $request->file('IdentificacionatrasFile')->getClientOriginalExtension();
+            $request->file('IdentificacionatrasFile')->storeAs($pathIdPersona,'identificacion_atras_oficial'.'.'.$extension);
         } elseif ($request->has('IdentificacionatrasFile')) {
             $image = $request->get('IdentificacionatrasFile'); 
             $image = str_replace('data:image/jpeg;base64,', '', $image);
@@ -872,8 +872,8 @@ class CuestionarioController extends Controller
         }
 
         if ($request->hasFile('CompDomFile')) {
-            $dataname3 = explode('.',$request->file('CompDomFile')->getClientOriginalName());
-            $request->file('CompDomFile')->storeAs($pathIdPersona,'comprobantedomicilio'.'.'.$dataname3[1]);
+            $extension = $request->file('CompDomFile')->getClientOriginalExtension();
+            $request->file('CompDomFile')->storeAs($pathIdPersona,'comprobantedomicilio'.'.'.$extension);
         } elseif ($request->has('CompDomFile')) {
             $image = $request->get('CompDomFile'); 
             $image = str_replace('data:image/jpeg;base64,', '', $image);
@@ -883,8 +883,8 @@ class CuestionarioController extends Controller
         }
 
         if ($request->hasFile('CURPFile')) {
-            $dataname2 = explode('.',$request->file('CURPFile')->getClientOriginalName());
-            $request->file('CURPFile')->storeAs($pathIdPersona,'curp'.'.'.$dataname2[1]);
+            $extension = $request->file('CURPFile')->getClientOriginalExtension();
+            $request->file('CURPFile')->storeAs($pathIdPersona,'curp'.'.'.$extension);
         } elseif ($request->has('CURPFile')) {
             $image = $request->get('CURPFile'); 
             $image = str_replace('data:image/jpeg;base64,', '', $image);
@@ -894,8 +894,8 @@ class CuestionarioController extends Controller
         }
 
         if ($request->hasFile('ComPagFile')) {
-            $dataname4 = explode('.',$request->file('ComPagFile')->getClientOriginalName());
-            $request->file('ComPagFile')->storeAs($pathIdDocumentacion,'comprobantepago'.'.'.$dataname4[1]);
+            $extension = $request->file('ComPagFile')->getClientOriginalExtension();
+            $request->file('ComPagFile')->storeAs($pathIdDocumentacion,'comprobantepago'.'.'.$extension);
         } elseif ($request->has('ComPagFile')) {
             $image = $request->get('ComPagFile'); 
             $image = str_replace('data:image/jpeg;base64,', '', $image);
@@ -905,8 +905,8 @@ class CuestionarioController extends Controller
         }
 
         if ($request->hasFile('ConstAutFiled')) {
-            $dataname5 = explode('.',$request->file('ConstAutFiled')->getClientOriginalName());
-            $request->file('ConstAutFiled')->storeAs($pathIdPersona,'constanciaautoridad'.'.'.$dataname5[1]);
+            $extension = $request->file('ConstAutFiled')->getClientOriginalExtension();
+            $request->file('ConstAutFiled')->storeAs($pathIdPersona,'constanciaautoridad'.'.'.$extension);
         } elseif ($request->has('ConstAutFiled')) {
             $image = $request->get('ConstAutFiled'); 
             $image = str_replace('data:image/jpeg;base64,', '', $image);
@@ -990,37 +990,37 @@ class CuestionarioController extends Controller
 
         if ($request->hasFile('IdentificacionFile')) {
             Validator::make($request->all(), [
-                'IdentificacionFile' => ['mimes:jpeg,pdf'],
+                'IdentificacionFile' => ['mimes:jpeg,pdf',' required','max:2000'],
             ])->validate();
         } 
 
         if ($request->hasFile('IdentificacionatrasFile')) {
             Validator::make($request->all(), [
-                'IdentificacionatrasFile' => ['mimes:jpeg,pdf'],
+                'IdentificacionatrasFile' => ['mimes:jpeg,pdf',' required','max:2000'],
             ])->validate();
         } 
 
         if ($request->hasFile('CompDomFile')) {
             Validator::make($request->all(), [
-                'CompDomFile' => ['mimes:jpeg,pdf'],
+                'CompDomFile' => ['mimes:jpeg,pdf',' required','max:2000'],
             ])->validate();
         }    
 
         if ($request->hasFile('CURPFile')) {
             Validator::make($request->all(), [
-                'CURPFile' => ['mimes:jpeg,pdf'],
+                'CURPFile' => ['mimes:jpeg,pdf',' required','max:2000'],
             ])->validate();
         }
 
         if ($request->hasFile('ComPagFile')) {
             Validator::make($request->all(), [
-                'ComPagFile' => ['mimes:jpeg,pdf'],
+                'ComPagFile' => ['mimes:jpeg,pdf',' required','max:2000'],
             ])->validate();
         } 
 
         if ($request->hasFile('ConstAutFiled')) {
             Validator::make($request->all(), [
-                'ConstAutFiled' => ['mimes:jpeg,pdf'],
+                'ConstAutFiled' => ['mimes:jpeg,pdf',' required','max:2000'],
             ])->validate();
         } 
         
