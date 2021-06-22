@@ -302,7 +302,7 @@
                                     <td> {{$entrega->localidad != null ? $entrega->localidad : "N/D" }} </td>
                                     <td> {{$entrega->Direccion != null? $entrega->Direccion : "N/D" }}</td>
                                     <td> {{$entrega->periodo != null ? $entrega->periodo : "N/D" }}</td>
-                                    <td> {{$entrega->centroentrega != null ? $entrega->centroentrega : "N/D" }}</td>
+                                    <td> {{$entrega->centroentregaentrega != null ? $entrega->centroentregaentrega : "N/D" }}</td>
                                     <td>@if ($entrega->periodo == 2021)<a role="button" href="/documentacion/download/fotoentrega.jpg/{{$persona[0]->id}}/{{$entrega->idDocumentacion}}" class="btn btn-primary" target="_blank"><span style="font-size: 1.2em; color: white;" class="fa fa-eye"></span></a></td>@else N/D @endif 
                                 </tr>
 

@@ -306,7 +306,8 @@ class EntregaController extends Controller
         ->leftJoin('c_municipios', 'entregas.MunicipioId', '=', 'c_municipios.id')
         ->leftJoin('c_localidades', 'entregas.LocalidadId', '=', 'c_localidades.id')
         ->leftJoin('c_centrosdeentrega', 'documentacion.idCentroEntrega', '=', 'c_centrosdeentrega.id')
-        ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega','c_centrosdeentrega.Direccion as direccioncentroentrega')
+        ->leftJoin('c_centrosdeentrega AS ce', 'entregas.idCentroEntrega', '=', 'ce.id')
+        ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega','ce.Descripcion as centroentregaentrega','c_centrosdeentrega.Direccion as direccioncentroentrega')
         ->where('documentacion.PersonaId',$id)
         ->get();
 
@@ -339,7 +340,7 @@ class EntregaController extends Controller
                                     <td> '.($entrega->localidad != null ? $entrega->localidad : "N/D").' </td>
                                     <td> '.($entrega->Direccion != null? $entrega->Direccion : "N/D").'</td>
                                     <td> '.($entrega->periodo != null ? $entrega->periodo : "N/D").'</td>
-                                    <td> '.($entrega->centroentrega != null ? $entrega->centroentrega : "N/D").'</td>
+                                    <td> '.($entrega->centroentregaentrega != null ? $entrega->centroentregaentrega : "N/D").'</td>
                                     <td> '.($entrega->periodo == 2021?'<a role="button" href="/documentacion/download/fotoentrega.jpg/'.$id.'/'.$entrega->idDocumentacion.'" class="btn btn-primary" target="_blank"><span style="font-size: 1.2em; color: white;" class="fa fa-eye"></span></a></td>':'N/D' ).'</td>
                                 </tr>';
                                 
