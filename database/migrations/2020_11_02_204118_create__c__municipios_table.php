@@ -17,6 +17,7 @@ class CreateCMunicipiosTable extends Migration
             $table->id();
             $table->string('Descripcion');
             $table->string('EstadoId');
+            $table->boolean('status');
             $table->timestamps();
         });
     }

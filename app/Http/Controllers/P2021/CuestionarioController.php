@@ -181,12 +181,16 @@ class CuestionarioController extends Controller
     public function create($curp = NULL)    
     {   
         // if (Auth::check()) {//cambio por beda electoral
-        
+            // DB::enableQueryLog(); 
+
             $colonias = DB::table('c_colonias')
             ->select('c_colonias.*')
             ->whereIn('c_colonias.LocalidadId', [57,249,326])
+            ->where('c_colonias.status', '=',1)
             ->orderBy('c_colonias.Descripcion', 'ASC')
             ->get();
+
+            // dd(DB::getQueryLog()); 
 
             return view('2021.cuestionario.encuesta',[
                 'preguntas'=> C_Pregunta::all(),
@@ -216,8 +220,12 @@ class CuestionarioController extends Controller
     {   
         $curpExiste = $this->findCurp($request->get('curp'));
 
-        if ($curpExiste->count() > 0) {
-            return [0,"La persona que intenta registrar ya existe. </br> Por Favor regrese a la vista principal o espere la redireccion."];
+        if($curpExiste->count() >= 2) {
+            return [0,"Error: 101, El CURP que intenta actulizar tiene un inconveniente, favor de reportar ."];
+        } else {
+            if ($curpExiste->count() > 0) {
+                return [0,"Error: 102, La persona que intenta registrar ya existe. </br> Por Favor regrese a la vista principal o espere la redireccion."];
+            }
         }
 
         Validator::make($request->all(), [
@@ -268,7 +276,7 @@ class CuestionarioController extends Controller
 
         $encuesta->save(); // guarda las encuestas
 
-        return $idpersona["id"];
+        return [1,$idpersona["id"]];
     }
 
     /**
@@ -373,6 +381,16 @@ class CuestionarioController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $curpExiste = $this->findCurp($request->get('curp'));
+
+        if($curpExiste->count() >= 2) {
+            return [0,"Error: 101, El CURP que intenta actulizar tiene un inconveniente, favor de reportar ."];
+        } else {
+            if ($curpExiste[0]->id != $id) {
+                return [0,"Error: 102, El CURP que intenta actulizar tiene un inconveniente, favor de reportar."];
+            } 
+        }
+        
         $persona = Persona::find($id);
 
         $persona->Nombre = $request->get('nombre');
@@ -415,7 +433,7 @@ class CuestionarioController extends Controller
 
         $encuesta->save();//actualiza las encuestas
 
-        return 'Datos Actualizados';
+        return [1,'Datos Actualizados'];
         
     }
 
@@ -570,9 +588,10 @@ class CuestionarioController extends Controller
                                     <td colspan="7"></td>
                                 </tr>
                                 <tr>
-                                <td colspan="7">
-                                        <p>Favor de estar pendiente de las fechas de entrega de despensas que serán publicadas en la página oficial de la Secretaría de Desarrollo Social de Quintana Roo <a href="https://qroo.gob.mx/sedeso">https://qroo.gob.mx/sedeso</a></p> 
-                                        <p>En ellas se le indicará cuando y en donde realizar el pago de la cuota de recuperación y deberá presentarse al centro de entrega asignado con los documento registrados en original, únicamente para su cotejo de información. (Solo el recibo de pago se quedará en el centro)</p>
+                                    <td colspan="7">
+                                        <p>Favor de estar pendiente de las fechas de entrega de despensas que serán publicadas en la página oficial del Programa Hambre Cero: <a href="https://qroo.gob.mx/sedeso/hambreceroquintanaroo">https://qroo.gob.mx/sedeso/hambreceroquintanaroo</a> y en las redes sociales oficiales de la Secretaría de Desarrollo Social de Quintana Roo: en Facebook <a href="https://www.facebook.com/SedesoQroo/">https://www.facebook.com/SedesoQroo/</a> y en Twitter <a href="https://twitter.com/sedeso_qroo">https://twitter.com/sedeso_qroo</a></p> 
+                                        <p>Verifique en el portal oficial del Programa Hambre Cero, la ubicación del centro de entrega (PASO 4) que le corresponde y los datos bancarios de la cuenta donde deberá realizar el pago de la cuota de recuperación (PASO 3).</p>
+                                        <p>Recuerde presentarse al centro de entrega asignado con los documentos que registró en original, únicamente para su cotejo de información. El recibo de pago de cuota de recuperación lo debe presentar también en original y se quedará en el centro de entrega.</p>
                                     </td>
                                 </tr>';
 

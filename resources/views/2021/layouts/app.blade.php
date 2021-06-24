@@ -688,9 +688,9 @@
 
 						if (data[0] != 0) {
 
-							$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">Datos Guardados, ID: '+data+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+							$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">Datos Guardados, ID: '+data[1]+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 							
-							$("#encuesta").append('<input type="hidden" data-persona="'+data+'" id="ntn">');       
+							$("#encuesta").append('<input type="hidden" data-persona="'+data[1]+'" id="ntn">');       
 
 							$("#spinnerprov").remove();
 							
@@ -735,15 +735,32 @@
 						$("[name='send']").hide();
 					},
 					success: function(data) {
-						// window.location.href = "/imprimir/"+idpersona; //no imprimir automaticamente
-						//window.print();// formato anterior de impresion de pdf
-						$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-						// $("[name='accion']").show();
-						$("[name='rel']").show();
+
+						if (data[0] != 0) {
+							// window.location.href = "/imprimir/"+idpersona; //no imprimir automaticamente
+							//window.print();// formato anterior de impresion de pdf
+							$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data[1]+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+							// $("[name='accion']").show();
+							$("[name='rel']").show();
+						} else {
+							$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-danger alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data[1]+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
+						}
 
 						setTimeout(function() { 
 							$("#sccs").alert('close');
-						}, 3500);                        
+						}, 5000);       
+					}, 
+					error: function( jqXHR, textStatus, errorThrown){
+						$("[name = 'send']").show();
+						// console.log(jqXHR.responseJSON.errors.contraseña[0]);
+						if ($("#password").hasClass("is-invalid")) {//si hay una alerta de error solo elimina y pone una nueva
+							$(".invalid-feedback").remove();
+							$("#password").after('<span class="invalid-feedback" role="alert"><strong>'+jqXHR.responseJSON.errors.contraseña[0]+'</strong></span>');
+							
+						} else {// si no hay alertas agrega la clase de rror y la alerta
+							$("#password").addClass('is-invalid')
+							$("#password").after('<span class="invalid-feedback" role="alert"><strong>'+jqXHR.responseJSON.errors.contraseña[0]+'</strong></span>');
+						}
 					}
 				});
 			});

@@ -17,6 +17,7 @@ class CreateCLocalidadesTable extends Migration
             $table->id();
             $table->string('Descripcion');
             $table->string('MunicipioId');
+            $table->boolean('status');
             $table->timestamps();
         });
     }
