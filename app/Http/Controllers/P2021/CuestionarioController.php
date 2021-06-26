@@ -302,7 +302,7 @@ class CuestionarioController extends Controller
 
             $colonias = DB::table('c_colonias')
             ->select('c_colonias.*')
-            ->whereIn('c_colonias.LocalidadId', [1,11,57,58,59,66,68,69,71,76,157,158,249,326,330,346,347])
+            ->whereIn('c_colonias.LocalidadId', [1,11,57,58,59,66,68,69,71,76,157,158,214,249,326,330,347])
             ->orderBy('c_colonias.Descripcion', 'ASC')
             ->get();
 
@@ -356,7 +356,7 @@ class CuestionarioController extends Controller
                 'estados'=> C_Estado::all(),
                 'colonias'=> $colonias,
                 // 'colonias'=> C_Colonia::all(),
-                'localidades'=> C_Localidad::findMany([1,11,57,58,59,66,68,69,71,76,157,158,249,326,330,346,347]),   
+                'localidades'=> C_Localidad::findMany([1,11,57,58,59,66,68,69,71,76,157,158,214,249,326,330,347]),   
                 // 'localidades'=> C_Localidad::findMany([57,249]),   
                 'municipios'=> C_Municipio::findMany([1,2,3,4,5,6,7,8,9,10,11]),
                 // 'municipios'=> C_Municipio::findMany([5,4]),
