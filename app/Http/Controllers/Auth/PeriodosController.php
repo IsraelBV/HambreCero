@@ -22,6 +22,7 @@ class PeriodosController extends Controller
             if (session()->has('periodo') && session()->has('periodo')) {
                 return redirect('/');
             } else {
+                 // DB::enableQueryLog();
                 $centrosdeentrega  = DB::table('c_centrosdeentrega') 
                     ->leftJoin('c_colonias', 'c_centrosdeentrega.id', '=', 'c_colonias.CentroEntregaId')
                     ->leftJoin('c_localidades', 'c_localidades.id', '=', 'c_colonias.LocalidadId')
@@ -29,7 +30,7 @@ class PeriodosController extends Controller
                     ->select('c_centrosdeentrega.id','c_centrosdeentrega.Descripcion','c_municipios.Descripcion as municipio')
                     ->groupBy('c_centrosdeentrega.id','c_centrosdeentrega.Descripcion','c_municipios.Descripcion')
                     ->get();
-
+                // dd(DB::getQueryLog());
                     // dd($centrosdeentrega);
 
                 return view('auth.periodos',['periodos'=> C_Periodo::all()],['centros'=> $centrosdeentrega]);

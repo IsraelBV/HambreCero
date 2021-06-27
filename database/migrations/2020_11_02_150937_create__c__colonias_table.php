@@ -18,6 +18,7 @@ class CreateCColoniasTable extends Migration
             $table->string('Descripcion');
             $table->integer('CentroEntregaId')->nullable();
             $table->integer('LocalidadId');
+            $table->boolean('status');
             $table->timestamps();
         });
     }
