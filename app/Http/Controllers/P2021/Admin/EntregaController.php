@@ -78,27 +78,43 @@ class EntregaController extends Controller
         $compag = 0;
         
 
-        if (Storage::disk('public')->exists($pathIdPersona."/identificacio_oficial.pdf") || Storage::disk('public')->exists($pathIdPersona."/identificacio_oficial.jpg")) {
+        // if (Storage::disk('public')->exists($pathIdPersona."/identificacio_oficial.pdf") || Storage::disk('public')->exists($pathIdPersona."/identificacio_oficial.jpg")) {
+        //     $idfront = 1;
+        // } 
+        $imgloc = $this->locateImg($pathIdPersona,'identificacio_oficial');
+        if ($imgloc[0]) {
             $idfront = 1;
         } 
 
-        if (Storage::disk('public')->exists("$pathIdPersona/identificacion_atras_oficial.pdf") || Storage::disk('public')->exists("$pathIdPersona/identificacion_atras_oficial.jpg")) {
+        // if (Storage::disk('public')->exists("$pathIdPersona/identificacion_atras_oficial.pdf") || Storage::disk('public')->exists("$pathIdPersona/identificacion_atras_oficial.jpg")) {
+        //     $idback = 1;
+        // }
+        $imgloc = $this->locateImg($pathIdPersona,'identificacion_atras_oficial');
+        if ($imgloc[0]) {
             $idback = 1;
         }
 
-        if (Storage::disk('public')->exists("$pathIdPersona/comprobantedomicilio.pdf") || Storage::disk('public')->exists("$pathIdPersona/comprobantedomicilio.jpg")) {
+        // if (Storage::disk('public')->exists("$pathIdPersona/comprobantedomicilio.pdf") || Storage::disk('public')->exists("$pathIdPersona/comprobantedomicilio.jpg")) {
+        //     $compdom = 1;
+        // }
+        $imgloc = $this->locateImg($pathIdPersona,'comprobantedomicilio');
+        if ($imgloc[0]) {
             $compdom = 1;
         }
         
-        // if (Storage::disk('public')->exists("$pathIdPersona/curp.pdf") || Storage::disk('public')->exists("$pathIdPersona/curp.jpg")) {
+        // if (Storage::disk('public')->exists("$pathIdPersona/curp.pdf") || Storage::disk('public')->exists("$pathIdPersona/curp.jpg")) {// por si se llega a necesitar
             
         // }
 
-        if (Storage::disk('public')->exists("$pathIdDocumentacion/comprobantepago.pdf") || Storage::disk('public')->exists("$pathIdDocumentacion/comprobantepago.jpg")) {
+        // if (Storage::disk('public')->exists("$pathIdDocumentacion/comprobantepago.pdf") || Storage::disk('public')->exists("$pathIdDocumentacion/comprobantepago.jpg")) {
+        //     $compag = 1;
+        // }
+        $imgloc = $this->locateImg($pathIdDocumentacion,'comprobantepago');
+        if ($imgloc[0]) {
             $compag = 1;
         }
 
-        // if (Storage::disk('public')->exists("$pathIdPersona/constanciaautoridad.pdf") || Storage::disk('public')->exists("$pathIdPersona/constanciaautoridad.jpg")) {
+        // if (Storage::disk('public')->exists("$pathIdPersona/constanciaautoridad.pdf") || Storage::disk('public')->exists("$pathIdPersona/constanciaautoridad.jpg")) {// por si se llega a necesitar
         // }
         if ($idfront && $idback && $compdom && $compag) {
             return 1;
@@ -152,10 +168,10 @@ class EntregaController extends Controller
                     
                     if ($request->hasFile('fotoentrega')) {
                         Validator::make($request->all(), [
-                            'fotoentrega' => ['mimes:jpeg,pdf',' required','max:2000'],
+                            'fotoentrega' => ['mimes:jpg,jpeg,pdf',' required','max:2000'],
                         ])->validate();
 
-                        $extension = $request->file('fotoentrega')->getClientOriginalExtension();
+                        $extension =  strtolower($request->file('fotoentrega')->getClientOriginalExtension());
                         $request->file('fotoentrega')->storeAs("documentacion/$personaId/$idDocumentacion/",'fotoentrega'.'.'.$extension);
 
                     } elseif($request->has('fotoentrega')) {
@@ -341,7 +357,7 @@ class EntregaController extends Controller
                                     <td> '.($entrega->Direccion != null? $entrega->Direccion : "N/D").'</td>
                                     <td> '.($entrega->periodo != null ? $entrega->periodo : "N/D").'</td>
                                     <td> '.($entrega->centroentregaentrega != null ? $entrega->centroentregaentrega : "N/D").'</td>
-                                    <td> '.($entrega->periodo == 2021?'<a role="button" href="/documentacion/download/fotoentrega.jpg/'.$id.'/'.$entrega->idDocumentacion.'" class="btn btn-primary" target="_blank"><span style="font-size: 1.2em; color: white;" class="fa fa-eye"></span></a></td>':'N/D' ).'</td>
+                                    <td> '.($entrega->periodo == 2021?'<a role="button" href="/documentacion/download/fotoentrega/'.$id.'/'.$entrega->idDocumentacion.'" class="btn btn-primary" target="_blank"><span style="font-size: 1.2em; color: white;" class="fa fa-eye"></span></a></td>':'N/D' ).'</td>
                                 </tr>';
                                 
                             }else{
@@ -412,6 +428,17 @@ class EntregaController extends Controller
             </form>';
 
         return  $htmlFoto;
+    }
+
+    public function locateImg($path,$archivo){ //pide el pad de la imagen y el nombre: busca si existe con alguno de los 3 formatos validos
+        $arrayFormatos = ["pdf","jpg","jpeg"];
+        foreach ($arrayFormatos as $formato) {
+            if (Storage::disk('public')->exists("$path/$archivo.$formato")) {
+                return[1,$archivo.$formato];
+            }
+        }
+        return[0,0];
+        // trigger_error("Error 103: Favor de reportarlo", E_USER_ERROR);
     }
 
 }
