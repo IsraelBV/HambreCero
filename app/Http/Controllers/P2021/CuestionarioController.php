@@ -185,7 +185,7 @@ class CuestionarioController extends Controller
 
             $colonias = DB::table('c_colonias')
             ->select('c_colonias.*')
-            ->whereIn('c_colonias.LocalidadId', [57,249,326])
+            ->whereIn('c_colonias.LocalidadId', [57,249,326,68,71,76,69,79,330,1,11])
             ->where('c_colonias.status', '=',1)
             ->orderBy('c_colonias.Descripcion', 'ASC')
             ->get();
@@ -197,9 +197,9 @@ class CuestionarioController extends Controller
                 'estados'=> C_Estado::all(),
                 'colonias'=> $colonias,
                 // 'colonias'=> C_Colonia::all(),
-                'localidades'=> C_Localidad::findMany([57,249,326]),   
+                'localidades'=> C_Localidad::findMany([57,249,326,68,71,76,69,79,330,1,11]),   
                 // 'localidades'=> C_Localidad::findMany([57,249]),   
-                'municipios'=> C_Municipio::findMany([4,5,8]),
+                'municipios'=> C_Municipio::findMany([4,5,8,2,9,10]),
                 // 'municipios'=> C_Municipio::findMany([5,4]),
                 'estadosCiviles' => C_EstadoCivil::all(),
                 'estudios'=> C_GradoDeEstudio::all(),
@@ -303,21 +303,21 @@ class CuestionarioController extends Controller
             if (Auth::check()) { // para diferenciar entra usuario y publico y proporcionarles la informacion correcta o que deben tener de colonias , localidades y municipios
                 $colonias = DB::table('c_colonias')
                 ->select('c_colonias.*')
-                ->whereIn('c_colonias.LocalidadId', [1,11,57,58,59,66,68,69,71,76,157,158,214,249,326,330,347])
+                ->whereIn('c_colonias.LocalidadId', [1,11,57,58,59,66,68,69,71,76,79,157,158,214,249,326,330,347])
                 ->orderBy('c_colonias.Descripcion', 'ASC')
                 ->get();
 
-                $localidades = C_Localidad::findMany([1,11,57,58,59,66,68,69,71,76,157,158,214,249,326,330,347]);
+                $localidades = C_Localidad::findMany([1,11,57,58,59,66,68,69,71,76,79,157,158,214,249,326,330,347]);
                 $municipios = C_Municipio::findMany([1,2,3,4,5,6,7,8,9,10,11]);
             } else {
                 $colonias = DB::table('c_colonias')
                 ->select('c_colonias.*')
-                ->whereIn('c_colonias.LocalidadId', [57,249,326])
+                ->whereIn('c_colonias.LocalidadId', [57,249,326,68,71,76,69,79,330,1,11])
                 ->where('c_colonias.status', '=',1)
                 ->orderBy('c_colonias.Descripcion', 'ASC')
                 ->get();
-                $localidades = C_Localidad::findMany([57,249,326]);
-                $municipios = C_Municipio::findMany([4,5,8]);
+                $localidades = C_Localidad::findMany([57,249,326,68,71,76,69,79,330,1,11]);
+                $municipios = C_Municipio::findMany([4,5,8,2,9,10]);
             } 
             
 
