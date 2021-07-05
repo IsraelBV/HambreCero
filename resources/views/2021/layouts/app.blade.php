@@ -278,6 +278,13 @@
 			//$("#editarDoc").off().click(function(){//trae el html de los archivos existentes y los no existentes
 				$("#documentacionEdit").closest('.card').show();
 				var folio = $(this).data('folio');
+
+				Webcam.set({
+							width: 640,
+							height: 480,
+							image_format: 'jpeg',
+							jpeg_quality: 98
+						});
 				// // alert(folio);
 				// console.log($(this).data('folio'));
 
@@ -323,13 +330,7 @@
 						$("#encuestaupdatemodal .modal-body").html(htmlfoto);
 
 						$('#encuestaupdatemodal [data-btn="cpt"]').attr("disabled", true);
-
-						Webcam.set({
-							width: 640,
-							height: 480,
-							image_format: 'jpeg',
-							jpeg_quality: 98
-						});
+						
 						Webcam.attach('#camera');
 
 						$("#take_photo").off().click(function(){//solo captura la imagen
@@ -471,6 +472,13 @@
 			// $("#entregaenupdatebtn").off().click(function(){
 				$("#entregaEnUpdate").closest('.card').show();
 				var folio = $(this).data('folio');
+
+				Webcam.set({
+							width: 680,
+							height: 510,
+							image_format: 'jpeg',
+							jpeg_quality: 100
+						});
 				
 				$.ajax({
 					type: "GET",
@@ -484,12 +492,6 @@
 
 					$("#entregaEnUpdate").html(data);
 
-					Webcam.set({
-							width: 680,
-							height: 510,
-							image_format: 'jpeg',
-							jpeg_quality: 100
-						});
 					Webcam.attach('#camara');
 
 					$("#tomar_foto").off().click(function(){//solo captura la imagen
