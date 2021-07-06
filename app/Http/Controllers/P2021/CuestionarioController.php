@@ -397,13 +397,15 @@ class CuestionarioController extends Controller
     public function update(Request $request, $id)
     {
         $curpExiste = $this->findCurp($request->get('curp'));
-
-        if($curpExiste->count() >= 2) {
-            return [0,"Error: 101, El CURP que intenta actulizar tiene un inconveniente, favor de reportar ."];
-        } else {
-            if ($curpExiste[0]->id != $id) {
-                return [0,"Error: 102, El CURP que intenta actulizar tiene un inconveniente, favor de reportar."];
-            } 
+        
+        if($curpExiste->count() > 0){//si es mayor a cero quiere decir que la curp nueva que pusieron si existe dentro de la base
+            if($curpExiste->count() >= 2) {
+                return [0,"Error: 101, El CURP que intenta actulizar tiene un inconveniente, favor de reportar ."];
+            } else {
+                if ($curpExiste[0]->id != $id) {
+                    return [0,"Error: 102, El CURP que intenta actulizar tiene un inconveniente, favor de reportar."];
+                } 
+            }
         }
         
         $persona = Persona::find($id);
