@@ -191,11 +191,7 @@
                 <!-- FIN DE FILA 7-->
                 <!--fila 8-->
                 <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="extranjero">{{ $preguntas[6]['Descripcion'] }}</label>
-                        <input type="text" class="form-control" id="extranjero" name="extranjero" onkeyup="mayusculas(this);">
-                    </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-2">
                         <label for="cuantas_per_viven_casa">{{ $preguntas[32]['Descripcion'] }}</label>
                         <input type="number" class="form-control" id="cuantas_per_viven_casa" name="cuantas_per_viven_casa" >
                     </div>
@@ -206,6 +202,18 @@
                             <option value="1">si</option>
                             <option value="0">no</option>
                         </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="considera_indigena">{{ $preguntas[102]['Descripcion'] }}</label>
+                        <select for id="considera_indigena" class="form-control" name="considera_indigena" >
+                            <option value="" selected>Seleccione una opcion</option>
+                            <option value="1">si</option>
+                            <option value="0">no</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="extranjero">{{ $preguntas[6]['Descripcion'] }}</label>
+                        <input type="text" class="form-control" id="extranjero" name="extranjero" onkeyup="mayusculas(this);">
                     </div>
                 </div>
                 <div class="form-row">

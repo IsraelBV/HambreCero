@@ -237,11 +237,7 @@
                 <!-- FIN DE FILA 7-->
                 <!--fila 8-->
                 <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label for="extranjero">{{ $preguntas[6]['Descripcion'] }}</label>
-                        <input type="text" class="form-control" id="extranjero" name="extranjero" onkeyup="mayusculas(this);" value="{{ $persona[0]->IdentificacionMigratoria != null?$persona[0]->IdentificacionMigratoria	:'' }}">
-                    </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-2">
                         <label for="cuantas_per_viven_casa">{{ $preguntas[32]['Descripcion'] }}</label>
                         <input type="number" class="form-control" id="cuantas_per_viven_casa" name="cuantas_per_viven_casa"  value="{{ $persona[0]->Pregunta_33 != null?$persona[0]->Pregunta_33:''}}">
                     </div>
@@ -262,6 +258,28 @@
                                 <option value="0">no</option>
                             @endif
                         </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="considera_indigena">{{ $preguntas[102]['Descripcion'] }}</label>
+                        <select for id="considera_indigena" class="form-control" name="considera_indigena" >
+                            @if ($persona[0]->Pregunta_103 !== null)
+                                @if ($persona[0]->Pregunta_103 == 1)
+                                    <option selected value="{{$persona[0]->Pregunta_103}}">SI</option>
+                                    <option value="0">NO</option>
+                                @else 
+                                    <option value="1">SI</option>
+                                    <option selected value="{{$persona[0]->Pregunta_103}}">NO</option>
+                                @endif
+                            @else
+                                <option value="" selected>Seleccione una opcion</option>
+                                <option value="1">si</option>
+                                <option value="0">no</option>
+                            @endif
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="extranjero">{{ $preguntas[6]['Descripcion'] }}</label>
+                        <input type="text" class="form-control" id="extranjero" name="extranjero" onkeyup="mayusculas(this);" value="{{ $persona[0]->IdentificacionMigratoria != null?$persona[0]->IdentificacionMigratoria	:'' }}">
                     </div>
                 </div>
                 <br>
@@ -287,7 +305,7 @@
 
                         @if (count($listaentregas) > 1 || $listaentregas[0]->idEntrega !== null)
                             <tr>
-                                <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th><th>FOTO</th>
+                                <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th><th>OBSERVACIÓN</th><th>FOTO</th>
                             </tr>
                         @endif
 
@@ -303,18 +321,18 @@
                                     <td> {{$entrega->Direccion != null? $entrega->Direccion : "N/D" }}</td>
                                     <td> {{$entrega->periodo != null ? $entrega->periodo : "N/D" }}</td>
                                     <td> {{$entrega->centroentregaentrega != null ? $entrega->centroentregaentrega : "N/D" }}</td>
+                                    <td> {{$entrega->comentario != null ? $entrega->comentario : "N/D" }}</td>
                                     <td>@if ($entrega->periodo == 2021)<a role="button" href="/documentacion/download/fotoentrega/{{$persona[0]->id}}/{{$entrega->idDocumentacion}}" class="btn btn-primary" target="_blank"><span style="font-size: 1.2em; color: white;" class="fa fa-eye"></span></a></td>@else N/D @endif 
                                 </tr>
 
                             @else
                                 <tr class="table-dark">
-                                    <td colspan="7" style="text-align: center; padding-top: 2px; padding-bottom: 0; color: black;"><h4> FECHA DE EMPADRONAMIENTO: {{$persona[0]->created_at}}</h4></td>
+                                    <td colspan="8" style="text-align: center; padding-top: 2px; padding-bottom: 0; color: black;"><h4> FECHA DE EMPADRONAMIENTO: {{$persona[0]->created_at}}</h4></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="5">
+                                    <td colspan="6">
                                         Folio: {{$entrega->idDocumentacion}} - Centro de Entrega: <strong>{{$entrega->centroentrega}}</strong> - Direcccion: {{$entrega->direccioncentroentrega}}
                                     </td>
-
                                     <td colspan="2">
                                         <button style="color: white" id="editarDoc" class="btn btn-warning mb-1" data-folio="{{$entrega->idDocumentacion}}">Documentacion</button>
                                         @if (auth()->check())
@@ -330,10 +348,10 @@
                                     </td> 
                                 </tr>
                                 <tr class="table-dark">
-                                    <td colspan="7"></td>
+                                    <td colspan="8"></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="7">
+                                    <td colspan="8">
                                         <p>Favor de estar pendiente de las fechas de entrega de despensas que serán publicadas en la página oficial del Programa Hambre Cero: <a href="https://qroo.gob.mx/sedeso/hambreceroquintanaroo">https://qroo.gob.mx/sedeso/hambreceroquintanaroo</a> y en las redes sociales oficiales de la Secretaría de Desarrollo Social de Quintana Roo: en Facebook <a href="https://www.facebook.com/SedesoQroo/">https://www.facebook.com/SedesoQroo/</a> y en Twitter <a href="https://twitter.com/sedeso_qroo">https://twitter.com/sedeso_qroo</a></p> 
                                         <p>Verifique en el portal oficial del Programa Hambre Cero, la ubicación del centro de entrega (PASO 4) que le corresponde y los datos bancarios de la cuenta donde deberá realizar el pago de la cuota de recuperación (PASO 3).</p>
                                         <p>Recuerde presentarse al centro de entrega asignado con los documentos que registró en original, únicamente para su cotejo de información. El recibo de pago de cuota de recuperación lo debe presentar también en original y se quedará en el centro de entrega.</p>

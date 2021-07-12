@@ -15,8 +15,10 @@ class CreateColumnsFirst2021InEntregas extends Migration
     {
         Schema::table('entregas', function (Blueprint $table) {
             $table->boolean('Pregunta_102')->nullable();
+            $table->boolean('Pregunta_103')->nullable();
             $table->integer('idCentroEntrega')->nullable();
             $table->integer('idPeriodoEntrega')->nullable();
+            $table->integer('comentarioEntrega')->nullable();
         });
     }
 
@@ -29,8 +31,10 @@ class CreateColumnsFirst2021InEntregas extends Migration
     {
         Schema::table('entregas', function (Blueprint $table) {
             $table->dropColumn('Pregunta_102');
+            $table->dropColumn('Pregunta_103');
             $table->dropColumn('idCentroEntrega');
             $table->dropColumn('idPeriodoEntrega');
+            $table->dropColumn('comentarioEntrega');
         });
     }
 }

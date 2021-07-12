@@ -169,6 +169,16 @@
 			e.value = e.value.toUpperCase();
 		}
 
+		function longitud(e) {
+			// console.log();
+			var max_chars = 250;
+
+			var chars = e.value.length;
+			var diff = max_chars - chars;
+			$(e).siblings('.contador').html(diff); 
+		}
+		
+
 		setTimeout(function() { 
 			$("#btnreturn").hide();
 		}, 20000);
@@ -617,7 +627,12 @@
 							// $('#encuestaupdatemodal [data-btn="cpt"]').attr('type','button').removeAttr("form disabled");
 							$("#entregaEnUpdate").html('');
 							$("#entregaEnUpdate").closest('.card').hide();
-							var msgerr = jqXHR.responseJSON.errors.fotoentrega;
+
+							if (jqXHR.responseJSON.errors.fotoentrega == null) {
+								var msgerr = jqXHR.responseJSON.errors.coments;
+							} else {
+								var msgerr = jqXHR.responseJSON.errors.fotoentrega;
+							}
 
 							$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-danger alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+msgerr+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 				

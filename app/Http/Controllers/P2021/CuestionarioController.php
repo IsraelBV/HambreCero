@@ -267,6 +267,7 @@ class CuestionarioController extends Controller
         $encuesta = new Encuesta();
         $encuesta->Pregunta_33 = $request->get('cuantas_per_viven_casa');
         $encuesta->Pregunta_102 = $request->get('menores_sin_acta');
+        $encuesta->Pregunta_103 = $request->get('considera_indigena');
         $encuesta->EncuestadorId = (Auth::check())?Auth::user()->id:0;
 
         $persona->save();// guarda los datos de la persona
@@ -323,7 +324,7 @@ class CuestionarioController extends Controller
 
             $personaCollection = DB::table('personas')
             ->leftjoin('encuestas', 'personas.id', '=', 'encuestas.personaId')
-            ->select('personas.*', 'encuestas.Pregunta_33', 'encuestas.Pregunta_102')
+            ->select('personas.*', 'encuestas.Pregunta_33', 'encuestas.Pregunta_102', 'encuestas.Pregunta_103')
             ->where('personas.id', $id)
             ->get();
 
@@ -345,7 +346,7 @@ class CuestionarioController extends Controller
             ->leftJoin('c_localidades', 'entregas.LocalidadId', '=', 'c_localidades.id')
             ->leftJoin('c_centrosdeentrega', 'documentacion.idCentroEntrega', '=', 'c_centrosdeentrega.id')
             ->leftJoin('c_centrosdeentrega AS ce', 'entregas.idCentroEntrega', '=', 'ce.id')
-            ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega','ce.Descripcion as centroentregaentrega','c_centrosdeentrega.Direccion as direccioncentroentrega')
+            ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega','ce.Descripcion as centroentregaentrega','c_centrosdeentrega.Direccion as direccioncentroentrega','entregas.comentarioEntrega as comentario')
             ->where('documentacion.PersonaId',$id)
             ->get();
 
@@ -444,6 +445,7 @@ class CuestionarioController extends Controller
         
         $encuesta->Pregunta_33 = $request->get('cuantas_per_viven_casa');
         $encuesta->Pregunta_102 = $request->get('menores_sin_acta');
+        $encuesta->Pregunta_103 = $request->get('considera_indigena');
         $encuesta->EncuestadorId = (Auth::check())?Auth::user()->id:0;
 
         $persona->save();//actualiza los registros de persona
@@ -542,7 +544,7 @@ class CuestionarioController extends Controller
         ->leftJoin('c_localidades', 'entregas.LocalidadId', '=', 'c_localidades.id')
         ->leftJoin('c_centrosdeentrega', 'documentacion.idCentroEntrega', '=', 'c_centrosdeentrega.id')
         ->leftJoin('c_centrosdeentrega AS ce', 'entregas.idCentroEntrega', '=', 'ce.id')
-        ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega','ce.Descripcion as centroentregaentrega','c_centrosdeentrega.Direccion as direccioncentroentrega')
+        ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega','ce.Descripcion as centroentregaentrega','c_centrosdeentrega.Direccion as direccioncentroentrega','entregas.comentarioEntrega as comentario')
         ->where('documentacion.PersonaId',$id)
         ->get();
 
@@ -559,7 +561,7 @@ class CuestionarioController extends Controller
                     <table class="table">';
                         if (count($listaentregas) > 1 || $listaentregas[0]->idEntrega !== null) {
                             $listaentregasstring .='<tr>
-                                    <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th><th>FOTO</th>
+                                    <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th><th>OBSERVACIÓN</th><th>FOTO</th>
                                 </tr>';
                         }
 
@@ -576,16 +578,17 @@ class CuestionarioController extends Controller
                                     <td> '.($entrega->Direccion != null? $entrega->Direccion : "N/D").'</td>
                                     <td> '.($entrega->periodo != null ? $entrega->periodo : "N/D").'</td>
                                     <td> '.($entrega->centroentregaentrega != null ? $entrega->centroentregaentrega : "N/D").'</td>
+                                    <td> '.($entrega->comentario != null ? $entrega->comentario : "N/D").'</td>
                                     <td> '.($entrega->periodo == 2021?'<a role="button" href="/documentacion/download/fotoentrega/'.$id.'/'.$entrega->idDocumentacion.'" class="btn btn-primary" target="_blank"><span style="font-size: 1.2em; color: white;" class="fa fa-eye"></span></a></td>':'N/D' ).'</td>
                                 </tr>';
                                 
                             }else{
                                 $listaentregasstring .='
                                 <tr class="table-dark">
-                                    <td colspan="7" style="text-align: center; padding-top: 2px; padding-bottom: 0; color: black;"><h4> FECHA DE EMPADRONAMIENTO: '.$fechaEmpadronamiento.'</h4></td>
+                                    <td colspan="8" style="text-align: center; padding-top: 2px; padding-bottom: 0; color: black;"><h4> FECHA DE EMPADRONAMIENTO: '.$fechaEmpadronamiento.'</h4></td>
                                 </tr>
                                 <tr>
-                                <td colspan="5">
+                                <td colspan="6">
                                     Folio: '.$entrega->idDocumentacion.' - Centro de Entrega: <strong>'.$entrega->centroentrega.'</strong> - Direcccion: '.$entrega->direccioncentroentrega.'
                                 </td>
                                 <td colspan="2">
@@ -602,10 +605,10 @@ class CuestionarioController extends Controller
                                 $listaentregasstring .='</td> 
                                 </tr>
                                 <tr class="table-dark">
-                                    <td colspan="7"></td>
+                                    <td colspan="8"></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="7">
+                                    <td colspan="8">
                                         <p>Favor de estar pendiente de las fechas de entrega de despensas que serán publicadas en la página oficial del Programa Hambre Cero: <a href="https://qroo.gob.mx/sedeso/hambreceroquintanaroo">https://qroo.gob.mx/sedeso/hambreceroquintanaroo</a> y en las redes sociales oficiales de la Secretaría de Desarrollo Social de Quintana Roo: en Facebook <a href="https://www.facebook.com/SedesoQroo/">https://www.facebook.com/SedesoQroo/</a> y en Twitter <a href="https://twitter.com/sedeso_qroo">https://twitter.com/sedeso_qroo</a></p> 
                                         <p>Verifique en el portal oficial del Programa Hambre Cero, la ubicación del centro de entrega (PASO 4) que le corresponde y los datos bancarios de la cuenta donde deberá realizar el pago de la cuota de recuperación (PASO 3).</p>
                                         <p>Recuerde presentarse al centro de entrega asignado con los documentos que registró en original, únicamente para su cotejo de información. El recibo de pago de cuota de recuperación lo debe presentar también en original y se quedará en el centro de entrega.</p>

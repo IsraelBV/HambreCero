@@ -92,6 +92,7 @@ class CreateEncuestasTable extends Migration
             $table->boolean('Pregunta_100')->nullable();
             $table->boolean('Pregunta_101')->nullable();
             $table->boolean('Pregunta_102')->nullable();
+            $table->boolean('Pregunta_103')->nullable();
             $table->integer('PersonaId');
             $table->integer('EncuestadorId')->nullable();
             $table->timestamps();
