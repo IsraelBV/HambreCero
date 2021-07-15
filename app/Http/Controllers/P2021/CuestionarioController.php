@@ -199,7 +199,7 @@ class CuestionarioController extends Controller
                 // 'colonias'=> C_Colonia::all(),
                 'localidades'=> C_Localidad::findMany([57,249,326,68,71,76,69,79,330,1,11,66,347]),   
                 // 'localidades'=> C_Localidad::findMany([57,249]),   
-                'municipios'=> C_Municipio::findMany([4,5,8,2,9,10,1]),
+                'municipios'=> C_Municipio::findMany([4,5,8,2,9,10,1,3]),
                 // 'municipios'=> C_Municipio::findMany([5,4]),
                 'estadosCiviles' => C_EstadoCivil::all(),
                 'estudios'=> C_GradoDeEstudio::all(),
