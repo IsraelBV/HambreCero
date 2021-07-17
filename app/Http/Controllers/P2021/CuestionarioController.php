@@ -185,7 +185,7 @@ class CuestionarioController extends Controller
 
             $colonias = DB::table('c_colonias')
             ->select('c_colonias.*')
-            ->whereIn('c_colonias.LocalidadId', [57,249,326,68,71,76,69,79,330,1,11,66,347])
+            ->whereIn('c_colonias.LocalidadId', [326,68,330,1,66,347])
             ->where('c_colonias.status', '=',1)
             ->orderBy('c_colonias.Descripcion', 'ASC')
             ->get();
@@ -197,9 +197,9 @@ class CuestionarioController extends Controller
                 'estados'=> C_Estado::all(),
                 'colonias'=> $colonias,
                 // 'colonias'=> C_Colonia::all(),
-                'localidades'=> C_Localidad::findMany([57,249,326,68,71,76,69,79,330,1,11,66,347]),   
+                'localidades'=> C_Localidad::findMany([326,68,330,1,66,347]),   
                 // 'localidades'=> C_Localidad::findMany([57,249]),   
-                'municipios'=> C_Municipio::findMany([4,5,8,2,9,10,1,3]),
+                'municipios'=> C_Municipio::findMany([8,2,9,10,1,3]),
                 // 'municipios'=> C_Municipio::findMany([5,4]),
                 'estadosCiviles' => C_EstadoCivil::all(),
                 'estudios'=> C_GradoDeEstudio::all(),
@@ -313,12 +313,12 @@ class CuestionarioController extends Controller
             } else {
                 $colonias = DB::table('c_colonias')
                 ->select('c_colonias.*')
-                ->whereIn('c_colonias.LocalidadId', [57,249,326,68,71,76,69,79,330,1,11,66])
+                ->whereIn('c_colonias.LocalidadId', [326,68,330,1,66,347])
                 ->where('c_colonias.status', '=',1)
                 ->orderBy('c_colonias.Descripcion', 'ASC')
                 ->get();
-                $localidades = C_Localidad::findMany([57,249,326,68,71,76,69,79,330,1,11,66]);
-                $municipios = C_Municipio::findMany([4,5,8,2,9,10,1]);
+                $localidades = C_Localidad::findMany([326,68,330,1,66,347]);
+                $municipios = C_Municipio::findMany([8,2,9,10,1,3]);
             } 
             
 
