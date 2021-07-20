@@ -180,7 +180,7 @@ class CuestionarioController extends Controller
      */
     public function create($curp = NULL)    
     {   
-        // if (Auth::check()) {//cambio por beda electoral
+        if (Auth::check()) {//cambio por beda electoral
             // DB::enableQueryLog(); 
 
             $colonias = DB::table('c_colonias')
@@ -205,9 +205,9 @@ class CuestionarioController extends Controller
                 'estudios'=> C_GradoDeEstudio::all(),
                 'curp' => $curp
                 ]);
-        // } else {
-        //     return view('2021.cuestionario.index');        
-        // }
+        } else {
+            return view('2021.cuestionario.index');        
+        }
     }
 
     /**
@@ -299,7 +299,7 @@ class CuestionarioController extends Controller
      */
     public function edit($id)
     {   
-        // if (Auth::check()) {// cambio por beda electoral
+        if (Auth::check()) {// cambio por beda electoral
 
             if (Auth::check()) { // para diferenciar entra usuario y publico y proporcionarles la informacion correcta o que deben tener de colonias , localidades y municipios
                 $colonias = DB::table('c_colonias')
@@ -383,9 +383,9 @@ class CuestionarioController extends Controller
                 'listo'=>$listo
                 // 'ultimadocumentacion'=>$documentacion
                 ]);
-        // } else {
-        //     return view('2021.cuestionario.index');        
-        // }
+        } else {
+            return view('2021.cuestionario.index');        
+        }
     }
 
     /**
