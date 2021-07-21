@@ -268,6 +268,7 @@ class CuestionarioController extends Controller
         $encuesta->Pregunta_33 = $request->get('cuantas_per_viven_casa');
         $encuesta->Pregunta_102 = $request->get('menores_sin_acta');
         $encuesta->Pregunta_103 = $request->get('considera_indigena');
+        $encuesta->voluntario = 0;
         $encuesta->EncuestadorId = (Auth::check())?Auth::user()->id:0;
 
         $persona->save();// guarda los datos de la persona
@@ -446,6 +447,7 @@ class CuestionarioController extends Controller
         $encuesta->Pregunta_33 = $request->get('cuantas_per_viven_casa');
         $encuesta->Pregunta_102 = $request->get('menores_sin_acta');
         $encuesta->Pregunta_103 = $request->get('considera_indigena');
+        // $encuesta->voluntario = 0;
         $encuesta->EncuestadorId = (Auth::check())?Auth::user()->id:0;
 
         $persona->save();//actualiza los registros de persona
@@ -510,8 +512,14 @@ class CuestionarioController extends Controller
                 ->where('documentacion.PersonaId', $id)
                 ->where('documentacion.idPeriodoEntrega', $periodoEntregaId)
                 ->get();
+
+        $voluntario = DB::table('encuestas')
+                    ->select('voluntario')
+                    ->where('PersonaId', $id)
+                    ->get();  
         
-        if ($documentacionExistente->count() > 0) {
+        // if ($documentacionExistente->count() > 0) {
+        if (($voluntario[0]->voluntario == 1 && $documentacionExistente->count() >= 8) || ($voluntario[0]->voluntario == 0 && $documentacionExistente->count() > 0)) {
             return $this->buildListaEntregas($id);
         } else {
 

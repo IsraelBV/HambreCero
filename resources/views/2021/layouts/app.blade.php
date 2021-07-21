@@ -266,18 +266,20 @@
 							$('#encuestaupdatemodal [data-btn="cpt"]').attr("disabled", true);
 						}
 					}).done(function(data) {
+						$("#entcont").html(data);            
+
 						$("#encuestaupdatemodal").modal('hide');//se cierra el modal 
 
 						$('#encuestaupdatemodal [data-btn="cpt"]').attr('type','button').removeAttr("form disabled");
 						$("#encuestaupdatemodal .modal-body").html('');
 
-						$("#entcont").html(data);                     
 					}).fail(function(jqXHR, textStatus, errorThrown){
+						alert('Ocurrio un error favor de reportarlo');
+						
 						$("#encuestaupdatemodal").modal('hide');//se cierra el modal 
 
 						$('#encuestaupdatemodal [data-btn="cpt"]').attr('type','button').removeAttr("form disabled");
 						$("#encuestaupdatemodal .modal-body").html('');
-						alert('Ocurrio un error favor de reportarlo');
 					});
 				});
 					

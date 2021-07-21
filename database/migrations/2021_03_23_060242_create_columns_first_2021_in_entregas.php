@@ -18,6 +18,7 @@ class CreateColumnsFirst2021InEntregas extends Migration
             $table->boolean('Pregunta_103')->nullable();
             $table->integer('idCentroEntrega')->nullable();
             $table->integer('idPeriodoEntrega')->nullable();
+            $table->boolean('voluntario')->nullable();
             $table->integer('comentarioEntrega')->nullable();
         });
     }
@@ -34,6 +35,7 @@ class CreateColumnsFirst2021InEntregas extends Migration
             $table->dropColumn('Pregunta_103');
             $table->dropColumn('idCentroEntrega');
             $table->dropColumn('idPeriodoEntrega');
+            $table->dropColumn('voluntario');
             $table->dropColumn('comentarioEntrega');
         });
     }
