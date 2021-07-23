@@ -305,11 +305,11 @@ class CuestionarioController extends Controller
             if (Auth::check()) { // para diferenciar entra usuario y publico y proporcionarles la informacion correcta o que deben tener de colonias , localidades y municipios
                 $colonias = DB::table('c_colonias')
                 ->select('c_colonias.*')
-                ->whereIn('c_colonias.LocalidadId', [1,11,57,58,59,66,68,69,71,76,79,157,158,214,249,326,330,347])
+                ->whereIn('c_colonias.LocalidadId', [1,11,57,58,59,66,68,69,71,76,79,101,103,157,158,214,249,326,330,347])
                 ->orderBy('c_colonias.Descripcion', 'ASC')
                 ->get();
 
-                $localidades = C_Localidad::findMany([1,11,57,58,59,66,68,69,71,76,79,157,158,214,249,326,330,347]);
+                $localidades = C_Localidad::findMany([1,11,57,58,59,66,68,69,71,76,79,101,103,157,158,214,249,326,330,347]);
                 $municipios = C_Municipio::findMany([1,2,3,4,5,6,7,8,9,10,11]);
             } else {
                 $colonias = DB::table('c_colonias')
