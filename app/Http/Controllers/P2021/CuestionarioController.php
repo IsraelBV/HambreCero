@@ -519,7 +519,7 @@ class CuestionarioController extends Controller
                     ->get();  
         
         // if ($documentacionExistente->count() > 0) {
-        if (($voluntario[0]->voluntario == 1 && $documentacionExistente->count() >= 8) || ($voluntario[0]->voluntario == 0 && $documentacionExistente->count() > 0)) {
+        if (($voluntario[0]->voluntario == 1 && $documentacionExistente->count() >= 8) || ($voluntario[0]->voluntario == 0 && $documentacionExistente->count() > 1)) {
             return $this->buildListaEntregas($id);
         } else {
 
