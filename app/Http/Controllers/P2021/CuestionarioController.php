@@ -14,6 +14,7 @@ use App\Models\Persona;
 use App\Models\Encuesta;
 use App\Models\C_EstadoCivil;
 use App\Models\C_PeriodosDeEntrega;
+use App\Models\StockDespensa;
 
 use App\Http\Controllers\P2021\Admin\EntregaController;
 
@@ -311,6 +312,7 @@ class CuestionarioController extends Controller
 
                 $localidades = C_Localidad::findMany([1,11,57,58,59,66,68,69,71,76,79,101,103,157,158,214,249,326,330,347]);
                 $municipios = C_Municipio::findMany([1,2,3,4,5,6,7,8,9,10,11]);
+                $stock = StockDespensa::where('idCentroEntrega', session('centroEntrega'))->get();
             } else {
                 $colonias = DB::table('c_colonias')
                 ->select('c_colonias.*')
@@ -320,6 +322,7 @@ class CuestionarioController extends Controller
                 ->get();
                 $localidades = C_Localidad::findMany([326,68,330,1,66,347]);
                 $municipios = C_Municipio::findMany([8,2,9,10,1,3]);
+                $stock = null;
             } 
             
 
@@ -381,7 +384,8 @@ class CuestionarioController extends Controller
                 'estudios'=> C_GradoDeEstudio::all(),
                 'persona'=>$personaCollection,
                 'listaentregas'=>$listaentregas,
-                'listo'=>$listo
+                'listo'=>$listo,
+                'stock'=>$stock,
                 // 'ultimadocumentacion'=>$documentacion
                 ]);
         // } else {
