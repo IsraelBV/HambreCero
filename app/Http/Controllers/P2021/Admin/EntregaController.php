@@ -323,7 +323,7 @@ class EntregaController extends Controller
                     $stock->stockDespensas = $disponibilidad - 1;
                     $stock->save();
 
-                return [1,"Se realizo la entrega con folio: $idDocumentacion", $this->buildListaEntregas($personaId)];
+                return [1,"Se realizo la entrega con folio: $idDocumentacion", $this->buildListaEntregas($personaId),StockDespensa::where('idCentroEntrega', session('centroEntrega'))->get()];
             }            
          } else {
             return [0,"Documentacion incompleta, la entrega no se realizo"];
@@ -463,6 +463,26 @@ class EntregaController extends Controller
         }
         return[0,0];
         // trigger_error("Error 103: Favor de reportarlo", E_USER_ERROR);
+    }
+
+
+    //-----------------------------------------------
+    //esta parte luego se cambiara a un controlador de administracion de bd
+    //-----------------------------------------------
+    public function stockUpdate(Request $request){
+        $stock = StockDespensa::find(session('centroEntrega'));
+        $stock->stockDespensas += $request->get('addStock');
+
+        $saved = $stock->save();
+
+        if(!$saved){
+            return 0;
+        } else {
+            return 1;
+            // return redirect(1,[
+            //     'errmsg'=>  "Se ha aumentado el stock correctamente"
+            // ]);
+        }
     }
 
 }

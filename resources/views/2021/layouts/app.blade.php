@@ -70,8 +70,6 @@
 					@if (session()->has('periodo'))
 						 {{' / '.session('periodoNombre')}}
 					@endif
-
-					
 				</a>
 				{{-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
 					<span class="navbar-toggler-icon"></span>
@@ -81,6 +79,13 @@
 					<!-- Left Side Of Navbar -->
 					<ul class="navbar-nav mr-auto">
 
+						{{-- @if (session()->has('centroEntrega'))
+							<ul class="nav navbar-nav">
+								<li class="nav-item">
+									<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true" style="font-size:1.2rem;">Disponibilidad: {{__(session('centroEntregaStock'))}}</a>
+								</li>
+							</ul>
+						@endif --}}
 					</ul>
 
 					<!-- Right Side Of Navbar -->
@@ -112,8 +117,8 @@
 								</a>
 								<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 									@if (session()->has('centroEntrega'))
-											<h5 class="dropdown-header" href="#">
-												{{__(session('centroEntregaNombre'))}}
+											<h5 @if(Auth::user()->tipoUsuarioId == 0) id="nombreCentro" @endif class="dropdown-header">
+												{{__(session('centroEntregaNombre'))}} 
 											</h5>
 											<div class="dropdown-divider"></div>
 									@endif
@@ -141,6 +146,26 @@
 				@yield('content')
 		
 			</div>
+
+			<div id="modalMultiuso" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title"></h4>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							  <span aria-hidden="true">×</span>
+							</button>
+						</div>
+						<div class="modal-body">							
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary closemdl" data-dismiss="modal">Close</button>
+							<button type="submit" class="btn btn-primary savemdl">Guardar</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
 		</main>
 	</div>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -549,8 +574,17 @@
 								$("#sccs").alert('close');
 								$("#sccs").remove();
 							}, 4500);
-
+							
 							$("#entregaEnUpdate").closest('.card').hide();
+
+							$("#banerSotck h5 span").html(data[3][0].stockDespensas);//para actualizar el banner de stock
+							if (data[3][0].stockDespensas >= 70) {
+								$("#banerSotck h5").css('background','#5bc0de')
+							} else if(data[3][0].stockDespensas >= 30){
+								$("#banerSotck h5").css('background','#ffc107')
+							} else {
+								$("#banerSotck h5").css('background','#dc3545')
+							}						
 
 							// $("#entcont").html(data);                     
 						}).fail(function(jqXHR, textStatus, errorThrown){
@@ -623,6 +657,15 @@
 							}, 4500);
 
 							$("#entregaEnUpdate").closest('.card').hide();
+
+							$("#banerSotck h5 span").html(data[3][0].stockDespensas);//para actualizar el banner de stock
+							if (data[3][0].stockDespensas >= 70) {
+								$("#banerSotck h5").css('background','#5bc0de')
+							} else if(data[3][0].stockDespensas >= 30){
+								$("#banerSotck h5").css('background','#ffc107')
+							} else {
+								$("#banerSotck h5").css('background','#dc3545')
+							}	
             
 						}).fail(function(jqXHR, textStatus, errorThrown){
 
@@ -651,6 +694,53 @@
 					$("#entregaEnUpdate").html('');
 					alert('Ocurrio un error favor de reportarlo');
 				});								
+			});
+
+			$(document).on('click', '#nombreCentro',function(){// abre el modal para aumentar despensas
+				
+				$cuerpo_modal = '<form id="stockform" action="" method="">'+
+									'<div class="form-group">'+
+										'<input type="hidden" name="_token" value="{{ csrf_token() }}">'+
+										// '<input type="hidden" name="_method" value="PUT">'+
+									'<label for="addStock">¿Cuantas despensas desea agregar?</label>'+
+									'<input type="number" name="addStock" class="form-control" id="addStock" placeholder="">'+
+									'</div>'+
+								'</form>';
+
+				$("#modalMultiuso .modal-header .modal-title").html('Agregar Stock');
+				$("#modalMultiuso .modal-body").html($cuerpo_modal);
+				$("#modalMultiuso .modal-footer .savemdl").attr('form','stockform');
+
+				$("#modalMultiuso").modal('show');
+
+				$('#stockform').off().submit(function(e){
+					e.preventDefault();
+
+					$.ajax({
+						type: "POST",
+						url: "/catalogo/stock/update",
+						data: $("#stockform").serialize(),
+						beforeSend: function(){
+							$("#modalMultiuso").modal('hide');//se cierra el modal 
+
+							$("#modalMultiuso .modal-header .modal-title").html('');
+							$("#modalMultiuso .modal-body").html('');
+							$("#modalMultiuso .modal-footer .savemdl").removeAttr('form');
+						}
+					}).done(function(data) {
+						console.log(data);
+						if (data == 0) {
+							alert('Ocurrio un error al actualizar el stock, favor de reportarlo');
+						} else {
+							location.reload();
+						} 
+					}).fail(function(jqXHR, textStatus, errorThrown){
+						alert('Ocurrio un error al aumentar el stock, favor de reportarlo');
+					});
+
+				});
+				
+
 			});
 
 

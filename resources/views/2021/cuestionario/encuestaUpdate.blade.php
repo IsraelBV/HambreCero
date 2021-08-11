@@ -293,6 +293,11 @@
         <br><br>
         <input type="hidden" value="{{ $persona[0]->Intentos }}" data-persona="{{ $persona[0]->id }}" id="ntn">
     </form>
+        @if (auth()->check())
+        <div id="banerSotck">
+            <h5 align="center" style="background:@if(count($stock)>0) {{($stock[0]->stockDespensas >= 70)?'#5bc0de' : ($stock[0]->stockDespensas>= 30 ? '#ffc107' : '#dc3545')}} @else'5bc0de'@endif;text-align:center;color: white;font-size:26px;"> Disponibilidad: <span>{{$stock[0]->stockDespensas}}</span></h5>
+        </div>
+        @endif
 
         <div class="card">
             <div class="card-body" id="entcont">
