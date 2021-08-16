@@ -743,6 +743,47 @@
 
 			});
 
+			$(document).on('change', '#municipio',function(){ //busca las localidades y colonias cuando se cambia el select de municipio
+				$.ajax({
+					type: "get",
+					url: "/utils/localidad",
+					data: {
+							'municipio':$("#municipio").val(),
+							'localidad':$("#localidad").val(),
+							'colonia':$("#colonia").val(),
+							'from': $("#ntn").length
+						},
+					beforeSend: function(){
+						$("#localidad").html('');
+						$("#colonia").html('');
+					}
+				}).done(function(data) {
+					$("#localidad").html(data[0]);
+					$("#colonia").html(data[1]);
+				}).fail(function(jqXHR, textStatus, errorThrown){
+					alert('Ocurrio un error, cambie el municipio y vuelva a elegir el correcto');
+				});
+			});
+
+			$(document).on('change', '#localidad',function(){ ////busca las colonias cuando se cambia el select de localidades
+				$.ajax({
+					type: "get",
+					url: "/utils/colonia",
+					data: {
+							'localidad':$("#localidad").val(),
+							'colonia':$("#colonia").val(),
+							'from': $("#ntn").length
+						},
+					beforeSend: function(){
+						$("#colonia").html('');
+					}
+				}).done(function(data) {
+					$("#colonia").html(data);
+				}).fail(function(jqXHR, textStatus, errorThrown){
+					alert('Ocurrio un error, cambie la localidad y vuelva a elegir la correcta');
+				});
+			});
+
 
 
 			$("#passpersonacreate").off().submit(function(e) { //cambia la contraseña de la persona

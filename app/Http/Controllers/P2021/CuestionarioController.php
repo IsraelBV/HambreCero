@@ -184,13 +184,24 @@ class CuestionarioController extends Controller
         // if (Auth::check()) {//cambio por beda electoral
             // DB::enableQueryLog(); 
 
-            $colonias = DB::table('c_colonias')
-            ->select('c_colonias.*')
-            ->whereIn('c_colonias.LocalidadId', [326,68,330,1,66,347])
-            ->where('c_colonias.status', '=',1)
-            ->orderBy('c_colonias.Descripcion', 'ASC')
-            ->get();
+            $colonias = null;
+            // $colonias = DB::table('c_colonias')
+            // ->select('c_colonias.*')
+            // ->leftjoin('c_localidades', 'c_colonias.LocalidadId', '=', 'c_localidades.id')
+            // // ->whereIn('c_colonias.LocalidadId', [326,68,330,1,66,347])
+            // ->where('c_colonias.status', '=',1)
+            // ->where('c_localidades.status', '=',1)
+            // ->orderBy('c_colonias.Descripcion', 'ASC')
+            // ->get();
 
+            $localidades = null;
+            // $localidades = DB::table('c_localidades')
+            // ->select('c_localidades.*')
+            // ->leftjoin('c_municipios', 'c_localidades.MunicipioId', '=', 'c_municipios.id')
+            // ->where('c_localidades.status', '=',1)
+            // ->orderBy('c_localidades.Descripcion', 'ASC')
+            // ->get();
+            
             // dd(DB::getQueryLog()); 
 
             return view('2021.cuestionario.encuesta',[
@@ -198,9 +209,10 @@ class CuestionarioController extends Controller
                 'estados'=> C_Estado::all(),
                 'colonias'=> $colonias,
                 // 'colonias'=> C_Colonia::all(),
-                'localidades'=> C_Localidad::findMany([326,68,330,1,66,347]),
+                'localidades'=> $localidades,
+                // 'localidades'=> C_Localidad::where('status', 1)->get(),
                 // 'localidades'=> C_Localidad::findMany([57,249]),   
-                'municipios'=> C_Municipio::findMany([8,2,9,10,1,3]),
+                'municipios'=> C_Municipio::where('status', 1)->get(),
                 // 'municipios'=> C_Municipio::findMany([5,4]),
                 'estadosCiviles' => C_EstadoCivil::all(),
                 'estudios'=> C_GradoDeEstudio::all(),
@@ -303,34 +315,64 @@ class CuestionarioController extends Controller
     {   
         // if (Auth::check()) {// cambio por beda electoral
 
-            if (Auth::check()) { // para diferenciar entra usuario y publico y proporcionarles la informacion correcta o que deben tener de colonias , localidades y municipios
-                $colonias = DB::table('c_colonias')
-                ->select('c_colonias.*')
-                ->whereIn('c_colonias.LocalidadId', [1,11,57,58,59,66,68,69,71,76,79,101,103,157,158,214,249,326,330,347])
-                ->orderBy('c_colonias.Descripcion', 'ASC')
-                ->get();
-
-                $localidades = C_Localidad::findMany([1,11,57,58,59,66,68,69,71,76,79,101,103,157,158,214,249,326,330,347]);
-                $municipios = C_Municipio::findMany([1,2,3,4,5,6,7,8,9,10,11]);
-                $stock = StockDespensa::where('idCentroEntrega', session('centroEntrega'))->get();
-            } else {
-                $colonias = DB::table('c_colonias')
-                ->select('c_colonias.*')
-                ->whereIn('c_colonias.LocalidadId', [326,68,330,1,66,347])
-                ->where('c_colonias.status', '=',1)
-                ->orderBy('c_colonias.Descripcion', 'ASC')
-                ->get();
-                $localidades = C_Localidad::findMany([326,68,330,1,66,347]);
-                $municipios = C_Municipio::findMany([8,2,9,10,1,3]);
-                $stock = null;
-            } 
-            
-
             $personaCollection = DB::table('personas')
             ->leftjoin('encuestas', 'personas.id', '=', 'encuestas.personaId')
             ->select('personas.*', 'encuestas.Pregunta_33', 'encuestas.Pregunta_102', 'encuestas.Pregunta_103')
             ->where('personas.id', $id)
             ->get();
+
+
+            if (Auth::check()) { // para diferenciar entra usuario y publico y proporcionarles la informacion correcta o que deben tener de colonias , localidades y municipios
+                
+                $colonias = DB::table('c_colonias')
+                ->select('*')
+                ->where('LocalidadId', '=',$personaCollection[0]->LocalidadId)
+                ->orWhere('id', '=', $personaCollection[0]->ColoniaId)
+                ->orderBy('Descripcion', 'ASC')
+                ->get();
+               
+                $localidades =  DB::table('c_localidades')
+                ->select('*')
+                ->whereIn('status', [1, 2])
+                ->where('MunicipioId', $personaCollection[0]->MunicipioId)
+                ->orWhere('id', '=', $personaCollection[0]->LocalidadId)
+                ->orderBy('Descripcion', 'ASC')
+                ->get();
+                
+                $municipios = DB::table('c_municipios')
+                ->select('*')
+                ->orderBy('Descripcion', 'ASC')
+                ->get();
+                
+                $stock = StockDespensa::where('idCentroEntrega', session('centroEntrega'))->get();
+            } else {
+                // DB::enableQueryLog(); 
+                $colonias = DB::table('c_colonias')
+                ->select('*')
+                ->where('LocalidadId', '=',$personaCollection[0]->LocalidadId)
+                ->where('status', '=',1)
+                ->orWhere('id', '=', $personaCollection[0]->ColoniaId)
+                ->orderBy('Descripcion', 'ASC')
+                ->get();
+                // dd(DB::getQueryLog()); 
+                
+                $localidades = DB::table('c_localidades')
+                ->select('*')
+                ->where('status', 1)
+                ->where('MunicipioId', $personaCollection[0]->MunicipioId)
+                ->orWhere('id', '=', $personaCollection[0]->LocalidadId)
+                ->orderBy('Descripcion', 'ASC')
+                ->get();
+
+                $municipios = DB::table('c_municipios')
+                ->select('*')
+                ->where('status', 1)
+                ->orWhere('id', '=', $personaCollection[0]->MunicipioId)
+                ->orderBy('Descripcion', 'ASC')
+                ->get();
+
+                $stock = null;
+            } 
 
             $personaCollection[0]->Intentos = 1;
 
@@ -1162,5 +1204,172 @@ class CuestionarioController extends Controller
         }
         return[0,0];
         // trigger_error("Error 103: Favor de reportarlo", E_USER_ERROR);
+    }
+
+    public function findLocalidades(Request $Request){
+
+            $localidadesArray = [];
+            $localidadesString = '';
+            $localidadesStringHold = '';
+            $coloniasString = '';
+            $coloniasStringHold = '';
+
+        if ($Request->get('from') == 0) {
+
+            $localidadesString .= '<option value="" selected>Seleccione una opcion</option>';
+            $coloniasString .= '<option value="" selected>Seleccione una opcion</option>';
+
+            $localidades = DB::table('c_localidades')
+                ->select('id', 'Descripcion')
+                ->where('status', '=',1)
+                ->where('MunicipioId', $Request->get('municipio'))
+                ->orderBy('Descripcion', 'ASC')
+                ->get();
+
+            foreach ($localidades as $localidad) {
+                $localidadesString .= '<option value="'.$localidad->id.'">'.$localidad->Descripcion.'</option>';
+                array_push($localidadesArray, $localidad->id);
+            }
+
+            $colonias = DB::table('c_colonias')
+                ->select('id', 'Descripcion')
+                ->where('status', '=',1)
+                ->whereIn('LocalidadId', $localidadesArray)
+                ->orderBy('Descripcion', 'ASC')
+                ->get();
+
+            foreach ($colonias as $colonia) {
+                $coloniasString .= '<option value="'.$colonia->id.'">'.$colonia->Descripcion.'</option>';
+            }
+
+            return [$localidadesString, $coloniasString];
+
+        } else {
+            $localidadesString .= '<option value="">Seleccione una opcion</option>';
+            $coloniasString .= '<option value="">Seleccione una opcion</option>';
+
+            if (Auth::check()) {
+
+                $localidades = DB::table('c_localidades')
+                    ->select('id', 'Descripcion')
+                    ->where('MunicipioId', $Request->get('municipio'))
+                    ->whereIn('status', [1, 2])
+                    ->orderBy('Descripcion', 'ASC')
+                    ->get();
+
+                foreach ($localidades as $localidad) {
+                    if ($Request->get('localidad') == $localidad->id) {//si la localidad ya es correcta entonces vacia el array y mete ese un unico valor para que al hacer la consulta de colonias devuelva solo las de esa localidad
+                        $localidadesArray = [];
+                        array_push($localidadesArray, $localidad->id);
+                        break;
+                    } else {
+                        array_push($localidadesArray, $localidad->id);
+                    }
+                }
+
+                $colonias = DB::table('c_colonias')
+                    ->select('id', 'Descripcion')
+                    ->whereIn('LocalidadId', $localidadesArray)
+                    ->orderBy('Descripcion', 'ASC')
+                    ->get();
+
+            } else {
+
+                $localidades = DB::table('c_localidades')
+                    ->select('id', 'Descripcion')
+                    ->where('status', 1)
+                    ->where('MunicipioId', $Request->get('municipio'))
+                    ->orderBy('Descripcion', 'ASC')
+                    ->get();
+
+                foreach ($localidades as $localidad) {
+                    if ($Request->get('localidad') == $localidad->id) {//si la localidad ya es correcta entonces vacia el array y mete ese un unico valor para que al hacer la consulta de colonias devuelva solo las de esa localidad
+                        $localidadesArray = [];
+                        array_push($localidadesArray, $localidad->id);
+                        break;
+                    } else {
+                        array_push($localidadesArray, $localidad->id);
+                    }
+                }
+
+                $colonias = DB::table('c_colonias')
+                    ->select('id', 'Descripcion')
+                    ->where('status', '=',1)
+                    ->whereIn('LocalidadId', $localidadesArray)
+                    ->orderBy('Descripcion', 'ASC')
+                    ->get();
+    
+                
+            }
+
+            foreach ($localidades as $localidad) {
+                if ($Request->get('localidad') == $localidad->id) {
+                    $localidadesString .= '<option value="'.$localidad->id.'" selected>'.$localidad->Descripcion.'</option>';
+                } else {
+                    $localidadesString .= '<option value="'.$localidad->id.'">'.$localidad->Descripcion.'</option>';
+                }
+            }
+
+            foreach ($colonias as $colonia) {
+                if ($Request->get('colonia') == $colonia->id) {
+                    $coloniasString .= '<option value="'.$colonia->id.'" selected>'.$colonia->Descripcion.'</option>';
+                } else {
+                    $coloniasString .= '<option value="'.$colonia->id.'">'.$colonia->Descripcion.'</option>';
+                }
+            }
+
+            return [$localidadesString, $coloniasString];            
+        }
+    }
+
+    public function findColonias(Request $Request){        
+        if ($Request->get('from') == 0) {
+            $coloniasString = '<option value="" selected>Seleccione una opcion</option>';
+
+            $colonias = DB::table('c_colonias')
+            ->select('id', 'Descripcion')
+            ->where('status', '=',1)
+            ->where('LocalidadId', $Request->get('localidad'))
+            ->orderBy('Descripcion', 'ASC')
+            ->get();
+            
+            foreach ($colonias as $colonia) {
+                if ($Request->get('colonia') == $colonia->id) {
+                    $coloniasString .= '<option value="'.$colonia->id.'" selected>'.$colonia->Descripcion.'</option>';
+                } else {
+                    $coloniasString .= '<option value="'.$colonia->id.'">'.$colonia->Descripcion.'</option>';
+                }
+            }
+
+            return $coloniasString;
+
+        } else {
+            $coloniasString = '<option value="" >Seleccione una opcion</option>';
+
+            if (Auth::check()) {
+                $colonias = DB::table('c_colonias')
+                    ->select('id', 'Descripcion')
+                    ->where('LocalidadId', $Request->get('localidad'))
+                    ->orderBy('Descripcion', 'ASC')
+                    ->get();
+            } else {
+                $colonias = DB::table('c_colonias')
+                    ->select('id', 'Descripcion')
+                    ->where('status', '=',1)
+                    ->where('LocalidadId', $Request->get('localidad'))
+                    ->orderBy('Descripcion', 'ASC')
+                    ->get();                
+            }
+
+            foreach ($colonias as $colonia) {                    
+                if ($Request->get('colonia') == $colonia->id) {
+                    $coloniasString .= '<option value="'.$colonia->id.'" selected>'.$colonia->Descripcion.'</option>';
+                } else {
+                    $coloniasString .= '<option value="'.$colonia->id.'">'.$colonia->Descripcion.'</option>';
+                }
+            }
+
+            return $coloniasString;
+        }
     }
 }

@@ -156,18 +156,22 @@
                         {{-- <input type="text" class="form-control" name="localidad"> --}}
                         <select id="localidad" class="form-control" name="localidad" required="">
                             <option value="" selected>Seleccione una opcion</option>
-                            @foreach ($localidades as $localidad)
-                                <option value="{{$localidad->id}}">{{$localidad->Descripcion}}</option>
-                            @endforeach
+                            @if ($localidades)
+                                @foreach ($localidades as $localidad)
+                                    <option value="{{$localidad->id}}">{{$localidad->Descripcion}}</option>
+                                @endforeach
+                            @endif
                         </select>
                     </div>
                     <div class="form-group col-md-3">
                         <label for="colonia">{{ $preguntas[12]['Descripcion'] }}</label><br>
                         <select for id="colonia" class="form-control" name="colonia" required="">
                             <option value="" selected>Seleccione una opcion</option>
-                            @foreach ($colonias as $colonia)
-                                <option value="{{$colonia->id}}">{{$colonia->Descripcion}}</option>
-                            @endforeach
+                            @if ($colonias)
+                                @foreach ($colonias as $colonia)
+                                    <option value="{{$colonia->id}}">{{$colonia->Descripcion}}</option>
+                                @endforeach
+                            @endif
                         </select>
                         <br>
                     </div>

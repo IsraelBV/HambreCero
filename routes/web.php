@@ -144,6 +144,10 @@ Route::get('/entrega/enUpdatePost','P2021\Admin\EntregaController@buildFormPostE
 /////Administracion de catalogos y stock
 Route::post('/catalogo/stock/update', 'P2021\Admin\EntregaController@stockUpdate');// hay que cambiar el controlador cuando de haga la parte de administracion de catalogo
 
+///// Utilidad
+Route::get('/utils/localidad','P2021\CuestionarioController@findLocalidades');
+Route::get('/utils/colonia','P2021\CuestionarioController@findColonias');
+
 
 //ADMIN/ENTRGAS 2020----------------------------------------------------------------------------------------------------------------------------------------
 // Route::get('/admin2020/entrega','P2020\Admin\EntregaController@index')->name('buscar');

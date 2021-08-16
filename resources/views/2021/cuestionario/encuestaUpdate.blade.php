@@ -191,13 +191,15 @@
                             @if ($persona[0]->LocalidadId == null)
                                 <option value="" selected>Seleccione una opcion</option>
                             @endif
-                            @foreach ($localidades as $localidad)
-                                @if ($localidad->id == $persona[0]->LocalidadId)
-                                    <option selected value="{{$localidad->id}}">{{$localidad->Descripcion}}</option>
-                                @else
-                                    <option value="{{$localidad->id}}">{{$localidad->Descripcion}}</option>
-                                @endif
-                            @endforeach
+                            @if ($localidades)
+                                @foreach ($localidades as $localidad)
+                                    @if ($localidad->id == $persona[0]->LocalidadId)
+                                        <option selected value="{{$localidad->id}}">{{$localidad->Descripcion}}</option>
+                                    @else
+                                        <option value="{{$localidad->id}}">{{$localidad->Descripcion}}</option>
+                                    @endif
+                                @endforeach
+                            @endif
                         </select>
                     </div>
                     <div class="form-group col-md-3">
@@ -206,13 +208,15 @@
                             @if ($persona[0]->ColoniaId == null)
                                 <option value="" selected>Seleccione una opcion</option>
                             @endif
-                            @foreach ($colonias as $colonia)
-                                @if ($colonia->id == $persona[0]->ColoniaId)
-                                    <option selected value="{{$colonia->id}}">{{$colonia->Descripcion}}</option>
-                                @else
-                                    <option value="{{$colonia->id}}">{{$colonia->Descripcion}}</option>
-                                @endif
-                            @endforeach
+                            @if ($localidades)
+                                @foreach ($colonias as $colonia)
+                                    @if ($colonia->id == $persona[0]->ColoniaId)
+                                        <option selected value="{{$colonia->id}}">{{$colonia->Descripcion}}</option>
+                                    @else
+                                        <option value="{{$colonia->id}}">{{$colonia->Descripcion}}</option>
+                                    @endif
+                                @endforeach
+                            @endif
                         </select>
                         <br>
                     </div>
