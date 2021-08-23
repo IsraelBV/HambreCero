@@ -100,17 +100,17 @@
 						@else
 							{{-- <li class="nav-item">
 								<a class="nav-link" href="{{ route('buscar') }}">{{ __('Validacion') }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
-							</li>
+							</li> --}}
 							@if (Auth::user()->tipoUsuarioId == 0)                            
 								@if (Route::has('register'))
-								<li class="nav-item">
-									<a class="nav-link" href="{{ route('usuarios') }}">{{ __('Usuarios') }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
-								</li>
+									{{-- <li class="nav-item">
+										<a class="nav-link" href="{{ route('usuarios2021') }}">{{ __('Usuarios') }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
+									</li> --}}
+									<li class="nav-item">
+										<a class="nav-link" href="{{ route('reporte2021') }}">{{ __('Reportes') }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
+									</li> 
 								@endif
-								<li class="nav-item">
-									<a class="nav-link" href="{{ route('reporte') }}">{{ __('Reportes') }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
-								</li>
-							@endif --}}
+							@endif
 							<li class="nav-item dropdown">
 								<a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
 									{{ Auth::user()->name }}
@@ -742,50 +742,6 @@
 				
 
 			});
-
-			$(document).on('change', '#municipio',function(){ //busca las localidades y colonias cuando se cambia el select de municipio
-				$.ajax({
-					type: "get",
-					url: "/utils/localidad",
-					data: {
-							'municipio':$("#municipio").val(),
-							'localidad':$("#localidad").val(),
-							'colonia':$("#colonia").val(),
-							'from': $("#ntn").length
-						},
-					beforeSend: function(){
-						$("#localidad").html('');
-						$("#colonia").html('');
-					}
-				}).done(function(data) {
-					$("#localidad").html(data[0]);
-					$("#colonia").html(data[1]);
-				}).fail(function(jqXHR, textStatus, errorThrown){
-					alert('Ocurrio un error, cambie el municipio y vuelva a elegir el correcto');
-				});
-			});
-
-			$(document).on('change', '#localidad',function(){ ////busca las colonias cuando se cambia el select de localidades
-				$.ajax({
-					type: "get",
-					url: "/utils/colonia",
-					data: {
-							'localidad':$("#localidad").val(),
-							'colonia':$("#colonia").val(),
-							'from': $("#ntn").length
-						},
-					beforeSend: function(){
-						$("#colonia").html('');
-					}
-				}).done(function(data) {
-					$("#colonia").html(data);
-				}).fail(function(jqXHR, textStatus, errorThrown){
-					alert('Ocurrio un error, cambie la localidad y vuelva a elegir la correcta');
-				});
-			});
-
-
-
 			$("#passpersonacreate").off().submit(function(e) { //cambia la contraseña de la persona
 				e.preventDefault();
 				
@@ -916,6 +872,52 @@
 			});
 		});
 	</script>
+
+	{{-- scrip de utilidades --}}
+	<script>
+		$(document).on('change', '#municipio',function(){ //busca las localidades y colonias cuando se cambia el select de municipio
+			$.ajax({
+				type: "get",
+				url: "/utils/localidad",
+				data: {
+						'municipio':$("#municipio").val(),
+						'localidad':$("#localidad").val(),
+						'colonia':$("#colonia").val(),
+						'from': $("#ntn").length
+					},
+				beforeSend: function(){
+					$("#localidad").html('');
+					$("#colonia").html('');
+				}
+			}).done(function(data) {
+				$("#localidad").html(data[0]);
+				$("#colonia").html(data[1]);
+			}).fail(function(jqXHR, textStatus, errorThrown){
+				alert('Ocurrio un error, cambie el municipio y vuelva a elegir el correcto');
+			});
+		});
+
+		$(document).on('change', '#localidad',function(){ ////busca las colonias cuando se cambia el select de localidades
+			$.ajax({
+				type: "get",
+				url: "/utils/colonia",
+				data: {
+						'localidad':$("#localidad").val(),
+						'colonia':$("#colonia").val(),
+						'from': $("#ntn").length
+					},
+				beforeSend: function(){
+					$("#colonia").html('');
+				}
+			}).done(function(data) {
+				$("#colonia").html(data);
+			}).fail(function(jqXHR, textStatus, errorThrown){
+				alert('Ocurrio un error, cambie la localidad y vuelva a elegir la correcta');
+			});
+		});
+	</script>
+
+
 	 {{--<script> //se utiliza para entregas
 		$(document).ready(function() {
 			$("#findentrega").off().submit(function(e) { //busca a las personas
@@ -1291,70 +1293,61 @@
 			});
 			
 		});        
-	</script>
+	</script> --}}
+
+
 	<script>//reportes
 		$(document).ready(function() {
+			//ya esta cubierto el cambio de localidad y colnia en la parte de utilidades
 			
-			$('#ciudadrpt').off().change(function(){
-				var ciudadrpt = $(this);
-				$.ajax({
-					type: "POST",
-					url: "/admin/reporte/findcolonias/"+ciudadrpt.val(),
-					data: {
-						"_token": "{{ csrf_token() }}"
-						},
-					success: function(data) {
-						// var selectcolonia = '<option value="" selected>Seleccione una opcion</option>';
-							var selectcolonia = '<option value="x" selected>Todas</option>';
-						$.each(data, function(k, v) {
-							selectcolonia += '<option value="'+v['id']+'" >'+v['colonia']+'</option>';
-						});
-						$('#coloniarpt').html(selectcolonia);
-					}
-				});
-			});
 
-			$('#entregadorpt').off().change(function(){
-				var ciudadrpt = $(this);
-
-				if (ciudadrpt.val() == 1) {
-					$('#periodorpt').prop('disabled', false);
-					$('#donadorpt').prop('disabled', false);
+			$('#centroent').off().change(function(){
+				var centroent = $(this);
+				if (centroent.val() == '') {
+					$('#municipio').prop('disabled', false);
+					$('#localidad').prop('disabled', false);
+					$('#colonia').prop('disabled', false);
 				} else { 
-					$("#periodorpt").val('x');
-					$("#donadorpt").val('x');
-					$('#periodorpt').prop('disabled', true)
-					$('#donadorpt').prop('disabled', true);
+					$('#municipio').val('');
+					$('#localidad').val('');
+					$('#colonia').val('');
+					$('#municipio').prop('disabled', true);
+					$('#localidad').prop('disabled', true);
+					$('#colonia').prop('disabled', true);
 				}
 			});
 			
-			$('#findreporte').off().submit(function(e){
-				e.preventDefault();
+			$('#verentregados').off().click(function(e){
+				// e.preventDefault();
 				
 				var sppiner = '<div class="text-center"></br></br><div class="spinner-border text-info" style="width: 6rem; height: 6rem;" role="status"><span class="sr-only">Loading...</span></div></div>';
 				$('#stats').html('');
 
-				$('#reportecontenedor').html(sppiner);
-
 				$.ajax({
 					type: "POST",
-					url: "/admin/reporte/findReporte",
+					url: "/admin2021/reporte/findReporte",
 					data:{"_token": "{{ csrf_token() }}",
-						"ciudadrpt":$('#ciudadrpt').val(),
-						"coloniarpt":$('#coloniarpt').val(),
-						"entregadorpt":$('#entregadorpt').val(),
-						"donadorpt":$('#donadorpt').val(),
-						"periodorpt":$('#periodorpt').val(),
+						"localidad":$('#localidad').val(),
+						"colonia":$('#colonia').val(),
+						"periodoent":$('#periodoent').val(),
+						"donado":$('#donado').val(),
+						"municipio":$('#municipio').val(),
+						"centroent":$('#centroent').val()
 						},
-					success: function(data) {
+					beforeSend:function(){
+						$('#reportecontenedor').html(sppiner);
+					}
+				}).done(function(data) {
 						var reporte = "<br/><br/><h3>No se encontraron registros con la informacion proporcionada.<h3>";
-						var entregados = 0;
+						var mujeres = 0;
+						var hombres = 0;
+						var nobinario = 0
 						var donados = 0;
 
 						if(data != undefined){    
 							if(data.length > 0 ){
 								
-								var reporte = '<br/><table class="table table-hover" id="reptable"><thead><tr class="table-info"><th>NOMBRE</th><th>CURP</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>COLONIA</th><th>DIRECCION</th><th>TELEFONO</th><th>ID ENTREGA</th><th>ENTREGADO</th><th>DONADO</th><th>VALIDO</th><th>FECHA ENTREGA</th></tr></thead><tbody>';
+								var reporte = '<br/><table class="table table-hover" id="reptable"><thead><tr class="table-info"><th>NOMBRE</th><th>CURP</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>COLONIA</th><th>DIRECCION</th><th>TELEFONO</th><th>FOLIO ENTREGA</th><th>ID ENTREGA</th><th>DONADO</th><th>PERIODO ENTREGA</th><th>CENTRO ENTREGA</th><th>ENTREGO</th><th>FECHA ENTREGA</th><th>OBSERVACION</th></tr></thead><tbody>';
 									
 								$.each(data, function(k, v) {
 									reporte +='<tr>';
@@ -1365,41 +1358,50 @@
 										reporte +='<td>'+(v['colonia']!= null?v['colonia']:"N/D")+'</td>';
 										reporte +='<td>'+(v['Manzana']!= null?"MZ."+v['Manzana']:"")+" "+(v['Lote']!= null?"LT."+v['Lote']:"")+" "+(v['Calle']!= null?"C."+v['Calle']:"")+" "+(v['NoExt']!= null?"N°Int."+v['NoExt']:"")+" "+(v['NoInt']!= null?"N°Ext."+v['NoInt']:"")+'</td>';
 										reporte +='<td>'+(v['TelefonoCelular']!= null?v['TelefonoCelular']:"N/D")+'</td>';
+										reporte +='<td>'+(v['folioEnt']!= null?v['folioEnt']:"N/D")+'</td>';
 										reporte +='<td>'+(v['idEnt']!= null?v['idEnt']:"N/D")+'</td>';
-										reporte +='<td>'+(v['Donado']!= null?'SI':'NO')+'</td>';
 										reporte +='<td>'+(v['Donado']!= null?(v['Donado']==1?'SI':'NO'):"N/D")+'</td>';
+										reporte +='<td>'+(v['periodoentrega']!= null?v['periodoentrega']:"N/D")+'</td>';
+										reporte +='<td>'+(v['centroentrega']!= null?v['centroentrega']:"N/D")+'</td>';
 										reporte +='<td>'+(v['name']!= null?v['name']:"N/D")+'</td>';
+																		
+
 										if (v['fechaE']!= null) {
 											var d = new Date(v['fechaE']);
-											d.setHours(d.getHours() - 5);
-											//d = d.getFullYear()+'-'+("0"+ (d.getMonth() + 1)).slice(-2)+'-'+("0"+d.getDate()).slice(-2)+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
 											d = d.toLocaleString();
 										} else {
 											var d = "N/D";
 										}
 										
 										reporte +='<td>'+d+'</td>';
+										reporte +='<td>'+(v['comentario']!= null?v['comentario']:"N/D")+'</td>';
+
 										reporte +='</tr>';
 
-										if (v['Donado']!= null) {
-											entregados++;
+										if (v['sexo'] == 'M') {
+											hombres++;
+										} else if(v['sexo'] == 'F'){
+											mujeres++;
+										} else {
+											nobinario++;
 										}
+
 										if (v['Donado']==1) {
 											donados++;
 										}
 								});
 								reporte +='</tbody></table>';
-								$('#stats').html('<strong>Registros: </strong>'+data.length+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>Entregados: </strong>'+entregados+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>Donados: </strong>'+donados);
-
+								$('#stats').html('<strong>Registros: </strong>'+data.length+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>Donados: </strong>'+donados+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>Mujeres: </strong>'+mujeres+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>Hombres: </strong>'+hombres+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>No binario: </strong>'+nobinario);
 
 							} 
 						} 
 						$('#reportecontenedor').html(reporte);
 						
 						$('#reptable').DataTable({
+							//  dom: 'frltp',
 							dom: 'frltpB',
-							pageLength: 10,
-							lengthMenu: [10,30,50,100,200,500],
+							pageLength: 15,
+							lengthMenu: [15,30,50,100,200,500],
 							sScrollY:"30em",
 							sScrollX: "100%",  
 							buttons: [{
@@ -1407,7 +1409,7 @@
 								className: "btn btn-success",
 								text: 'Exportar Reporte',
 								title: '',
-								filename: 'Reporte Hambre Cero',
+								filename: 'Reporte de Entregas',
 							}],
 							"language": {
 								"decimal":        "",
@@ -1434,12 +1436,14 @@
 								}
 							}
 						});
-					}
+				}).fail(function(jqXHR, textStatus, errorThrown){
 				});
-			});     
+			});
+			
+			
 		});
 	</script>
-	<script>//usuarios
+	{{-- <script>//usuarios
 		$(document).ready(function() {
 			
 			$("[name='idusuariodesh']").off().click(function(){// para deshabilitar usuario 

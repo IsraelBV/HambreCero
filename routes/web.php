@@ -149,21 +149,7 @@ Route::get('/utils/localidad','P2021\CuestionarioController@findLocalidades');
 Route::get('/utils/colonia','P2021\CuestionarioController@findColonias');
 
 
-//ADMIN/ENTRGAS 2020----------------------------------------------------------------------------------------------------------------------------------------
-// Route::get('/admin2020/entrega','P2020\Admin\EntregaController@index')->name('buscar');
-
-// Route::post('/admin2020/findPersonaEntrega', 'P2020\Admin\EntregaController@findPersonaEntrega');
-
-// Route::post('/admin2020/findListaEntregas/{entrega}', 'P2020\Admin\EntregaController@findEntregas');
-
-// Route::get('/admin2020/entrega/{entrega}/edit','P2020\Admin\EntregaController@editarEntrega');
-
-// Route::put('/admin2020/entrega/{entrega}','P2020\Admin\EntregaController@actualizarEntrega');// editar una entrega
-
-// Route::delete('/admin2020/entrega/revertirEntrega/{entrega}', 'P2020\Admin\EntregaController@revertirEntrega');//revertir las entregas por admins
-
-// Route::post('/admin2020/entrega/{entrega}', 'P2020\Admin\EntregaController@registrarEntrega');
-
-// Route::post('/admin2020/entrega/documentacion/{entrega}', 'P2020\Admin\EntregaController@registrarDocumentacion');
-
-// Route::post('/admin2020/findDocumentacion/{entrega}', 'P2020\Admin\EntregaController@findDocumentacion');
+//REPORTES------------------------------------------------------------------------------------------------------------------------------------------------
+Route::get('/admin2021/reporte','P2021\Admin\ReporteController@index')->name('reporte2021');
+Route::post('/admin2021/reporte/findReporte','P2021\Admin\ReporteController@findReporte');
+// Route::get('/admin2021/reporte/downloadReporte','P2021\Admin\ReporteController@downloadReporte');
