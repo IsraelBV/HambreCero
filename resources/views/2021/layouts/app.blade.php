@@ -1391,7 +1391,7 @@
 										}
 								});
 								reporte +='</tbody></table>';
-								$('#stats').html('<strong>Registros: </strong>'+data.length+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>Donados: </strong>'+donados+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>Mujeres: </strong>'+mujeres+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>Hombres: </strong>'+hombres+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>No binario: </strong>'+nobinario);
+								$('#stats').html('<strong>Registros: </strong>'+data.length+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>Donados: </strong>'+donados+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>Mujeres: </strong>'+mujeres+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>Hombres: </strong>'+hombres+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>Sin especificar: </strong>'+nobinario);
 
 							} 
 						} 
