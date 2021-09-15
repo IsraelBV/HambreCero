@@ -18,7 +18,7 @@ class CreateColumnsFirst2021InEntregas extends Migration
             $table->boolean('Pregunta_103')->nullable();
             $table->integer('idCentroEntrega')->nullable();
             $table->integer('idPeriodoEntrega')->nullable();
-            $table->boolean('idTipoBeneficiario')->nullable();
+            $table->integer('idTipoBeneficiario')->nullable();
             $table->integer('comentarioEntrega')->nullable();
         });
     }
