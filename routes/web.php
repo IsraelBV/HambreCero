@@ -153,3 +153,9 @@ Route::get('/utils/colonia','P2021\CuestionarioController@findColonias');
 Route::get('/admin2021/reporte','P2021\Admin\ReporteController@index')->name('reporte2021');
 Route::post('/admin2021/reporte/findReporte','P2021\Admin\ReporteController@findReporte');
 // Route::get('/admin2021/reporte/downloadReporte','P2021\Admin\ReporteController@downloadReporte');
+
+
+//Modulo entregas------------------------------------------------------------------------------------------------------------------------------------------------
+Route::get('/admin2021/entrega','P2021\Admin\EntregaController@index')->name('buscar2021');
+Route::get('/admin2021/entrega/edit','P2021\Admin\EntregaController@editarEntrega');
+Route::put('/admin2021/entrega/{entrega}','P2021\Admin\EntregaController@actualizarEntrega');

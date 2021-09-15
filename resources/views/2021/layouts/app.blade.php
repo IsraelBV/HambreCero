@@ -98,14 +98,15 @@
 								</li>
 							@endif
 						@else
-							{{-- <li class="nav-item">
-								<a class="nav-link" href="{{ route('buscar') }}">{{ __('Validacion') }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
-							</li> --}}
+							
 							@if (Auth::user()->tipoUsuarioId == 0)                            
 								@if (Route::has('register'))
 									{{-- <li class="nav-item">
 										<a class="nav-link" href="{{ route('usuarios2021') }}">{{ __('Usuarios') }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
 									</li> --}}
+									<li class="nav-item">
+										<a class="nav-link" href="{{ route('buscar2021') }}">{{ __('Entregas') }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
+									</li>
 									<li class="nav-item">
 										<a class="nav-link" href="{{ route('reporte2021') }}">{{ __('Reportes') }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
 									</li> 
@@ -918,364 +919,20 @@
 	</script>
 
 
-	 {{--<script> //se utiliza para entregas
+	 <script> //se utiliza para entregas
 		$(document).ready(function() {
-			$("#findentrega").off().submit(function(e) { //busca a las personas
-				e.preventDefault();
-				
-				$.ajax({ //manda a buscar a los registros con la curp y de ahi busca todos lo que coincida con la direccion
-					type: "POST",
-					url: "/admin/findPersonaEntrega",
-					data: $("#findentrega").serialize(),
-					success: function(data) {
-
-						var userlvl = data['userlvl'];
-						var listastring2 = "<br/><br/><h3>No se encontraron registros con esta CURP.<h3>";
-
-							if(data['retper'] != undefined){    
-								if(data['retper'].length > 0 ){
-
-									var listastring2 =  '<br/><table class="table"><tr><th>NOMBRE</th><th>CURP</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>ENTREGAS</th><th>DOCUMENTOS</th><th>ENTREGAR</th></tr>';//+((data['userlvl'] == 0)?'<th>REVERTIR</th>':'')+'</tr>';<th>ESTADO CIVIL</th>
-										
-									$.each(data['retper'], function(k, v) {
-										listastring2 +='<tr>';
-											listastring2 +='<td>'+(v['Nombre']!= null?v['Nombre']:"")+" "+(v['APaterno']!= null?v['APaterno']:"")+" "+(v['AMaterno']!= null?v['AMaterno']:"")+'</td>';
-											listastring2 +='<td>'+(v['CURP']!= null?v['CURP']:"N/D")+'</td>';
-											listastring2 +='<td>'+(v['municipio']!= null?v['municipio']:"N/D")+'</td>';
-											listastring2 +='<td>'+(v['localidad']!= null?v['localidad']:"N/D")+'</td>';
-											// listastring2 +='<td>'+(v['estadoc']!= null?v['estadoc']:"N/D")+'</td>';
-											listastring2 +='<td>'+(v['colonia']!= null?v['colonia']:"")+" "+(v['Manzana']!= null?"MZ."+v['Manzana']:"")+" "+(v['Lote']!= null?"LT."+v['Lote']:"")+" "+(v['Calle']!= null?"C."+v['Calle']:"")+" "+(v['NoExt']!= null?"N°Ext."+v['NoExt']:"")+" "+(v['NoInt']!= null?"N°Int."+v['NoInt']:"")+'</td>';
-											listastring2 +='<td><button class="btn btn-outline-info" name="idpersonalistaentrega" data-entid="'+v['id']+'">Entregas</button></td>';
-											listastring2 +='<td><button class="btn btn-outline-warning" name="idpersonadocumentacion" data-entid="'+v['id']+'">Documentos</button></td>';
-											listastring2 +=(data['docper'] !== 0)?'<td><button disabled class="btn btn-outline-danger" name="idpersonaentrega" data-entid="'+v['id']+'"> ENTREGADO </button></td>':'<td><button class="btn btn-outline-success" name="idpersonaentrega" data-entid="'+v['id']+'">Entregar</button></td>';
-										listastring2 +='</tr>';
-									});
-									listastring2 +='</table>';
-										
-								} 
-							} 
-
-						$("#entregaContenedor").html(listastring2);//despliega la lista de encontrados
-						
-						$("[name='idpersonalistaentrega']").off().click(function(){// si se hace click a algun boton de listado de entregas
-
-							var btnlistaentregas = $(this);
-
-							$("#entregadoModal .modal-title").html("LISTA DE ENTREGAS");//llena el titulo
-
-							$.ajax({//manda a buscar los registros de entregas de la persona
-								type: "POST",
-								url: "/admin/findListaEntregas/"+btnlistaentregas.data("entid"),
-								data: {
-										"_token": "{{ csrf_token() }}"
-									},
-								success: function(data) {
-									//tabla de entregas
-									var strlistaentregas =  '<br/><table class="table table-hover"><tr><th>ID ENT.</th><th>DIRECCION</th><th>PERIODO</th><th>DONADO</th><th>FECHA</th><th>ENTREGO</th>'+((userlvl == 0)?'<th>EDITAR</th><th>REVERTIR</th>':'')+'</tr>';
-									$.each(data, function(k, v) {
-										strlistaentregas +='<tr>';
-										strlistaentregas +='<td>'+(v['id']!= null?v['id']:"N/D")+'</td>';
-										strlistaentregas +='<td>'+'Mpio. '+(v['municipio']!= null?v['municipio']:"N/D")+' Loc. '+(v['localidad']!= null?v['localidad']:"N/D")+' '+(v['Direccion']!= null?v['Direccion']:"N/D")+'</td>';
-										strlistaentregas +='<td>'+(v['periodo']!= null?v['periodo']:"N/D")+'</td>';
-										strlistaentregas +='<td>'+(v['Donado']!= null?(v['Donado'] == 1 ?'Si':'No'):"N/D")+'</td>';
-										strlistaentregas +='<td>'+(v['created_at']!= null?v['created_at']:"N/D")+'</td>';
-										strlistaentregas +='<td>'+(v['name']!= null?v['name']:"N/D")+'</td>';
-										strlistaentregas +=(userlvl == 0)?'<td><a class="btn btn-outline-warning" name="identregaeditar" href="/admin/entrega/'+v['id']+'/edit" target="_blank">Editar</a></td><td><input type="checkbox" class="chkToggle" data-onstyle="danger" data-offstyle="outline-warning"><button class="btn btn-outline-danger" name="identregarevertir" data-entid="'+v['id']+'" disabled>Revertir</button></td>':'';
-										strlistaentregas +='</tr>';
-									});
-									strlistaentregas +='</table>';
-
-									$("#entregadoModal .modal-body").html(strlistaentregas);//llena la lista de entregas en el body
-
-									$('.chkToggle').bootstrapToggle();//inicializar los toggle de on off
-									$('.chkToggle').off().change(function(){//al cambiar el switch
-										
-										if ($(this).prop('checked')){
-											$(this).parent().next("button").prop( "disabled", false);
-										} else {
-											$(this).parent().next("button").prop( "disabled", true);
-										}
-									});
-
-									$("#entregadoModal .modal-dialog").addClass("modal-lg");//se hace grande el modal para mejor visualizacion
-									$('#entregadoModal [data-btn="cnl"]').text("Salir");
-									$("#entregadoModal").modal('show');
-									
-									$('#entregadoModal [data-btn="cpt"]').hide();//ocultar el boton de guardar por que no sirve de nada
-									
-									$("[name='identregaeditar']").off().click(function(){//se utiliza solo para cerrar el modal cuando le dan clic a editar una entrega ya que redirecciona al volver a abrir refresca la info del modal
-										$("#entregadoModal").modal('hide');
-									});
-
-									$("[name='identregarevertir']").off().click(function(){// si se hace click para revertir entrega 
-
-										var btnrevertir = $(this);
-										$.ajax({//manda a revertir la entrega segun el id
-											type: "DELETE",
-											url: "/admin/entrega/revertirEntrega/"+btnrevertir.data("entid"),
-											data: {
-												"_token": "{{ csrf_token() }}"
-												},
-											success: function(data) {
-												btnrevertir.parent().parent().remove();
-											}
-										});
-									});
-
-									$("#entregadoModal").on('hidden.bs.modal', function (e) {// despues de cerrar el modal se quita el modal grande y se vuelve a mostrar el boton de guardar
-										$("#entregadoModal .modal-dialog").removeClass("modal-lg");
-										$('#entregadoModal [data-btn="cpt"]').show();
-										$('#entregadoModal [data-btn="cnl"]').text("Cancelar");
-									});
-								}
-							});                                                         
-						});
-
-						$("[name='idpersonadocumentacion']").off().click(function(){// si se hace click a algun boton de documentacion
-
-							var btndocumentacion = $(this);
-							$("#entregadoModal .modal-title").html("DOCUMENTACION");//llena el titulo
-
-							var strdocumentacion = '<div id="skidconcurp">';
-								strdocumentacion += '<label for="">';
-									strdocumentacion += '¿La identificacion tiene la curp?';
-								strdocumentacion += '</label>';
-								strdocumentacion += '<br>';
-								strdocumentacion += '<div class="form-check-inline">';
-									strdocumentacion += '<input class="form-check-input" type="radio" name="curpid" id="curpid" value="1">';
-									strdocumentacion += '<label class="form-check-label" for="curpid">';
-										strdocumentacion += 'Si';
-									strdocumentacion += '</label>';
-								strdocumentacion += '</div>';
-								strdocumentacion += '<div class="form-check-inline">';
-									strdocumentacion += '<input class="form-check-input" type="radio" name="curpid" id="curpid1" value="0">';
-									strdocumentacion += '<label class="form-check-label" for="curpid1">';
-										strdocumentacion += 'No';
-									strdocumentacion += '</label>';
-								strdocumentacion += '</div>';
-								strdocumentacion += '</div>';
-							
-								strdocumentacion += '<form id="formdocumentos">@csrf';
-								strdocumentacion += '<div id="sktipodespensa">';
-								strdocumentacion += '<label for="">¿Que tipo de despensa es?</label>';
-								strdocumentacion += '<br>';
-								strdocumentacion += '<div class="form-check-inline">';
-									strdocumentacion += '<input class="form-check-input" type="radio" name="donado" id="donado2" value="0">';
-									strdocumentacion += '<label class="form-check-label" for="donado2">Pagada</label>';
-								strdocumentacion += '</div>';
-								strdocumentacion += '<div class="form-check-inline">';
-									strdocumentacion += '<input class="form-check-input" type="radio" name="donado" id="donado1" value="1">';
-									strdocumentacion += '<label class="form-check-label" for="donado1">Donacion</label>';
-								strdocumentacion += '</div>';
-								strdocumentacion += '</div>';
-								strdocumentacion += '<br>';
-							strdocumentacion += '<div id="docscont"> </div>';
-
-							$("#entregadoModal .modal-body").html(strdocumentacion);//llena opciones del body
-							console.log(btndocumentacion.data("entid"));
-								$.ajax({//manda a buscar registros de documentacion en caso de existir
-									type: "POST",
-									url: "/admin/findDocumentacion/"+btndocumentacion.data("entid"),
-									data: {
-											"_token": "{{ csrf_token() }}",
-										},
-									success: function(data) {         
-										if (data != 0) {
-
-											if (data.Donado == 1) {                                                
-												$('#donado1').attr("checked", "checked");
-											} else {
-												$('#donado2').attr("checked", "checked");
-											}
-											
-											$('#skidconcurp').hide();
-
-											strdocumentacion = '<label for="">Documentacion</label>';
-													strdocumentacion += '<br>';
-														strdocumentacion += '<div class="form-group">';
-															strdocumentacion += '<div class="form-check">';
-																strdocumentacion += '<input class="form-check-input" type="checkbox" id="comprobante" name="comprobante" '+(data.Comprobante == 1?'checked':'')+'>';
-																strdocumentacion += '<label class="form-check-label" for="comprobante" id="comprolabel">'+(data.Donado == 0?'Recibo de pago':'Anexo 16 - Carta de no pago')+'</label>';                                                            
-																strdocumentacion += '</div>';
-															strdocumentacion += '<div class="form-check">';
-																strdocumentacion += '<input class="form-check-input" type="checkbox" id="cuestionario" name="cuestionario" '+(data.CuestionarioCompleto == 1?'checked':'')+'>';
-																strdocumentacion += '<label class="form-check-label" for="cuestionario">';
-																	strdocumentacion += 'Cuestionario Necesidades (2020)/ Solicitud de Apoyo (2020bis)';
-																strdocumentacion += '</label>';
-															strdocumentacion += '</div>';
-															strdocumentacion += '<div class="form-check">';
-																strdocumentacion += '<input class="form-check-input" type="checkbox" id="formato1" name="formato1" '+(data.F1SolicitudApoyo == 1?'checked':'')+'>';
-																strdocumentacion += '<label class="form-check-label" for="formato1">';
-																	strdocumentacion += 'Formato 1 Solicitud apoyo firmado';
-																strdocumentacion += '</label>';
-															strdocumentacion += '</div>';
-															strdocumentacion += '<div class="form-check">';
-																strdocumentacion += '<input class="form-check-input" type="checkbox" id="idoficial" name="idoficial" '+(data.Identificacion == 1?'checked':'')+'>';
-																strdocumentacion += '<label class="form-check-label" for="idoficial">';
-																	strdocumentacion += 'Identificación oficial vigente';
-																strdocumentacion += '</label>';
-															strdocumentacion += '</div>';   
-																strdocumentacion += '<div class="form-check">';
-																	strdocumentacion += '<input class="form-check-input" type="checkbox" id="curpdoc" name="curpdoc" '+(data.CURP == 1?'checked':'')+'>';
-																	strdocumentacion += '<label class="form-check-label" for="curpdoc">';
-																		strdocumentacion += 'CURP';
-																	strdocumentacion += '</label>';
-																strdocumentacion += '</div>';
-															strdocumentacion += '<div class="form-check">';
-																strdocumentacion += '<input class="form-check-input" type="checkbox" id="domicilio" name="domicilio" '+(data.ComprobanteDomicilio == 1?'checked':'')+'>';
-																strdocumentacion += '<label class="form-check-label" for="domicilio">';
-																	strdocumentacion += 'Comprobante de domicilio no mayor a 3 meses de antigüedad ';
-																strdocumentacion += '</label>';
-															strdocumentacion += '</div>';
-															strdocumentacion += '<div class="form-check">';
-																strdocumentacion += '<input class="form-check-input" type="checkbox" id="anexo17" name="anexo17" '+(data.Anexo17 == 1?'checked':'')+'>';
-																strdocumentacion += '<label class="form-check-label" for="anexo17">';
-																	strdocumentacion += 'Anexo 17 - Comprobante de recepción de apoyo';
-																strdocumentacion += '</label>';
-															strdocumentacion += '</div>';
-																strdocumentacion += '<input type="hidden" name="docid" value="'+data.id+'">';
-														strdocumentacion += '</div>';
-													strdocumentacion += '</form>';
-
-													$("#docscont").html(strdocumentacion);
-													
-													
-													$("[name='donado']").click(function(){
-														if ($(this).val() == 0) {
-															$('#comprolabel').html('Recibo de pago');
-														} else {
-															$('#comprolabel').html('Anexo 16 - Carta de no pago');
-														}
-													});
-													
-											$("#entregadoModal").modal('show');// abre el modal de documentacion
-										} else {
-											$("#entregadoModal").modal('show');// abre el modal de documentacion
-
-											$("[name='donado'],[name='curpid']").click(function(){
-													if (typeof $("[name='donado']:checked").val() != "undefined" && typeof $("[name='curpid']:checked").val() != "undefined") {
-														var strdocumentacion2 = '<label for="">Documentacion</label>';
-														strdocumentacion2 += '<br>';
-															strdocumentacion2 += '<div class="form-group">';
-																strdocumentacion2 += '<div class="form-check">';
-																	strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="comprobante" name="comprobante">';
-																	strdocumentacion2 += '<label class="form-check-label" for="comprobante" id="rp">'+($("[name='donado']:checked").val() == 0?'Recibo de pago':'Anexo 16 - Carta de no pago')+'</label>';                         
-																strdocumentacion2 += '</div>';
-																strdocumentacion2 += '<div class="form-check">';
-																	strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="cuestionario" name="cuestionario">';
-																	strdocumentacion2 += '<label class="form-check-label" for="cuestionario">';
-																		strdocumentacion2 += 'Cuestionario Necesidades (2020)/ Solicitud de Apoyo (2020bis)';
-																	strdocumentacion2 += '</label>';
-																strdocumentacion2 += '</div>';
-																strdocumentacion2 += '<div class="form-check">';
-																	strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="formato1" name="formato1">';
-																	strdocumentacion2 += '<label class="form-check-label" for="formato1">';
-																		strdocumentacion2 += 'Formato 1 Solicitud apoyo firmado';
-																	strdocumentacion2 += '</label>';
-																strdocumentacion2 += '</div>';
-																strdocumentacion2 += '<div class="form-check">';
-																	strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="idoficial" name="idoficial">';
-																	strdocumentacion2 += '<label class="form-check-label" for="idoficial">';
-																		strdocumentacion2 += 'Identificación oficial vigente';
-																	strdocumentacion2 += '</label>';
-																strdocumentacion2 += '</div>';
-																if ($("[name='curpid']:checked").val() == 0) {    
-																	strdocumentacion2 += '<div class="form-check">';
-																		strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="curpdoc" name="curpdoc">';
-																		strdocumentacion2 += '<label class="form-check-label" for="curpdoc">';
-																			strdocumentacion2 += 'CURP';
-																		strdocumentacion2 += '</label>';
-																	strdocumentacion2 += '</div>';
-																}
-																strdocumentacion2 += '<div class="form-check">';
-																	strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="domicilio" name="domicilio">';
-																	strdocumentacion2 += '<label class="form-check-label" for="domicilio">';
-																		strdocumentacion2 += 'Comprobante de domicilio no mayor a 3 meses de antigüedad ';
-																	strdocumentacion2 += '</label>';
-																strdocumentacion2 += '</div>';
-																strdocumentacion2 += '<div class="form-check">';
-																	strdocumentacion2 += '<input class="form-check-input" type="checkbox" id="anexo17" name="anexo17">';
-																	strdocumentacion2 += '<label class="form-check-label" for="anexo17">';
-																		strdocumentacion2 += 'Anexo 17 - Comprobante de recepción de apoyo';
-																	strdocumentacion2 += '</label>';
-																strdocumentacion2 += '</div>';
-																strdocumentacion2 += '<input type="hidden" name="docid" value="0">';
-															strdocumentacion2 += '</div>';
-														strdocumentacion2 += '</form>';
-
-														$("#docscont").html(strdocumentacion2);
-													}
-											});
-										}
-
-										$('#entregadoModal [data-btn="cpt"]').off().click(function(){//en caso de mandar a guardar la documentacion
-
-											$.ajax({//manda a guardar la documentacion
-												type: "POST",
-												url: "/admin/entrega/documentacion/"+btndocumentacion.data("entid"),
-												data:$('#formdocumentos').serialize(),
-												success: function(data) {                        
-													
-													$("#entregadoModal").modal('hide');
-												}
-											});
-										});
-									}
-								});                                                         
-						});
-
-						$("[name='idpersonaentrega']").off().click(function(){// si se hace click a algun boton de entrega 
-
-							var btnentrega = $(this);
-
-							$("#entregadoModal .modal-title").html("¿Seguro(a) que desea guardar como entregado a "+btnentrega.parent().siblings("td:first").text()+"?");//llena la pregunta del modal
-							$("#entregadoModal .modal-body").html("");//vacia el body de modal
-							$("#entregadoModal").modal('show');// abre el modal de desicion
-
-							$('#entregadoModal [data-btn="cpt"]').off().click(function(){//en caso de aceptar
-
-								$.ajax({//manda a guardar como entregado
-									type: "POST",
-									url: "/admin/entrega/"+btnentrega.data("entid"),
-									data: {
-										"_token": "{{ csrf_token() }}"
-										},
-									success: function(data) {
-										if (data == 1) {                                            
-											btnentrega.attr({
-												class:"btn btn-danger",
-												disabled:"true"
-											}).html("  ENTREGADO  ");
-
-											$("#entregadoModal").modal('hide');
-										} else {
-											$("#entregadoModal").modal('hide');
-											$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-danger alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-						
-											setTimeout(function() { 
-												$("#sccs").alert('close');
-											}, 5000);  
-										}                      
-									}
-								});
-
-							});                            
-						});
-
-					}
-				});
-			});
-
-			$("#entregaupdate").off().submit(function(e) { //envia los datos para actualizar una entrega abierta en la lista de entregas
+			
+			$("#entregaupdate2021").off().submit(function(e) { //envia los datos para actualizar una entrega abierta en la lista de entregas
 				e.preventDefault();
 				
 				var identrega = $("#hid").data('entrega');
+				
 				$.ajax({
 					type: "PUT",
-					url: "/admin/entrega/"+identrega,
-					data: $("#entregaupdate").serialize(),
-					success: function(data) {
-						$("[name='send']").hide();
+					url: "/admin2021/entrega/"+identrega,
+					data: $("#entregaupdate2021").serialize()
+				}).done(function(data) {
+					$("[name='sendUpdateEntrega']").hide();
 						$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 						// $("[name='accion']").show();
 						// $("[name='rel']").show();
@@ -1283,17 +940,15 @@
 						setTimeout(function() { 
 							$("#sccs").alert('close');
 							window.close();
-						}, 5000);                        
-					}, 
-					error: function(XMLHttpRequest, textStatus, errorThrown){
-						$("[name='send']").hide();
+						}, 5000);  
+				}).fail(function(jqXHR, textStatus, errorThrown){
+					$("[name='sendUpdateEntrega']").hide();
 						$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-danger alert-dismissible fade show" role="alert"> <h3 class="alert-heading">Por favor tomar captura y reportar el error <br> Status: '+ textStatus+' Error: ' + errorThrown+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'); 
-					}
 				});
 			});
 			
 		});        
-	</script> --}}
+	</script>
 
 
 	<script>//reportes

@@ -4,9 +4,17 @@ namespace App\Http\Controllers\P2021\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\C_CentroDeEntrega;
+use App\Models\C_Colonia;
+use App\Models\C_Estado;
+use App\Models\C_EstadoCivil;
+use App\Models\C_GradoDeEstudio;
+use App\Models\C_Localidad;
+use App\Models\C_Municipio;
 use App\Models\Documentacion;
 use App\Models\Entrega;
 use App\Models\C_PeriodosDeEntrega;
+use App\Models\C_Pregunta;
 use App\Models\StockDespensa;
 use App\Models\Persona;
 
@@ -26,12 +34,14 @@ class EntregaController extends Controller
     }
 
     public function index(){
-        
-        // if (session()->has('periodo')) {
-        //     return view('2020.entregas.index');       
-        // } else {
-        //     return redirect('/periodo');
-        // }
+        if (Auth::user()->tipoUsuarioId != 0) {
+            return redirect('/');
+        }
+        if (session()->has('periodo')) {
+            return view('2021.entregas.index');       
+        } else {
+            return redirect('/periodo');
+        }
     }
 
     ////dibuja el html de los documentos
@@ -468,7 +478,97 @@ class EntregaController extends Controller
         // trigger_error("Error 103: Favor de reportarlo", E_USER_ERROR);
     }
 
+    public function editarEntrega(Request $request){
+        // dd($request->get('idEntrega'));
+        if (Auth::user()->tipoUsuarioId != 0) {
+            return redirect('/');
+        }
+        $bitacoraCollection = DB::table('entregas')
+        ->select('entregas.id','entregas.Nombre','entregas.APaterno','entregas.AMaterno','entregas.CURP','entregas.RFC','entregas.ClaveElector','entregas.IdentificacionMigratoria','entregas.Sexo','entregas.EstadoNacimientoId','entregas.CiudadNacimiento','entregas.FechaNacimiento','entregas.GradoEstudiosId','entregas.ColoniaId','entregas.Calle','entregas.Manzana','entregas.Lote','entregas.NoExt','entregas.NoInt','entregas.EstadoId','entregas.MunicipioId','entregas.LocalidadId','entregas.CP','entregas.TelefonoCelular','entregas.TelefonoCasa','entregas.Email','entregas.GrupoSocialId','entregas.EstadoCivilId','entregas.Pregunta_33','entregas.Pregunta_102','entregas.Pregunta_103','entregas.Pregunta_103','entregas.idCentroEntrega')
+        ->where("entregas.id", $request->get('idEntrega'))
+        ->get();
 
+        $colonias = DB::table('c_colonias')
+                ->select('*')
+                ->where('LocalidadId', '=',$bitacoraCollection[0]->LocalidadId)
+                ->orWhere('id', '=', $bitacoraCollection[0]->ColoniaId)
+                ->orderBy('Descripcion', 'ASC')
+                ->get();
+               
+                $localidades =  DB::table('c_localidades')
+                ->select('*')
+                ->whereIn('status', [1, 2])
+                ->where('MunicipioId', $bitacoraCollection[0]->MunicipioId)
+                ->orWhere('id', '=', $bitacoraCollection[0]->LocalidadId)
+                ->orderBy('Descripcion', 'ASC')
+                ->get();
+                
+                $municipios = DB::table('c_municipios')
+                ->select('*')
+                ->orderBy('Descripcion', 'ASC')
+                ->get();
+
+        return view('2021.entregas.entregaUpdate',[
+            'preguntas'=> C_Pregunta::all(),
+            'estados'=> C_Estado::all(),
+            'colonias'=> $colonias,
+            'localidades'=> $localidades,  
+            'municipios'=> $municipios,
+            'estadosCiviles' => C_EstadoCivil::all(),
+            // 'estudios'=> C_GradoDeEstudio::all(),
+            'bitacora'=>$bitacoraCollection,
+            'centrosEntrega'=>C_CentroDeEntrega::all(),
+            ]);
+    }
+
+    public function actualizarEntrega(Request $request, $id){
+        $colonia  = DB::table('c_colonias') //se busca la colonia para completar la direccion
+                    ->select('*')
+                    ->where('id',$request->get('colonia'))
+                    ->get()[0];
+
+        $entrega = Entrega::find($id);
+
+        // dd($id);
+
+        $entrega->Direccion = ($colonia->Descripcion!=null ? $colonia->Descripcion : 'Col.N/D')." Mz.".($request->get('manzana')!=null ? $request->get('manzana') : 'N/D')." Lt.".($request->get('lote')!=null ?$request->get('lote') : 'N/D')." Calle: ".($request->get('calle')!=null ?$request->get('calle') : 'N/D')." NoExt: ".($request->get('num_exterior')!=null ?$request->get('num_exterior') : 'N/D')." NoInt: ".($request->get('num_interior')!=null ?$request->get('num_interior') : 'N/D');
+        $entrega->Nombre = $request->get('nombre');
+        $entrega->APaterno = $request->get('apellido_p');
+        $entrega->AMaterno = $request->get('apellido_m');
+        $entrega->CURP = $request->get('curp');
+        // $entrega->RFC = $request->get('rfc');
+        // $entrega->ClaveElector = $request->get('clave_elector');
+        $entrega->IdentificacionMigratoria = $request->get('extranjero');
+        $entrega->Sexo = $request->get('sexo');
+        $entrega->EstadoNacimientoId = $request->get('estado_nac');
+        $entrega->CiudadNacimiento = $request->get('ciudad_nac');
+        $entrega->FechaNacimiento = $request->get('fecha_na');
+        // $entrega->GradoEstudiosId = $request->get('grado_estudios');
+        $entrega->ColoniaId = $request->get('colonia');
+        $entrega->Calle = $request->get('calle');
+        $entrega->Manzana = $request->get('manzana');
+        $entrega->Lote = $request->get('lote');
+        $entrega->NoExt = $request->get('num_exterior');
+        $entrega->NoInt = $request->get('num_interior');
+        $entrega->EstadoId = $request->get('estado');
+        $entrega->MunicipioId = $request->get('municipio');
+        $entrega->LocalidadId = $request->get('localidad');
+        $entrega->CP = $request->get('cod_postal');
+        $entrega->TelefonoCelular = $request->get('tel_cel');
+        $entrega->TelefonoCasa = $request->get('tel_casa');
+        $entrega->Email = $request->get('correo_ele');
+        // $entrega->GrupoSocialId = $request->get('gruposocial');
+        $entrega->EstadoCivilId = $request->get('estadocivil');
+        $entrega->Pregunta_33 = $request->get('cuantas_per_viven_casa');
+        $entrega->Pregunta_102 = $request->get('menores_sin_acta');
+        $entrega->Pregunta_103 = $request->get('considera_indigena');
+        $entrega->idCentroEntrega = $request->get('centroEnt');
+        // $entrega->EntregadorId = (Auth::check())?Auth::user()->id:0;
+
+        $entrega->save();//actualiza la entrega
+
+        return 'Datos Actualizados. <br>La ventana se cerrara automaticamente';           
+    }
     //-----------------------------------------------
     //esta parte luego se cambiara a un controlador de administracion de bd
     //-----------------------------------------------
