@@ -283,7 +283,7 @@ class CuestionarioController extends Controller
         $encuesta->Pregunta_33 = $request->get('cuantas_per_viven_casa');
         $encuesta->Pregunta_102 = $request->get('menores_sin_acta');
         $encuesta->Pregunta_103 = $request->get('considera_indigena');
-        $encuesta->idTipoBeneficiario = $request->get('benef_type');
+        $encuesta->idTipoBeneficiario = ($request->has('benef_type'))?$request->get('benef_type'):1;
         $encuesta->EncuestadorId = (Auth::check())?Auth::user()->id:0;
 
         $persona->save();// guarda los datos de la persona
