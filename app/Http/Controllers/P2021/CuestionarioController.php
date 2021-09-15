@@ -17,7 +17,7 @@ use App\Models\C_PeriodosDeEntrega;
 use App\Models\StockDespensa;
 
 use App\Http\Controllers\P2021\Admin\EntregaController;
-
+use App\Models\c_tipo_beneficiario;
 use App\Models\Documentacion;
 
 use Illuminate\Support\Facades\Hash;
@@ -216,6 +216,7 @@ class CuestionarioController extends Controller
                 // 'municipios'=> C_Municipio::findMany([5,4]),
                 'estadosCiviles' => C_EstadoCivil::all(),
                 'estudios'=> C_GradoDeEstudio::all(),
+                'tiposbeneficiario'=> c_tipo_beneficiario::all(),
                 'curp' => $curp
                 ]);
         // } else {
@@ -277,11 +278,12 @@ class CuestionarioController extends Controller
         $persona->password = Hash::make($request->get('contraseña'));
         $persona->PeriodoId = 3;
         
+        
         $encuesta = new Encuesta();
         $encuesta->Pregunta_33 = $request->get('cuantas_per_viven_casa');
         $encuesta->Pregunta_102 = $request->get('menores_sin_acta');
         $encuesta->Pregunta_103 = $request->get('considera_indigena');
-        $encuesta->voluntario = 0;
+        $encuesta->idTipoBeneficiario = $request->get('benef_type');
         $encuesta->EncuestadorId = (Auth::check())?Auth::user()->id:0;
 
         $persona->save();// guarda los datos de la persona
@@ -317,7 +319,7 @@ class CuestionarioController extends Controller
 
             $personaCollection = DB::table('personas')
             ->leftjoin('encuestas', 'personas.id', '=', 'encuestas.personaId')
-            ->select('personas.*', 'encuestas.Pregunta_33', 'encuestas.Pregunta_102', 'encuestas.Pregunta_103')
+            ->select('personas.*', 'encuestas.idTipoBeneficiario','encuestas.Pregunta_33', 'encuestas.Pregunta_102', 'encuestas.Pregunta_103')
             ->where('personas.id', $id)
             ->get();
 
@@ -392,7 +394,8 @@ class CuestionarioController extends Controller
             ->leftJoin('c_localidades', 'entregas.LocalidadId', '=', 'c_localidades.id')
             ->leftJoin('c_centrosdeentrega', 'documentacion.idCentroEntrega', '=', 'c_centrosdeentrega.id')
             ->leftJoin('c_centrosdeentrega AS ce', 'entregas.idCentroEntrega', '=', 'ce.id')
-            ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega','ce.Descripcion as centroentregaentrega','c_centrosdeentrega.Direccion as direccioncentroentrega','entregas.comentarioEntrega as comentario')
+            ->leftJoin('c_periodosdeentrega', 'entregas.idPeriodoEntrega', '=', 'c_periodosdeentrega.id')
+            ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega','ce.Descripcion as centroentregaentrega','c_centrosdeentrega.Direccion as direccioncentroentrega','entregas.comentarioEntrega as comentario',DB::raw('DATE_SUB(entregas.created_at, INTERVAL 5 HOUR) as fechaEntrega'),'c_periodosdeentrega.Descripcion as periodoEntrega')
             ->where('documentacion.PersonaId',$id)
             ->get();
 
@@ -424,6 +427,7 @@ class CuestionarioController extends Controller
                 // 'municipios'=> C_Municipio::findMany([5,4]),
                 'estadosCiviles' => C_EstadoCivil::all(),
                 'estudios'=> C_GradoDeEstudio::all(),
+                'tiposbeneficiario'=> c_tipo_beneficiario::all(),
                 'persona'=>$personaCollection,
                 'listaentregas'=>$listaentregas,
                 'listo'=>$listo,
@@ -493,7 +497,10 @@ class CuestionarioController extends Controller
         $encuesta->Pregunta_33 = $request->get('cuantas_per_viven_casa');
         $encuesta->Pregunta_102 = $request->get('menores_sin_acta');
         $encuesta->Pregunta_103 = $request->get('considera_indigena');
-        // $encuesta->voluntario = 0;
+        if ($request->has('benef_type')) {
+            $encuesta->idTipoBeneficiario = $request->get('benef_type');
+        }
+        
         $encuesta->EncuestadorId = (Auth::check())?Auth::user()->id:0;
 
         $persona->save();//actualiza los registros de persona
@@ -549,23 +556,100 @@ class CuestionarioController extends Controller
 
         $this->validateDocumentFormat($request);
 
-        $periodosEntrega = C_PeriodosDeEntrega::where('status','=',1)->get();
+        $okEntrega = 0;//variable sirve para validar si aun tiene disponibilidad para crear otra documetacion o ya tiene las despensas maximas a la fecha
 
-        $periodoEntregaId = $periodosEntrega[0]->id; // varible provicional para saber el periodo de entrega
+        $idperiodoEntregaActual = C_PeriodosDeEntrega::where('status','=',1)->get()[0]->id;//obtiene el periodo de entrega activo
 
-        $documentacionExistente = DB::table('documentacion') // busca si existe una documentacion con ese id de persona y en ese periodo de entrega
-                ->select('documentacion.id')
-                ->where('documentacion.PersonaId', $id)
-                ->where('documentacion.idPeriodoEntrega', $periodoEntregaId)
-                ->get();
-
-        $voluntario = DB::table('encuestas')
-                    ->select('voluntario')
+        $idTipoBeneficiario = DB::table('encuestas')
+                    ->select('idTipoBeneficiario')
                     ->where('PersonaId', $id)
-                    ->get();  
+                    ->get()[0]
+                    ->idTipoBeneficiario;
+
+        $despensasCorrespondenEnElbimestre = DB::table('c_tipos_beneficiarios')//cuantas entregas recibe por bimestre
+                ->select('despensasPorPeriodo')
+                ->where('id', $idTipoBeneficiario)
+                ->get()[0]
+                ->despensasPorPeriodo;
+                
+        $entregasEnElBimestreActual = DB::table('entregas') // busca si existe una entrega con ese id de persona y en ese periodo de entrega
+            ->select('id')
+            ->where('PersonaId', $id)
+            ->where('idPeriodoEntrega', $idperiodoEntregaActual)
+            ->get()
+            ->count();
+
+            //compara las entregas que tenga de el bimestre activo y las despensas que le tocan por el tipo de beneficiario que es para saber si aun tiene disponibles, 
+            //si tiene mas (que deberia ser imposible) o igual cantidad de despensas entonces entra a una segunda validacion
+        if ($entregasEnElBimestreActual >= $despensasCorrespondenEnElbimestre) {
+            if ($idTipoBeneficiario == 1 || $idTipoBeneficiario == 3) {//valida si son los tipos de usuario que pueden reclamar una despensa que no hayan pedido en bimestres anteriores
+                $hdc = $despensasCorrespondenEnElbimestre; //holdDespensasCorresponden ->variable para guardar el total de entregas que le corresponden | se inicializa con las que ya se tienen del bimestre actual.
+                $hde = $entregasEnElBimestreActual; //holdDespensasEntrgadas ->variable para guardar el total de entregas hechas | se inicializa con las que ya se tienen del bimestre actual.
+                $listaPeriodosEntrega = DB::table('c_periodosdeentrega')// obtiene la lista de los bimestres que pertenecen al periodo anual seleccionado y sean menores que el periodo de entrega activo.
+                    ->select('id')
+                    ->where('idPeriodoPrograma',session('periodo'))
+                    ->where('id','<',$idperiodoEntregaActual)
+                    ->orderBy('id', 'DESC')
+                    ->get();
+
+                foreach ($listaPeriodosEntrega as $periodoEntrega) {//itera la lista de los bimestres para verificar uno a uno e ir sumando las entregas que deberian tener y las que les corresponden
+                    
+                    $entregasxperiodo = DB::table('entregas') // obtiene las entregas correspondientes al bimestre de la iteracion
+                    ->select('id','idTipoBeneficiario')
+                    ->where('PersonaId', $id)
+                    ->where('idPeriodoEntrega', $periodoEntrega->id)
+                    ->orderBy('id', 'DESC')
+                    ->get();
+
+                    $totalEntregasEstePeriodo = $entregasxperiodo->count(); //total de entregas en el bimestre
+                    
+                    $hde += $totalEntregasEstePeriodo;//siempre se suma el total de entregas hechas en el bimestre parta al final tener el total de entregas hechas
+                    if ($totalEntregasEstePeriodo < 1) {//si no tiene entregas
+                        $hdc ++; //suma 1 a las que le corresponderian
+                    } else {
+                        $ecbeb = null; //entregas que corresponden al beneficiario en ese bimestre
+                       
+                        //para ahorrar el paso de consultar siempre las despensas correspondientes segun su tipo de beneficiario, 
+                        //se verifica si la ultima entrega de ese bimestre tiene el mismo tipo de beneficiario que la del bimestre activo
+                        if ($entregasxperiodo[0]->idTipoBeneficiario == $idTipoBeneficiario) {//si lo tiene toma la consulta principal
+                            $ecbeb = $despensasCorrespondenEnElbimestre;
+                        } else { //si no lo tiene consulta la cantidad de despensas para ese tipo de beneficiario
+                            $ecbeb = DB::table('c_tipos_beneficiarios')
+                            ->select('despensasPorPeriodo')
+                            ->where('id', $entregasxperiodo[0]->idTipoBeneficiario)
+                            ->get()[0];
+                        }
+
+                        //si las entregas que le corresponden al usuario en ese bimestre son menos que las entregas hechas en ese periodo, se toma las que la correspondian en ese bimestre 
+                        //(se descartan las que son extras en ese bimestre ya que pueden ser entregas que no fue a buscar en su momento y lo que estamos buscando es hacer la suma del total de despensas que le corresponderian hasta la fecha)
+                        if ($ecbeb < $totalEntregasEstePeriodo) {
+                            $hdc += $ecbeb;
+                        } else { //si son mas las entregas que le correspondian en ese bimestre se toman en cuenta las que fueron hechas ya que son las que tomo en ese bimestre, 
+                                //si tomamos en cuenta las que en teoria le correspondian se estaria agregando despensas extra.
+                            $hdc += $totalEntregasEstePeriodo;
+                        }
+                    }
+                } 
+                if ($hde < $hdc) {//si las entregas totales son menos de las que le corresponden a la fecha entonces da ok a la entrega
+                    $okEntrega = 1;
+                }
+            }
+        } else {
+            $okEntrega = 1;
+        }
         
+
+        // $documentacionExistente = DB::table('documentacion') // busca si existe una documentacion con ese id de persona y en ese periodo de entrega
+        // ->select('documentacion.id')
+        // ->where('documentacion.PersonaId', $id)
+        // ->where('documentacion.idPeriodoEntrega', $idperiodoEntregaActual)
+        // ->get();
+
+
         // if ($documentacionExistente->count() > 0) {
-        if (($voluntario[0]->voluntario == 1 && $documentacionExistente->count() >= 8) || ($voluntario[0]->voluntario == 0 && $documentacionExistente->count() > 1)) {
+        // if (($idTipoBeneficiario[0]->idTipoBeneficiario == 2 && $documentacionExistente->count() >= 8) || ($idTipoBeneficiario[0]->idTipoBeneficiario == 1 && $documentacionExistente->count() > 1)) {
+
+        if ($okEntrega == 0) {
             return $this->buildListaEntregas($id);
         } else {
 
@@ -573,13 +657,14 @@ class CuestionarioController extends Controller
                     ->leftjoin('c_colonias', 'personas.ColoniaId', '=', 'c_colonias.id')
                     ->select('c_colonias.CentroEntregaId')
                     ->where('personas.id', $id)
-                    ->get();
+                    ->get()[0]
+                    ->CentroEntregaId;
     
             $documentacion = new Documentacion();
             
             $documentacion->PersonaId = $id;
-            $documentacion->idCentroEntrega = $centroEntrega[0]->CentroEntregaId;
-            $documentacion->idPeriodoEntrega = $periodoEntregaId;
+            $documentacion->idCentroEntrega = $centroEntrega;
+            $documentacion->idPeriodoEntrega = $idperiodoEntregaActual;
     
             $documentacion->save();
             
@@ -598,7 +683,8 @@ class CuestionarioController extends Controller
         ->leftJoin('c_localidades', 'entregas.LocalidadId', '=', 'c_localidades.id')
         ->leftJoin('c_centrosdeentrega', 'documentacion.idCentroEntrega', '=', 'c_centrosdeentrega.id')
         ->leftJoin('c_centrosdeentrega AS ce', 'entregas.idCentroEntrega', '=', 'ce.id')
-        ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega','ce.Descripcion as centroentregaentrega','c_centrosdeentrega.Direccion as direccioncentroentrega','entregas.comentarioEntrega as comentario')
+        ->leftJoin('c_periodosdeentrega', 'entregas.idPeriodoEntrega', '=', 'c_periodosdeentrega.id')
+        ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega','ce.Descripcion as centroentregaentrega','c_centrosdeentrega.Direccion as direccioncentroentrega','entregas.comentarioEntrega as comentario',DB::raw('DATE_SUB(entregas.created_at, INTERVAL 5 HOUR) as fechaEntrega'),'c_periodosdeentrega.Descripcion as periodoEntrega')
         ->where('documentacion.PersonaId',$id)
         ->get();
 
@@ -615,7 +701,7 @@ class CuestionarioController extends Controller
                     <table class="table">';
                         if (count($listaentregas) > 1 || $listaentregas[0]->idEntrega !== null) {
                             $listaentregasstring .='<tr>
-                                    <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th><th>OBSERVACIÓN</th><th>FOTO</th>
+                                    <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>BIMESTRE</th><th>FECHA ENTREGA</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th><th>OBSERVACIÓN</th><th>FOTO</th>
                                 </tr>';
                         }
 
@@ -630,6 +716,8 @@ class CuestionarioController extends Controller
                                     <td> '.($entrega->municipio != null ? $entrega->municipio : "N/D").' </td>
                                     <td> '.($entrega->localidad != null ? $entrega->localidad : "N/D").' </td>
                                     <td> '.($entrega->Direccion != null? $entrega->Direccion : "N/D").'</td>
+                                    <td> '.($entrega->periodoEntrega != null ? $entrega->periodoEntrega : "N/D").'</td>
+                                    <td> '.($entrega->fechaEntrega != null ? $entrega->fechaEntrega : "N/D").'</td>
                                     <td> '.($entrega->periodo != null ? $entrega->periodo : "N/D").'</td>
                                     <td> '.($entrega->centroentregaentrega != null ? $entrega->centroentregaentrega : "N/D").'</td>
                                     <td> '.($entrega->comentario != null ? $entrega->comentario : "N/D").'</td>
@@ -639,13 +727,13 @@ class CuestionarioController extends Controller
                             }else{
                                 $listaentregasstring .='
                                 <tr class="table-dark">
-                                    <td colspan="8" style="text-align: center; padding-top: 2px; padding-bottom: 0; color: black;"><h4> FECHA DE EMPADRONAMIENTO: '.$fechaEmpadronamiento.'</h4></td>
+                                    <td colspan="10" style="text-align: center; padding-top: 2px; padding-bottom: 0; color: black;"><h4> FECHA DE EMPADRONAMIENTO: '.$fechaEmpadronamiento.'</h4></td>
                                 </tr>
                                 <tr>
-                                <td colspan="6">
+                                <td colspan="7">
                                     Folio: '.$entrega->idDocumentacion.' - Centro de Entrega: <strong>'.$entrega->centroentrega.'</strong> - Direcccion: '.$entrega->direccioncentroentrega.'
                                 </td>
-                                <td colspan="2">
+                                <td colspan="3">
                                     <button style="color: white" id="editarDoc" class="btn btn-warning mb-1" data-folio="'.$entrega->idDocumentacion.'">Documentacion</button>';
                                     if (Auth::check()){
                                         $entregacontroller = new EntregaController;
@@ -659,10 +747,10 @@ class CuestionarioController extends Controller
                                 $listaentregasstring .='</td> 
                                 </tr>
                                 <tr class="table-dark">
-                                    <td colspan="8"></td>
+                                    <td colspan="10"></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="8">
+                                    <td colspan="10">
                                         <p>Favor de estar pendiente de las fechas de entrega de despensas que serán publicadas en la página oficial del Programa Hambre Cero: <a href="https://qroo.gob.mx/sedeso/hambreceroquintanaroo">https://qroo.gob.mx/sedeso/hambreceroquintanaroo</a> y en las redes sociales oficiales de la Secretaría de Desarrollo Social de Quintana Roo: en Facebook <a href="https://www.facebook.com/SedesoQroo/">https://www.facebook.com/SedesoQroo/</a> y en Twitter <a href="https://twitter.com/sedeso_qroo">https://twitter.com/sedeso_qroo</a></p> 
                                         <p>Verifique en el portal oficial del Programa Hambre Cero, la ubicación del centro de entrega (PASO 4) que le corresponde y los datos bancarios de la cuenta donde deberá realizar el pago de la cuota de recuperación (PASO 3).</p>
                                         <p>Recuerde presentarse al centro de entrega asignado con los documentos que registró en original, únicamente para su cotejo de información. El recibo de pago de cuota de recuperación lo debe presentar también en original y se quedará en el centro de entrega.</p>

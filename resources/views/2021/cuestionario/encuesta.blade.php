@@ -227,6 +227,24 @@
                     <input id="password" type="password" class="form-control " name="contraseña" autocomplete="new-password">
                     
                 </div>
+                @if (Auth::check() && Auth::user()->tipoUsuarioId == 0)
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="benef_type">Tipo Beneficiario</label>
+                            <select id="benef_type" class="form-control" name="benef_type" required="">
+                                @if ($tiposbeneficiario)
+                                    @foreach ($tiposbeneficiario as $tipobeneficiario)
+                                        @if ($tipobeneficiario->id == 1)
+                                            <option selected value="{{$tipobeneficiario->id}}">{{$tipobeneficiario->Descripcion}}</option>
+                                        @else
+                                            <option value="{{$tipobeneficiario->id}}">{{$tipobeneficiario->Descripcion}}</option>
+                                        @endif
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+                    </div>
+                @endif
 
                 <!-- <div class="form-row">
                     

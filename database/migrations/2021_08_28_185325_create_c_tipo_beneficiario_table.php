@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTableCPeriodosEntrega extends Migration
+class CreateCTipoBeneficiarioTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateTableCPeriodosEntrega extends Migration
      */
     public function up()
     {
-        Schema::create('c_periodosdeentrega', function (Blueprint $table) {
+        Schema::create('c_tipos_beneficiarios', function (Blueprint $table) {
             $table->id();
             $table->string('Descripcion')->nullable();
-            $table->boolean('status')->nullable();
-            $table->integer('idPeriodo')->nullable();
-            $table->integer('idPeriodoPrograma')->nullable();
+            $table->integer('despensasPorPeriodo');
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ class CreateTableCPeriodosEntrega extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('c_periodosdeentrega');
+        Schema::dropIfExists('c_tipos_beneficiarios');
     }
 }

@@ -286,6 +286,29 @@
                         <input type="text" class="form-control" id="extranjero" name="extranjero" onkeyup="mayusculas(this);" value="{{ $persona[0]->IdentificacionMigratoria != null?$persona[0]->IdentificacionMigratoria	:'' }}">
                     </div>
                 </div>
+
+                @if (Auth::check() && Auth::user()->tipoUsuarioId == 0)
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="benef_type">Tipo Beneficiario</label>
+                            <select id="benef_type" class="form-control" name="benef_type" required="">
+                                @if ($persona[0]->idTipoBeneficiario == null)
+                                    <option value="" selected>Seleccione una opcion</option>
+                                @endif
+                                @if ($tiposbeneficiario)
+                                    @foreach ($tiposbeneficiario as $tipobeneficiario)
+                                        @if ($tipobeneficiario->id == $persona[0]->idTipoBeneficiario)
+                                            <option selected value="{{$tipobeneficiario->id}}">{{$tipobeneficiario->Descripcion}}</option>
+                                        @else
+                                            <option value="{{$tipobeneficiario->id}}">{{$tipobeneficiario->Descripcion}}</option>
+                                        @endif
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+                    </div>
+                @endif
+
                 <br>
                 <div class="form-row">
                     <button type="submit" name="send" class="btn btn-success"><strong>ACTUALIZAR</strong></button>
@@ -314,7 +337,7 @@
 
                         @if (count($listaentregas) > 1 || $listaentregas[0]->idEntrega !== null)
                             <tr>
-                                <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th><th>OBSERVACIÓN</th><th>FOTO</th>
+                                <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>BIMESTRE</th><th>FECHA ENTREGA</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th><th>OBSERVACIÓN</th><th>FOTO</th>
                             </tr>
                         @endif
 
@@ -328,6 +351,8 @@
                                     <td> {{$entrega->municipio != null ? $entrega->municipio : "N/D" }} </td>
                                     <td> {{$entrega->localidad != null ? $entrega->localidad : "N/D" }} </td>
                                     <td> {{$entrega->Direccion != null? $entrega->Direccion : "N/D" }}</td>
+                                    <td> {{$entrega->periodoEntrega != null ? $entrega->periodoEntrega : "N/D" }}</td>
+                                    <td> {{$entrega->fechaEntrega != null ? $entrega->fechaEntrega : "N/D" }}</td>
                                     <td> {{$entrega->periodo != null ? $entrega->periodo : "N/D" }}</td>
                                     <td> {{$entrega->centroentregaentrega != null ? $entrega->centroentregaentrega : "N/D" }}</td>
                                     <td> {{$entrega->comentario != null ? $entrega->comentario : "N/D" }}</td>
@@ -336,13 +361,13 @@
 
                             @else
                                 <tr class="table-dark">
-                                    <td colspan="8" style="text-align: center; padding-top: 2px; padding-bottom: 0; color: black;"><h4> FECHA DE EMPADRONAMIENTO: {{$persona[0]->created_at}}</h4></td>
+                                    <td colspan="10" style="text-align: center; padding-top: 2px; padding-bottom: 0; color: black;"><h4> FECHA DE EMPADRONAMIENTO: {{$persona[0]->created_at}}</h4></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="6">
+                                    <td colspan="7">
                                         Folio: {{$entrega->idDocumentacion}} - Centro de Entrega: <strong>{{$entrega->centroentrega}}</strong> - Direcccion: {{$entrega->direccioncentroentrega}}
                                     </td>
-                                    <td colspan="2">
+                                    <td colspan="3">
                                         <button style="color: white" id="editarDoc" class="btn btn-warning mb-1" data-folio="{{$entrega->idDocumentacion}}">Documentacion</button>
                                         @if (auth()->check())
                                             @if ($listo['folio'] == $entrega->idDocumentacion && $listo['completo'] == 1)
@@ -357,10 +382,10 @@
                                     </td> 
                                 </tr>
                                 <tr class="table-dark">
-                                    <td colspan="8"></td>
+                                    <td colspan="10"></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="8">
+                                    <td colspan="10">
                                         <p>Favor de estar pendiente de las fechas de entrega de despensas que serán publicadas en la página oficial del Programa Hambre Cero: <a href="https://qroo.gob.mx/sedeso/hambreceroquintanaroo">https://qroo.gob.mx/sedeso/hambreceroquintanaroo</a> y en las redes sociales oficiales de la Secretaría de Desarrollo Social de Quintana Roo: en Facebook <a href="https://www.facebook.com/SedesoQroo/">https://www.facebook.com/SedesoQroo/</a> y en Twitter <a href="https://twitter.com/sedeso_qroo">https://twitter.com/sedeso_qroo</a></p> 
                                         <p>Verifique en el portal oficial del Programa Hambre Cero, la ubicación del centro de entrega (PASO 4) que le corresponde y los datos bancarios de la cuenta donde deberá realizar el pago de la cuota de recuperación (PASO 3).</p>
                                         <p>Recuerde presentarse al centro de entrega asignado con los documentos que registró en original, únicamente para su cotejo de información. El recibo de pago de cuota de recuperación lo debe presentar también en original y se quedará en el centro de entrega.</p>
