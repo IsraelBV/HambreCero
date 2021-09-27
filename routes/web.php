@@ -143,6 +143,8 @@ Route::get('/entrega/enUpdatePost','P2021\Admin\EntregaController@buildFormPostE
 
 /////Administracion de catalogos y stock
 Route::post('/catalogo/stock/update', 'P2021\Admin\EntregaController@stockUpdate');// hay que cambiar el controlador cuando de haga la parte de administracion de catalogo
+Route::get('/catalogo/stock/update/centrose/{ce}', 'P2021\Admin\EntregaController@stockGetCentros');// obtiene los centros de entrega para listarlos
+Route::post('/catalogo/stock/update/transferencia', 'P2021\Admin\EntregaController@stockTransferencia');// hace la transferencia de despensas
 
 ///// Utilidad
 Route::get('/utils/localidad','P2021\CuestionarioController@findLocalidades');

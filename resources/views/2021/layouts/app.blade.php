@@ -116,23 +116,39 @@
 								<a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
 									{{ Auth::user()->name }}
 								</a>
-								<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+								<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 									@if (session()->has('centroEntrega'))
-											<h5 @if(Auth::user()->tipoUsuarioId == 0) id="nombreCentro" @endif class="dropdown-header">
-												{{__(session('centroEntregaNombre'))}} 
-											</h5>
-											<div class="dropdown-divider"></div>
+										<h5 class="dropdown-header"> {{__(session('centroEntregaNombre'))}} </h5>
+										<li>
+											<hr class="dropdown-divider">
+										</li>
 									@endif
-									<a class="dropdown-item" href="{{ route('logout') }}"
+									@if (Auth::user()->tipoUsuarioId == 0)
+										<h5 class="dropdown-header">
+											CENTROS DE ENTREGA
+										</h5>
+										<li>
+											<hr class="dropdown-divider">
+										</li>
+										<li  href="#" onclick="">
+											<a class="dropdown-item" href="#" id="addDespensas">{{ __('Agregar despensas') }}</a>
+										</li>
+										<li  href="#" onclick="">
+											<a class="dropdown-item" href="#" id="despensasTransfer">{{ __('Transferir despensas') }}</a>											
+										</li>
+									@endif
+									<li>
+										<hr class="dropdown-divider">
+									</li>
+									<li class="dropdown-item" href="{{ route('logout') }}"
 									   onclick="event.preventDefault();
 													 document.getElementById('logout-form').submit();">
 										{{ __('Cerrar sesion') }}
-									</a>
-
-									<form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-										@csrf
-									</form>
-								</div>
+										<form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+											@csrf
+										</form>
+									</li>									
+								</ul>
 							</li>
 							
 						@endguest
@@ -697,7 +713,7 @@
 				});								
 			});
 
-			$(document).on('click', '#nombreCentro',function(){// abre el modal para aumentar despensas
+			$(document).on('click', '#addDespensas',function(){// abre el modal para aumentar despensas
 				
 				$cuerpo_modal = '<form id="stockform" action="" method="">'+
 									'<div class="form-group">'+
@@ -739,10 +755,115 @@
 						alert('Ocurrio un error al aumentar el stock, favor de reportarlo');
 					});
 
+				});				
+
+			});
+
+			$(document).on('click', '#despensasTransfer',function(){// abre el modal para transferir despensas
+
+				$.ajax({
+				type: "GET",
+				url: "/catalogo/stock/update/centrose/0"
+				}).done(function(data) {
+
+					var optionsCEString = "";
+					$.each(data[0], function(k, v) {
+						optionsCEString +='<option value="'+v['id']+'">'+v['Descripcion']+'</option>';
+						 
+					});
+
+					$cuerpo_modal = '<form id="stockTransfer" action="" method="">'+
+										'<div class="form-row">'+
+												'<input type="hidden" name="_token" value="{{ csrf_token() }}">'+
+												// '<input type="hidden" name="_method" value="PUT">'+
+											'<div class="form-group col-md-5">'+
+												'<label for="CEOrigen">Centro entrega origen:</label>'+
+												'<select name="CEOrigen" id="CEOrigen" class="form-control" required="">'+
+													'<option selected value="">seleccione una opcion...</option>'+
+													optionsCEString+
+												'</select>'+
+											'</div>'+
+											'<div class="form-group col-md-2">'+
+												'<label for="despensasTransferinput">Cantidad</label>'+
+												'<input type="number" name="despensasTransferinput" class="form-control" id="despensasTransferinput" placeholder="0" required="">'+
+											'</div>'+
+											'<div class="form-group col-md-5">'+
+												'<label for="CEDestino">Centro entrega Destino:</label>'+
+												'<select name="CEDestino" id="CEDestino" class="form-control" required="">'+
+													'<option selected value="">seleccione una opcion...</option>'+
+													// optionsCEString+
+													// '<option value=""></option>'+
+												'</select>'+									
+											'</div>'+
+										'</div>'+
+									'</form>';
+
+					$("#modalMultiuso .modal-dialog").addClass('modal-lg');//<---------
+					$("#modalMultiuso .modal-header .modal-title").html('Transferir Despensas');
+					$("#modalMultiuso .modal-body").html($cuerpo_modal);
+					$("#modalMultiuso .modal-footer .savemdl").attr('form','stockTransfer');
+
+					$("#modalMultiuso").modal('show');
+					
+					$("#CEOrigen").change(function(){
+						$.ajax({
+							type: "GET",
+							url: "/catalogo/stock/update/centrose/"+this.value,
+						}).done(function(data) {
+
+							var optionsCEString = '<option selected value="">seleccione una opcion...</option>';
+							$.each(data[0], function(k, v) {
+								optionsCEString +='<option value="'+v['id']+'">'+v['Descripcion']+'</option>';
+							});
+
+							$("#CEDestino").html(optionsCEString);
+							$("#despensasTransferinput").attr('max',data[1][0].stockDespensas);
+
+						}).fail(function(jqXHR, textStatus, errorThrown){
+							alert('2: Ocurrio un error al transferir stock, favor de reportarlo');
+						});
+					});
+
+					$('#stockTransfer').off().submit(function(e){
+						e.preventDefault();
+
+						$.ajax({
+							type: "POST",
+							url: "/catalogo/stock/update/transferencia/",
+							data: $("#stockTransfer").serialize(),
+							beforeSend: function(){
+								$("#modalMultiuso").modal('hide');//se cierra el modal 
+
+								$("#modalMultiuso .modal-dialog").removeClass('modal-lg');		
+								$("#modalMultiuso .modal-header .modal-title").html('');
+								$("#modalMultiuso .modal-body").html('');
+								$("#modalMultiuso .modal-footer .savemdl").removeAttr('form');
+							}
+						}).done(function(data) {
+							if (data == 1) {
+								location.reload();
+							} else if (10) {
+								alert('Ocurrio un error al actualizar el stock de los 2 centros de entrega, favor de reportarlo');
+							} else if (11) {
+								alert('Ocurrio un error al actualizar el stock del centro de entrega origen, favor de reportarlo');
+							} else{
+								alert('Ocurrio un error al actualizar el stock del centro de entrega destino, favor de reportarlo');
+							}
+						}).fail(function(jqXHR, textStatus, errorThrown){
+							alert('3: Ocurrio un error al transferir el stock, favor de reportarlo');
+						});
+
+					});
+					
+				}).fail(function(jqXHR, textStatus, errorThrown){
+					alert('1: Ocurrio un error al transferir stock, favor de reportarlo');
 				});
+				
+				
 				
 
 			});
+
 			$("#passpersonacreate").off().submit(function(e) { //cambia la contraseña de la persona
 				e.preventDefault();
 				
@@ -1098,6 +1219,11 @@
 			
 		});
 	</script>
+
+	<script>//centros de entrega
+
+	</script>
+
 	{{-- <script>//usuarios
 		$(document).ready(function() {
 			

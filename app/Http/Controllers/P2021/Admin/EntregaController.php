@@ -588,6 +588,52 @@ class EntregaController extends Controller
         }
     }
 
+    public function stockGetCentros($id){
+        $stock = 0;
+        if ($id != 0) {
+            $centrosEntrega = DB::table('c_centrosdeentrega') //se busca la colonia para completar la direccion
+            ->select('*')
+            ->where('id','!=',$id)
+            ->where('status','1')
+            ->get();
+            $stock = DB::table('stock_despensas') //se busca la colonia para completar la direccion
+            ->select('*')
+            ->where('idCentroEntrega',$id)
+            ->get();
+        } else {
+            $centrosEntrega = DB::table('c_centrosdeentrega') //se busca la colonia para completar la direccion
+            ->select('*')
+            ->where('status','1')
+            ->get();
+        }
+        
+        return[$centrosEntrega,$stock]; 
+    }
+
+    public function stockTransferencia(Request $request){
+        $CEorigen = StockDespensa::find($request->get('CEOrigen'));
+        $CEdestino = StockDespensa::find($request->get('CEDestino'));
+
+        $CEorigen->stockDespensas -= $request->get('despensasTransferinput');
+        $CEdestino->stockDespensas += $request->get('despensasTransferinput');
+
+        $savedo = $CEorigen->save();
+        $savedd = $CEdestino->save();
+
+        if(!$savedo && !$savedd){
+            return 10;
+        } elseif (!$savedo){
+            return 11;
+        } elseif (!$savedd) {
+            return 12;
+        } else {
+            return 1;
+            // return redirect(1,[
+            //     'errmsg'=>  "Se ha aumentado el stock correctamente"
+            // ]);
+        }
+    }
+
 }
 
 
