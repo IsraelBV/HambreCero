@@ -829,7 +829,7 @@
 
 						$.ajax({
 							type: "POST",
-							url: "/catalogo/stock/update/transferencia/",
+							url: "/catalogo/stock/update/transferencia",
 							data: $("#stockTransfer").serialize(),
 							beforeSend: function(){
 								$("#modalMultiuso").modal('hide');//se cierra el modal 
