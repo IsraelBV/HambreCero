@@ -30,6 +30,7 @@ class PeriodosController extends Controller
                     ->where('c_centrosdeentrega.status', 1)
                     ->select('c_centrosdeentrega.id','c_centrosdeentrega.Descripcion','c_municipios.Descripcion as municipio')
                     ->groupBy('c_centrosdeentrega.id','c_centrosdeentrega.Descripcion','c_municipios.Descripcion')
+                    ->orderBy('c_centrosdeentrega.Descripcion','asc')
                     ->get();
                 // dd(DB::getQueryLog());
                     // dd($centrosdeentrega);

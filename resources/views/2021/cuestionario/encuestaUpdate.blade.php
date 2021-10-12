@@ -365,7 +365,8 @@
                                 </tr>
                                 <tr>
                                     <td colspan="7">
-                                        Folio: {{$entrega->idDocumentacion}} - Centro de Entrega: <strong>{{$entrega->centroentrega}}</strong> - Direcccion: {{$entrega->direccioncentroentrega}}
+                                        <!-- Folio: {{$entrega->idDocumentacion}} - Centro de Entrega: <strong>{{$entrega->centroentrega}}</strong> - Direcccion: {{$entrega->direccioncentroentrega}} -->
+                                        Folio: {{$entrega->idDocumentacion}}
                                     </td>
                                     <td colspan="3">
                                         <button style="color: white" id="editarDoc" class="btn btn-warning mb-1" data-folio="{{$entrega->idDocumentacion}}">Documentacion</button>
@@ -386,9 +387,18 @@
                                 </tr>
                                 <tr>
                                     <td colspan="10">
-                                        <p>Favor de estar pendiente de las fechas de entrega de despensas que serán publicadas en la página oficial del Programa Hambre Cero: <a href="https://qroo.gob.mx/sedeso/hambreceroquintanaroo">https://qroo.gob.mx/sedeso/hambreceroquintanaroo</a> y en las redes sociales oficiales de la Secretaría de Desarrollo Social de Quintana Roo: en Facebook <a href="https://www.facebook.com/SedesoQroo/">https://www.facebook.com/SedesoQroo/</a> y en Twitter <a href="https://twitter.com/sedeso_qroo">https://twitter.com/sedeso_qroo</a></p> 
+                                        <p>Para recoger su apoyo alimentario por favor esté pendiente de las fechas y horarios de entrega en su municipio y acuda al centro de entrega abierto más cercano a su domicilio.<br>
+                                        Podrá verificar la ubicación de los centros de entrega abiertos en la página oficial del Programa Hambre Cero en el PASO 4 y los datos bancarios de la cuenta donde deberá realizar el pago de la cuota de recuperación en el PASO 3.<br>
+                                        Recuerde presentarse al centro de entrega con los documentos originales que registró en la plataforma de Hambre Cero, únicamente para el cotejo de información.<br>
+                                        El recibo de pago de cuota de recuperación lo deberá presentar también en original y éste se quedará en el centro de entrega.</p>
+                                        <p>Página oficial del Programa Hambre Cero:<a href="https://qroo.gob.mx/sedeso/hambreceroquintanaroo">https://qroo.gob.mx/sedeso/hambreceroquintanaroo</a></p>
+                                        <p>Redes sociales oficiales de la Secretaría de Desarrollo Social de Quintana Roo:
+                                        Facebook <a href="https://www.facebook.com/SedesoQroo/">https://www.facebook.com/SedesoQroo/</a>
+                                        Twitter <a href="https://twitter.com/sedeso_qroo">https://twitter.com/sedeso_qroo</a></p>
+
+                                        <!-- <p>Favor de estar pendiente de las fechas de entrega de despensas que serán publicadas en la página oficial del Programa Hambre Cero: <a href="https://qroo.gob.mx/sedeso/hambreceroquintanaroo">https://qroo.gob.mx/sedeso/hambreceroquintanaroo</a> y en las redes sociales oficiales de la Secretaría de Desarrollo Social de Quintana Roo: en Facebook <a href="https://www.facebook.com/SedesoQroo/">https://www.facebook.com/SedesoQroo/</a> y en Twitter <a href="https://twitter.com/sedeso_qroo">https://twitter.com/sedeso_qroo</a></p> 
                                         <p>Verifique en el portal oficial del Programa Hambre Cero, la ubicación del centro de entrega (PASO 4) que le corresponde y los datos bancarios de la cuenta donde deberá realizar el pago de la cuota de recuperación (PASO 3).</p>
-                                        <p>Recuerde presentarse al centro de entrega asignado con los documentos que registró en original, únicamente para su cotejo de información. El recibo de pago de cuota de recuperación lo debe presentar también en original y se quedará en el centro de entrega.</p>
+                                        <p>Recuerde presentarse al centro de entrega asignado con los documentos que registró en original, únicamente para su cotejo de información. El recibo de pago de cuota de recuperación lo debe presentar también en original y se quedará en el centro de entrega.</p> -->
                                     </td>
                                 </tr>
 
