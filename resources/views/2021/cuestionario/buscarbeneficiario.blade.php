@@ -5,8 +5,8 @@
 <h2 class="col-6 offset-md-3">BUSCAR BENEFICIARIO</h2>
     <br>
     <br>
-    <form id="findpersona" action="" method="">
-        <div id="findnombre" class="form-row">
+    <form id="findpersonaParcial" action="" method="">
+        <div class="form-row">
             <div class="form-group col-md-3">
                 <label for="nombre">NOMBRE</label>
                 <input type="text" class="form-control" id="nombre" name="nombre" onkeyup="mayusculas(this);">
@@ -22,7 +22,7 @@
            
         </div>
 
-        <div id="findcurp" class="form-row">
+        <div class="form-row">
             <div class="form-group col-md-4">
                 <label for="curp">CURP</label>
                 <input type="text" class="form-control" id="curpParcial" name="curpParcial" onkeyup="mayusculas(this);">

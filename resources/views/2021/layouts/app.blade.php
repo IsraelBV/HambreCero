@@ -910,13 +910,13 @@
 				});
 			});
 
-			$("#findpersona").off().submit(function(e) { //busca a las personas
+			$("#findpersonaParcial").off().submit(function(e) { //busca a las personas
                 e.preventDefault();
                 
                 $.ajax({
                     type: "get",
                     url: "/utils/buscarBeneficiario/coincidencia",
-                    data: $("#findpersona").serialize(),
+                    data: $("#findpersonaParcial").serialize(),
                     success: function(data) {
 
                         $("#personasContenedor").html(data);
