@@ -149,6 +149,10 @@ Route::post('/catalogo/stock/update/transferencia', 'P2021\Admin\EntregaControll
 ///// Utilidad
 Route::get('/utils/localidad','P2021\CuestionarioController@findLocalidades');
 Route::get('/utils/colonia','P2021\CuestionarioController@findColonias');
+Route::get('/utils/buscarBeneficiario', function () { return view('2021.cuestionario.buscarbeneficiario');});
+Route::get('/utils/buscarBeneficiario/coincidencia','P2021\CuestionarioController@findPersonasPorCoincidencia');//<==================================================
+
+// Route::get('/utils/buscarBeneficiario','P2021\CuestionarioController@findPersonasPorCoincidencia');
 
 
 //REPORTES------------------------------------------------------------------------------------------------------------------------------------------------

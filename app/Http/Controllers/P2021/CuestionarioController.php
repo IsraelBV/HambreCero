@@ -1470,4 +1470,61 @@ class CuestionarioController extends Controller
             return $coloniasString;
         }
     }
+    public function findPersonasPorCoincidencia (Request $Request){
+        $whereraw = null;
+        // dd($Request);
+
+        if ($Request->has('nombre') && !is_null($Request->get('nombre'))) {
+            $whereraw .= "personas.Nombre LIKE '%".$Request->get('nombre')."%' ";
+            if (($Request->has('apellido_p') && !is_null($Request->get('apellido_p'))) || ($Request->has('apellido_m') && !is_null($Request->get('apellido_m'))) || ($Request->has('curpParcial') && !is_null($Request->get('curpParcial')))) {
+                $whereraw .= "AND ";
+            }
+        }
+        if ($Request->has('apellido_p') && !is_null($Request->get('apellido_p'))) {
+            $whereraw .= "personas.APaterno LIKE '%".$Request->get('apellido_p')."%' ";
+            if (($Request->has('apellido_m') && !is_null($Request->get('apellido_m'))) || ($Request->has('curpParcial') && !is_null($Request->get('curpParcial')))) {
+                $whereraw .= "AND ";
+            }
+        }
+        if ($Request->has('apellido_m') && !is_null($Request->get('apellido_m'))) {
+            $whereraw .= "personas.AMaterno LIKE '%".$Request->get('apellido_m')."%' ";
+            if (($Request->has('curpParcial') && !is_null($Request->get('curpParcial')))) {
+                $whereraw .= "AND ";
+            }
+        }
+        if ($Request->has('curpParcial') && !is_null($Request->get('curpParcial'))) {
+            $whereraw .= "personas.CURP LIKE '%".$Request->get('curpParcial')."%' ";
+            
+        }
+        
+        $result = DB::table('personas')
+            ->leftJoin('c_colonias', 'personas.ColoniaId', '=', 'c_colonias.id')
+            ->leftJoin('c_municipios', 'personas.MunicipioId', '=', 'c_municipios.id')
+            ->leftJoin('c_localidades', 'personas.LocalidadId', '=', 'c_localidades.id')
+            ->select('personas.id', 'personas.Nombre', 'personas.APaterno','personas.AMaterno','personas.CURP')
+            ->WhereRaw($whereraw)
+            ->get();
+            
+        
+        $listastring = "<br/><br/><h3>No se encontraron registros con esta información.<h3>";
+
+        if($result->count() > 0){
+            
+            $listastring =  '<br/><table class="table table-hover" id="personasCoincidencia"><thead><tr class="table-info"><th>ID</th><th>NOMBRE</th><th>APELLIDO PATERNO</th><th>APELLIDO MATERNO</th><th>CURP</th></tr></thead><tbody>';
+                
+            foreach ($result as $beneficiario) {
+                $listastring .='<tr>';
+                    $listastring .='<td>'.($beneficiario->id != null? $beneficiario->id:"N/D").'</td>';
+                    $listastring .='<td>'.($beneficiario->Nombre != null? $beneficiario->Nombre:"N/D").'</td>';
+                    $listastring .='<td>'.($beneficiario->APaterno!= null? $beneficiario->APaterno:"N/D").'</td>';
+                    $listastring .='<td>'.($beneficiario->AMaterno!= null? $beneficiario->AMaterno:"N/D").'</td>';
+                    $listastring .='<td>'.($beneficiario->CURP != null? $beneficiario->CURP:"N/D").'</td>';
+                $listastring .='</tr>';
+            }
+            $listastring .='</tbody></table>';
+        } 
+
+        return $listastring;
+    }
+    
 }

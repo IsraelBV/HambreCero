@@ -124,19 +124,35 @@
 										</li>
 									@endif
 									@if (Auth::user()->tipoUsuarioId == 0)
+										
 										<h5 class="dropdown-header">
 											CENTROS DE ENTREGA
 										</h5>
 										<li>
 											<hr class="dropdown-divider">
 										</li>
-										<li  href="#" onclick="">
+										<li>
 											<a class="dropdown-item" href="#" id="addDespensas">{{ __('Agregar despensas') }}</a>
 										</li>
-										<li  href="#" onclick="">
+										<li>
 											<a class="dropdown-item" href="#" id="despensasTransfer">{{ __('Transferir despensas') }}</a>											
 										</li>
+										
 									@endif
+										
+									<li>
+										<hr class="dropdown-divider">
+									</li>
+									<h5 class="dropdown-header">
+										BUSCAR BENEFICIARIOS
+									</h5>
+									<li>
+										<hr class="dropdown-divider">
+									</li>
+									<li>
+										<a class="dropdown-item" href="/utils/buscarBeneficiario" >{{ __('Buscar') }}</a>
+									</li>
+
 									<li>
 										<hr class="dropdown-divider">
 									</li>
@@ -893,6 +909,53 @@
 					}
 				});
 			});
+
+			$("#findpersona").off().submit(function(e) { //busca a las personas
+                e.preventDefault();
+                
+                $.ajax({
+                    type: "get",
+                    url: "/utils/buscarBeneficiario/coincidencia",
+                    data: $("#findpersona").serialize(),
+                    success: function(data) {
+
+                        $("#personasContenedor").html(data);
+						
+						$('#personasCoincidencia').DataTable({
+							dom: 'frltp',
+							pageLength: 10,
+							lengthMenu: [10,20,30,50],
+							// sScrollY:"30em",
+							// sScrollX: "100%",  
+							"language": {
+								"decimal":        "",
+								"emptyTable":     "No data available in table",
+								"info":           "Mostrando _START_ a _END_ de _TOTAL_ registros",
+								"infoEmpty":      "Mostrando 0 to 0 of 0 entries",
+								"infoFiltered":   "(filtered from _MAX_ total entries)",
+								"infoPostFix":    "",
+								"thousands":      ",",
+								"lengthMenu":     "Mostrar _MENU_ registros",
+								"loadingRecords": "Cargando...",
+								"processing":     "Procesando...",
+								"search":         "Buscar:",
+								"zeroRecords":    "No matching records found",
+								"paginate": {
+									"first":      "Primero",
+									"last":       "Ultimo",
+									"next":       "Siguiente",
+									"previous":   "Anterior"
+								},
+								"aria": {
+									"sortAscending":  ": activate to sort column ascending",
+									"sortDescending": ": activate to sort column descending"
+								}
+							}
+						});
+
+                    }
+                });
+            });
 		   
 			$("#encuesta").off().submit(function(e) { //envia los datos para registro
 				e.preventDefault();
