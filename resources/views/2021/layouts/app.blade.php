@@ -8,7 +8,7 @@
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-	<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">  
+	<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
 	{{-- <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css"> --}}
 	<link rel = "stylesheet" href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css" />
@@ -41,10 +41,10 @@
 			color: white;
 			font-size: 24px;
 		}
-		input[type=number]::-webkit-inner-spin-button, 
-		input[type=number]::-webkit-outer-spin-button { 
-		-webkit-appearance: none; 
-		margin: 0; 
+		input[type=number]::-webkit-inner-spin-button,
+		input[type=number]::-webkit-outer-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
 		}
 
 		#modal_alerta{
@@ -57,7 +57,7 @@
 		.nav-link{
 			color: white !important;
 		}
-		
+
 	</style>
 </head>
 <body>
@@ -98,8 +98,8 @@
 								</li>
 							@endif
 						@else
-							
-							@if (Auth::user()->tipoUsuarioId == 0)                            
+
+							@if (Auth::user()->tipoUsuarioId == 0)
 								@if (Route::has('register'))
 									{{-- <li class="nav-item">
 										<a class="nav-link" href="{{ route('usuarios2021') }}">{{ __('Usuarios') }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
@@ -109,7 +109,7 @@
 									</li>
 									<li class="nav-item">
 										<a class="nav-link" href="{{ route('reporte2021') }}">{{ __('Reportes') }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
-									</li> 
+									</li>
 								@endif
 							@endif
 							<li class="nav-item dropdown">
@@ -118,13 +118,13 @@
 								</a>
 								<ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 									@if (session()->has('centroEntrega'))
-										<h5 class="dropdown-header"> {{__(session('centroEntregaNombre'))}} </h5>
+										<h5 class="dropdown-header"> {{__(session('centroEntregaNombre'))}}: {{__(session('NumeroDeEntregas'))}} </h5>
 										<li>
 											<hr class="dropdown-divider">
 										</li>
 									@endif
 									@if (Auth::user()->tipoUsuarioId == 0)
-										
+
 										<h5 class="dropdown-header">
 											CENTROS DE ENTREGA
 										</h5>
@@ -135,11 +135,11 @@
 											<a class="dropdown-item" href="#" id="addDespensas">{{ __('Agregar despensas') }}</a>
 										</li>
 										<li>
-											<a class="dropdown-item" href="#" id="despensasTransfer">{{ __('Transferir despensas') }}</a>											
+											<a class="dropdown-item" href="#" id="despensasTransfer">{{ __('Transferir despensas') }}</a>
 										</li>
-										
+
 									@endif
-										
+
 									<li>
 										<hr class="dropdown-divider">
 									</li>
@@ -163,10 +163,10 @@
 										<form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
 											@csrf
 										</form>
-									</li>									
+									</li>
 								</ul>
 							</li>
-							
+
 						@endguest
 					</ul>
 				</div>
@@ -177,7 +177,7 @@
 			<div class="container">
 
 				@yield('content')
-		
+
 			</div>
 
 			<div id="modalMultiuso" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -189,7 +189,7 @@
 							  <span aria-hidden="true">×</span>
 							</button>
 						</div>
-						<div class="modal-body">							
+						<div class="modal-body">
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary closemdl" data-dismiss="modal">Close</button>
@@ -198,7 +198,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 		</main>
 	</div>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -215,9 +215,9 @@
 	<script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
 	<script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
 	<script src="{{asset('js/webcam.js')}}"></script>
-	
+
 	<script> //se utiliza para cuestionario
-		function printHTML() {  
+		function printHTML() {
 			if (window.print) {
 				window.print();
 			}
@@ -233,29 +233,29 @@
 
 			var chars = e.value.length;
 			var diff = max_chars - chars;
-			$(e).siblings('.contador').html(diff); 
+			$(e).siblings('.contador').html(diff);
 		}
-		
 
-		setTimeout(function() { 
+
+		setTimeout(function() {
 			$("#btnreturn").hide();
 		}, 20000);
 
 		if ( $(".alertDefault").length > 0 ){
-			setTimeout(function() { 
+			setTimeout(function() {
 				$(".alertDefault").remove();
 			}, 8000);
 		}
-		
+
 		$(document).ready(function() {
 
-			$("[name='tel_cel'],[name='tel_casa']").attr({pattern:'[1-9]{1}[0-9]{9}', type:'text', title:'10 NUMEROS'});//validacion para numero de telefono 
+			$("[name='tel_cel'],[name='tel_casa']").attr({pattern:'[1-9]{1}[0-9]{9}', type:'text', title:'10 NUMEROS'});//validacion para numero de telefono
 			$("[name='cod_postal']").attr({pattern:'[7]{2}[0-9]{3}', type:'text', title:'5 NUMEROS'});//codigo postal validacion
 			$("[name='curp']").attr({pattern:'[A-Z]{4}[0-9]{6}[HM]{1}[A-Z]{5}[A-Z0-9]{1}[0-9]{1}', type:'text', title:'FORMATO DE CURP VALIDA'});//codigo postal validacion
 
 			$('#modal_alerta').modal('show');//muestra el modal
 
-		   
+
 			if ($("#ntn").val() == 0) { //bloquea los campos en caso de no tener intentos
 				// $('#encuestaupdate input').attr('readonly', 'readonly');
 				$('#encuestaupdate input').attr('disabled', true);
@@ -264,7 +264,7 @@
 				// $("[name='accion']").show();
 				$("[name='rel']").show();
 			}
-			
+
 			$(document).on('click','#solicitarD',function(){
             // $("#solicitarD").off().click(function(){//abre y escribe el modal para subir los documentos y solicitar una despensa
 				$("#encuestaupdatemodal .modal-title").html('Subir documentacion');
@@ -303,8 +303,8 @@
 				$('#encuestaupdatemodal [data-btn="cpt"]').attr({form:'documentosForm',type:'submit'});
 
 				$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-info alert-dismissible fade show" role="alert"> <h3 class="alert-heading">Los documentos adjuntados deben de estar en formato PDF o JPG <br> y no exceder los 2 MB de tamaño</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-				
-				setTimeout(function() { 
+
+				setTimeout(function() {
 					$("#sccs").alert('close');
 					$("#sccs").remove();
 				}, 5500);
@@ -324,24 +324,24 @@
 							$('#encuestaupdatemodal [data-btn="cpt"]').attr("disabled", true);
 						}
 					}).done(function(data) {
-						$("#entcont").html(data);            
+						$("#entcont").html(data);
 
-						$("#encuestaupdatemodal").modal('hide');//se cierra el modal 
+						$("#encuestaupdatemodal").modal('hide');//se cierra el modal
 
 						$('#encuestaupdatemodal [data-btn="cpt"]').attr('type','button').removeAttr("form disabled");
 						$("#encuestaupdatemodal .modal-body").html('');
 
 					}).fail(function(jqXHR, textStatus, errorThrown){
 						alert('Ocurrio un error favor de reportarlo');
-						
-						$("#encuestaupdatemodal").modal('hide');//se cierra el modal 
+
+						$("#encuestaupdatemodal").modal('hide');//se cierra el modal
 
 						$('#encuestaupdatemodal [data-btn="cpt"]').attr('type','button').removeAttr("form disabled");
 						$("#encuestaupdatemodal .modal-body").html('');
 					});
 				});
-					
-				
+
+
 			});
 
 			$(document).on('click','#editarDoc',function(){
@@ -377,8 +377,8 @@
 					$("#documentacionEdit").html(data);
 
 					$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-info alert-dismissible fade show" role="alert"> <h3 class="alert-heading">Los documentos adjuntados deben de estar en formato PDF o JPG <br> y no exceder los 2 MB de tamaño</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-				
-					setTimeout(function() { 
+
+					setTimeout(function() {
 						$("#sccs").alert('close');
 						$("#sccs").remove();
 					}, 5500);
@@ -391,7 +391,7 @@
 					// $(".btncamera").off().click(function(){//
 						var namedoc = $(this).data('name');
 						$("#encuestaupdatemodal .modal-title").html('Tomar foto');
-						$("#encuestaupdatemodal .modal-dialog").addClass('modal-lg');//<<------------------------corregir de nuevo 
+						$("#encuestaupdatemodal .modal-dialog").addClass('modal-lg');//<<------------------------corregir de nuevo
 						var htmlfoto = '<div id="camera" style="display:block;margin:auto;"></div>';
 							htmlfoto += '<button id="take_photo" class="btn btn-info btn-block mt-2 mb-2" type=button>Tomar foto</button>';
 							htmlfoto += '<div id="resultPhoto"></div>';
@@ -400,7 +400,7 @@
 						$("#encuestaupdatemodal .modal-body").html(htmlfoto);
 
 						$('#encuestaupdatemodal [data-btn="cpt"]').attr("disabled", true);
-						
+
 						Webcam.attach('#camera');
 
 						$("#take_photo").off().click(function(){//solo captura la imagen
@@ -415,11 +415,11 @@
 							$('#'+namedoc).attr('type','hidden').removeClass('custom-file-input');
 							$('#'+namedoc).val(imgbase64);
 							$('#'+namedoc).next().removeClass('custom-file-label');
-							$("#encuestaupdatemodal").modal('hide');//se cierra el modal 
+							$("#encuestaupdatemodal").modal('hide');//se cierra el modal
 							$("#encuestaupdatemodal .modal-dialog").removeClass('modal-lg');
 						});
 
-						$("#encuestaupdatemodal").modal('show');							
+						$("#encuestaupdatemodal").modal('show');
 					});
 
 					$(".btndelfile").off().click(function(){//sirve para eliminar un documento
@@ -437,8 +437,8 @@
 								delbtn.attr("disabled", true);
 							}
 						}).done(function(data) {
-							if (data[2] == 0 ) {//si es igual a 0 quiere decir que se descompletaron los documentos obligarios 
-								if ($('#entregaenupdatebtn').length) {//entonces verifica si ya existia el boton de entrega 
+							if (data[2] == 0 ) {//si es igual a 0 quiere decir que se descompletaron los documentos obligarios
+								if ($('#entregaenupdatebtn').length) {//entonces verifica si ya existia el boton de entrega
 									$('#entregaenupdatebtn').remove();//si existe lo borra
 									$('#entregaenupdatedocbtn').remove();//si existe lo borra
 								}
@@ -447,8 +447,8 @@
 							delbtn.closest('.form-row').html(data[0]);
 							$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data[1]+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 							bsCustomFileInput.init();
-				
-							setTimeout(function() { 
+
+							setTimeout(function() {
 								$("#sccs").alert('close');
 								$("#sccs").remove();
 							}, 4500);
@@ -478,8 +478,8 @@
 
 							@if (auth()->check())
 								if (data[0] == 1) {
-									
-									if ($('#entregaenupdatebtn').length) {//entonces verifica si ya existia el boton de entrega 
+
+									if ($('#entregaenupdatebtn').length) {//entonces verifica si ya existia el boton de entrega
 										// $('#entregaenupdatebtn').remove();//si existe lo borra
 									} else {
 										// if (data[2] == 0) {
@@ -487,19 +487,19 @@
 										// }
 										$('#editarDoc').after('<br><button style="color: white" id="entregaenupdatebtn" class="btn btn-success mb-1" data-folio="'+folio+'">Entrega</button>');
 									}
-								}	
+								}
 							@endif
 
 							$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data[1]+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-				
-							setTimeout(function() { 
+
+							setTimeout(function() {
 								$("#sccs").alert('close');
 								$("#sccs").remove();
 							}, 4500);
 
 							$("#documentacionEdit").closest('.card').hide();
 
-							// $("#entcont").html(data);                     
+							// $("#entcont").html(data);
 						}).fail(function(jqXHR, textStatus, errorThrown){
 
 							$("#documentacionEdit").html('');
@@ -523,19 +523,19 @@
 							}
 
 							$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-danger alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+msgerr+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-				
-							setTimeout(function() { 
+
+							setTimeout(function() {
 								$("#sccs").alert('close');
 								$("#sccs").remove();
 							}, 4500);
 						});
 					});
-            
+
 				}).fail(function(jqXHR, textStatus, errorThrown){
-					
+
 					$("#documentacionEdit").html('');
 					alert('Ocurrio un error favor de reportarlo');
-				});								
+				});
 			});
 
 			$(document).on('click',"#entregaenupdatebtn",function(){//trae el html de la subida de foto de entrega
@@ -549,12 +549,12 @@
 							image_format: 'jpeg',
 							jpeg_quality: 100
 						});
-				
+
 				$.ajax({
 					type: "GET",
 					url: "/entrega/enUpdate",
 					beforeSend: function(){
-						$("#documentacionEdit").html('').closest('.card').hide();//por si se tiene abierto el lugar donde se suben documentos ya que se pueden borrar desde ahi 
+						$("#documentacionEdit").html('').closest('.card').hide();//por si se tiene abierto el lugar donde se suben documentos ya que se pueden borrar desde ahi
 						$("#entregaEnUpdate").html('<div class="text-center"></br></br><div class="spinner-border text-info" style="width: 6rem; height: 6rem;" role="status"><span class="sr-only">Loading...</span></div></div>');
 						$(this).attr("disabled", true);
 					}
@@ -583,7 +583,7 @@
 						$.ajax({
 							type: "POST",
 							url: "/entrega/enUpdate/"+folio,
-							data: $('#entregaEnUpdateForm').serialize(),						
+							data: $('#entregaEnUpdateForm').serialize(),
 							// data: new FormData(this),// para enviar documentos
 							// contentType: false,
 							// cache: false,
@@ -602,12 +602,12 @@
 							} else {
 								$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-danger alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data[1]+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 							}
-				
-							setTimeout(function() { 
+
+							setTimeout(function() {
 								$("#sccs").alert('close');
 								$("#sccs").remove();
 							}, 4500);
-							
+
 							$("#entregaEnUpdate").closest('.card').hide();
 
 							$("#banerSotck h5 span").html(data[3][0].stockDespensas);//para actualizar el banner de stock
@@ -617,9 +617,9 @@
 								$("#banerSotck h5").css('background','#ffc107')
 							} else {
 								$("#banerSotck h5").css('background','#dc3545')
-							}						
+							}
 
-							// $("#entcont").html(data);                     
+							// $("#entcont").html(data);
 						}).fail(function(jqXHR, textStatus, errorThrown){
 
 							// $('#encuestaupdatemodal [data-btn="cpt"]').attr('type','button').removeAttr("form disabled");
@@ -628,31 +628,31 @@
 							alert('Ocurrio un error favor de reportarlo');
 						});
 					});
-            
+
 				}).fail(function(jqXHR, textStatus, errorThrown){
-					
+
 					$("#entregaEnUpdate").html('');
 					alert('Ocurrio un error favor de reportarlo');
-				});								
+				});
 			});
-			
+
 			$(document).on('click',"#entregaenupdatedocbtn",function(){//trae el html de la subida de el documento jpg que se va a subir
 			// $("#entregaenupdatebtn").off().click(function(){
 				$("#entregaEnUpdate").closest('.card').show();
 				var folio = $(this).data('folio');
-				
+
 				$.ajax({
 					type: "GET",
 					url: "/entrega/enUpdatePost",
 					beforeSend: function(){
-						$("#documentacionEdit").html('').closest('.card').hide();//por si se tiene abierto el lugar donde se suben documentos ya que se pueden borrar desde ahi 
+						$("#documentacionEdit").html('').closest('.card').hide();//por si se tiene abierto el lugar donde se suben documentos ya que se pueden borrar desde ahi
 						$("#entregaEnUpdate").html('<div class="text-center"></br></br><div class="spinner-border text-info" style="width: 6rem; height: 6rem;" role="status"><span class="sr-only">Loading...</span></div></div>');
 						$(this).attr("disabled", true);
 					}
 				}).done(function(data) {
 					$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-info alert-dismissible fade show" role="alert"> <h3 class="alert-heading">La imagen adjuntada debe de estar en formato JPG <br> y no exceder los 2 MB de tamaño</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-				
-					setTimeout(function() { 
+
+					setTimeout(function() {
 						$("#sccs").alert('close');
 						$("#sccs").remove();
 					}, 5500);
@@ -665,7 +665,7 @@
 
 						$.ajax({
 							type: "POST",
-							url: "/entrega/enUpdate/"+folio,						
+							url: "/entrega/enUpdate/"+folio,
 							data: new FormData(this),// para enviar documentos
 							contentType: false,
 							cache: false,
@@ -683,8 +683,8 @@
 							} else {
 								$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-danger alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data[1]+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 							}
-				
-							setTimeout(function() { 
+
+							setTimeout(function() {
 								$("#sccs").alert('close');
 								$("#sccs").remove();
 							}, 4500);
@@ -698,8 +698,8 @@
 								$("#banerSotck h5").css('background','#ffc107')
 							} else {
 								$("#banerSotck h5").css('background','#dc3545')
-							}	
-            
+							}
+
 						}).fail(function(jqXHR, textStatus, errorThrown){
 
 							// $('#encuestaupdatemodal [data-btn="cpt"]').attr('type','button').removeAttr("form disabled");
@@ -713,24 +713,24 @@
 							}
 
 							$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-danger alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+msgerr+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-				
-							setTimeout(function() { 
+
+							setTimeout(function() {
 								$("#sccs").alert('close');
 								$("#sccs").remove();
 							}, 4500);
 
 						});
 					});
-            
+
 				}).fail(function(jqXHR, textStatus, errorThrown){
-					
+
 					$("#entregaEnUpdate").html('');
 					alert('Ocurrio un error favor de reportarlo');
-				});								
+				});
 			});
 
 			$(document).on('click', '#addDespensas',function(){// abre el modal para aumentar despensas
-				
+
 				$cuerpo_modal = '<form id="stockform" action="" method="">'+
 									'<div class="form-group">'+
 										'<input type="hidden" name="_token" value="{{ csrf_token() }}">'+
@@ -754,7 +754,7 @@
 						url: "/catalogo/stock/update",
 						data: $("#stockform").serialize(),
 						beforeSend: function(){
-							$("#modalMultiuso").modal('hide');//se cierra el modal 
+							$("#modalMultiuso").modal('hide');//se cierra el modal
 
 							$("#modalMultiuso .modal-header .modal-title").html('');
 							$("#modalMultiuso .modal-body").html('');
@@ -766,12 +766,12 @@
 							alert('Ocurrio un error al actualizar el stock, favor de reportarlo');
 						} else {
 							location.reload();
-						} 
+						}
 					}).fail(function(jqXHR, textStatus, errorThrown){
 						alert('Ocurrio un error al aumentar el stock, favor de reportarlo');
 					});
 
-				});				
+				});
 
 			});
 
@@ -785,7 +785,7 @@
 					var optionsCEString = "";
 					$.each(data[0], function(k, v) {
 						optionsCEString +='<option value="'+v['id']+'">'+v['Descripcion']+'</option>';
-						 
+
 					});
 
 					$cuerpo_modal = '<form id="stockTransfer" action="" method="">'+
@@ -809,7 +809,7 @@
 													'<option selected value="">seleccione una opcion...</option>'+
 													// optionsCEString+
 													// '<option value=""></option>'+
-												'</select>'+									
+												'</select>'+
 											'</div>'+
 										'</div>'+
 									'</form>';
@@ -820,7 +820,7 @@
 					$("#modalMultiuso .modal-footer .savemdl").attr('form','stockTransfer');
 
 					$("#modalMultiuso").modal('show');
-					
+
 					$("#CEOrigen").change(function(){
 						$.ajax({
 							type: "GET",
@@ -848,9 +848,9 @@
 							url: "/catalogo/stock/update/transferencia",
 							data: $("#stockTransfer").serialize(),
 							beforeSend: function(){
-								$("#modalMultiuso").modal('hide');//se cierra el modal 
+								$("#modalMultiuso").modal('hide');//se cierra el modal
 
-								$("#modalMultiuso .modal-dialog").removeClass('modal-lg');		
+								$("#modalMultiuso .modal-dialog").removeClass('modal-lg');
 								$("#modalMultiuso .modal-header .modal-title").html('');
 								$("#modalMultiuso .modal-body").html('');
 								$("#modalMultiuso .modal-footer .savemdl").removeAttr('form');
@@ -870,19 +870,19 @@
 						});
 
 					});
-					
+
 				}).fail(function(jqXHR, textStatus, errorThrown){
 					alert('1: Ocurrio un error al transferir stock, favor de reportarlo');
 				});
-				
-				
-				
+
+
+
 
 			});
 
 			$("#passpersonacreate").off().submit(function(e) { //cambia la contraseña de la persona
 				e.preventDefault();
-				
+
 				$.ajax({
 					type: "POST",
 					url: "/registro/pass/"+$("#passpersonacreate").data("user"),
@@ -895,13 +895,13 @@
 					},
 					success: function(data) {
 						$(document.body).html(data);
-					}, 
+					},
 					error: function( jqXHR, textStatus, errorThrown){
 						// console.log(jqXHR.responseJSON.errors.contraseña[0]);
 						if ($("#password").hasClass("is-invalid")) {//si hay una alerta de error solo elimina y pone una nueva
 							$(".invalid-feedback").remove();
 							$("#password").after('<span class="invalid-feedback" role="alert"><strong>'+jqXHR.responseJSON.errors.contraseña[0]+'</strong></span>');
-							
+
 						} else {// si no hay alertas agrega la clase de rror y la alerta
 							$("#password").addClass('is-invalid')
 							$("#password").after('<span class="invalid-feedback" role="alert"><strong>'+jqXHR.responseJSON.errors.contraseña[0]+'</strong></span>');
@@ -912,7 +912,7 @@
 
 			$("#findpersonaParcial").off().submit(function(e) { //busca a las personas
                 e.preventDefault();
-                
+
                 $.ajax({
                     type: "get",
                     url: "/utils/buscarBeneficiario/coincidencia",
@@ -920,13 +920,13 @@
                     success: function(data) {
 
                         $("#personasContenedor").html(data);
-						
+
 						$('#personasCoincidencia').DataTable({
 							dom: 'frltp',
 							pageLength: 10,
 							lengthMenu: [10,20,30,50],
 							// sScrollY:"30em",
-							// sScrollX: "100%",  
+							// sScrollX: "100%",
 							"language": {
 								"decimal":        "",
 								"emptyTable":     "No data available in table",
@@ -956,10 +956,10 @@
                     }
                 });
             });
-		   
+
 			$("#encuesta").off().submit(function(e) { //envia los datos para registro
 				e.preventDefault();
-				
+
 				$.ajax({
 					type: "POST",
 					url: "/registro",
@@ -980,24 +980,24 @@
 						if (data[0] != 0) {
 
 							$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">Datos Guardados, ID: '+data[1]+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-							
-							$("#encuesta").append('<input type="hidden" data-persona="'+data[1]+'" id="ntn">');       
+
+							$("#encuesta").append('<input type="hidden" data-persona="'+data[1]+'" id="ntn">');
 
 							$("#spinnerprov").remove();
-							
-							$("#solicitarD").show();  
+
+							$("#solicitarD").show();
 						} else {
 							$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-danger alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data[1]+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
-							
-							setTimeout(function() { 
+
+							setTimeout(function() {
 								window.location.href = "/registro";
 							}, 14000);
 						}
 
-						setTimeout(function() { 
+						setTimeout(function() {
 							$("#sccs").alert('close');
 						}, 12000);
-					}, 
+					},
 					error: function( jqXHR, textStatus, errorThrown){
 						$("[name = 'send']").show();
 						$("#spinnerprov").remove();
@@ -1005,7 +1005,7 @@
 						if ($("#password").hasClass("is-invalid")) {//si hay una alerta de error solo elimina y pone una nueva
 							$(".invalid-feedback").remove();
 							$("#password").after('<span class="invalid-feedback" role="alert"><strong>'+jqXHR.responseJSON.errors.contraseña[0]+'</strong></span>');
-							
+
 						} else {// si no hay alertas agrega la clase de rror y la alerta
 							$("#password").addClass('is-invalid')
 							$("#password").after('<span class="invalid-feedback" role="alert"><strong>'+jqXHR.responseJSON.errors.contraseña[0]+'</strong></span>');
@@ -1016,7 +1016,7 @@
 
 			$("#encuestaupdate").off().submit(function(e) { //envia los datos para actualizar
 				e.preventDefault();
-				
+
 				var idpersona = $("#ntn").data('persona');
 				$.ajax({
 					type: "PUT",
@@ -1037,17 +1037,17 @@
 							$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-danger alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data[1]+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 						}
 
-						setTimeout(function() { 
+						setTimeout(function() {
 							$("#sccs").alert('close');
-						}, 5000);       
-					}, 
+						}, 5000);
+					},
 					error: function( jqXHR, textStatus, errorThrown){
 						$("[name = 'send']").show();
 						// console.log(jqXHR.responseJSON.errors.contraseña[0]);
 						if ($("#password").hasClass("is-invalid")) {//si hay una alerta de error solo elimina y pone una nueva
 							$(".invalid-feedback").remove();
 							$("#password").after('<span class="invalid-feedback" role="alert"><strong>'+jqXHR.responseJSON.errors.contraseña[0]+'</strong></span>');
-							
+
 						} else {// si no hay alertas agrega la clase de rror y la alerta
 							$("#password").addClass('is-invalid')
 							$("#password").after('<span class="invalid-feedback" role="alert"><strong>'+jqXHR.responseJSON.errors.contraseña[0]+'</strong></span>');
@@ -1105,12 +1105,12 @@
 
 	 <script> //se utiliza para entregas
 		$(document).ready(function() {
-			
+
 			$("#entregaupdate2021").off().submit(function(e) { //envia los datos para actualizar una entrega abierta en la lista de entregas
 				e.preventDefault();
-				
+
 				var identrega = $("#hid").data('entrega');
-				
+
 				$.ajax({
 					type: "PUT",
 					url: "/admin2021/entrega/"+identrega,
@@ -1121,24 +1121,24 @@
 						// $("[name='accion']").show();
 						// $("[name='rel']").show();
 
-						setTimeout(function() { 
+						setTimeout(function() {
 							$("#sccs").alert('close');
 							window.close();
-						}, 5000);  
+						}, 5000);
 				}).fail(function(jqXHR, textStatus, errorThrown){
 					$("[name='sendUpdateEntrega']").hide();
-						$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-danger alert-dismissible fade show" role="alert"> <h3 class="alert-heading">Por favor tomar captura y reportar el error <br> Status: '+ textStatus+' Error: ' + errorThrown+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'); 
+						$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-danger alert-dismissible fade show" role="alert"> <h3 class="alert-heading">Por favor tomar captura y reportar el error <br> Status: '+ textStatus+' Error: ' + errorThrown+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
 				});
 			});
-			
-		});        
+
+		});
 	</script>
 
 
 	<script>//reportes
 		$(document).ready(function() {
 			//ya esta cubierto el cambio de localidad y colnia en la parte de utilidades
-			
+
 
 			$('#centroent').off().change(function(){
 				var centroent = $(this);
@@ -1146,7 +1146,7 @@
 					$('#municipio').prop('disabled', false);
 					$('#localidad').prop('disabled', false);
 					$('#colonia').prop('disabled', false);
-				} else { 
+				} else {
 					$('#municipio').val('');
 					$('#localidad').val('');
 					$('#colonia').val('');
@@ -1155,10 +1155,10 @@
 					$('#colonia').prop('disabled', true);
 				}
 			});
-			
+
 			$('#verentregados').off().click(function(e){
 				// e.preventDefault();
-				
+
 				var sppiner = '<div class="text-center"></br></br><div class="spinner-border text-info" style="width: 6rem; height: 6rem;" role="status"><span class="sr-only">Loading...</span></div></div>';
 				$('#stats').html('');
 
@@ -1183,11 +1183,11 @@
 						var nobinario = 0
 						var donados = 0;
 
-						if(data != undefined){    
+						if(data != undefined){
 							if(data.length > 0 ){
-								
+
 								var reporte = '<br/><table class="table table-hover" id="reptable"><thead><tr class="table-info"><th>NOMBRE</th><th>CURP</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>COLONIA</th><th>DIRECCION</th><th>TELEFONO</th><th>FOLIO ENTREGA</th><th>ID ENTREGA</th><th>DONADO</th><th>PERIODO ENTREGA</th><th>CENTRO ENTREGA</th><th>ENTREGO</th><th>FECHA ENTREGA</th><th>OBSERVACION</th></tr></thead><tbody>';
-									
+
 								$.each(data, function(k, v) {
 									reporte +='<tr>';
 										reporte +='<td>'+(v['Nombre']!= null?v['Nombre']:"")+" "+(v['APaterno']!= null?v['APaterno']:"")+" "+(v['AMaterno']!= null?v['AMaterno']:"")+'</td>';
@@ -1203,7 +1203,7 @@
 										reporte +='<td>'+(v['periodoentrega']!= null?v['periodoentrega']:"N/D")+'</td>';
 										reporte +='<td>'+(v['centroentrega']!= null?v['centroentrega']:"N/D")+'</td>';
 										reporte +='<td>'+(v['name']!= null?v['name']:"N/D")+'</td>';
-																		
+
 
 										if (v['fechaE']!= null) {
 											var d = new Date(v['fechaE']);
@@ -1211,7 +1211,7 @@
 										} else {
 											var d = "N/D";
 										}
-										
+
 										reporte +='<td>'+d+'</td>';
 										reporte +='<td>'+(v['comentario']!= null?v['comentario']:"N/D")+'</td>';
 
@@ -1232,17 +1232,17 @@
 								reporte +='</tbody></table>';
 								$('#stats').html('<strong>Registros: </strong>'+data.length+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>Donados: </strong>'+donados+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>Mujeres: </strong>'+mujeres+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>Hombres: </strong>'+hombres+'&nbsp;&nbsp;&nbsp;&nbsp;<strong>Sin especificar: </strong>'+nobinario);
 
-							} 
-						} 
+							}
+						}
 						$('#reportecontenedor').html(reporte);
-						
+
 						$('#reptable').DataTable({
 							//  dom: 'frltp',
 							dom: 'frltpB',
 							pageLength: 15,
 							lengthMenu: [15,30,50,100,200,500],
 							sScrollY:"30em",
-							sScrollX: "100%",  
+							sScrollX: "100%",
 							buttons: [{
 								extend: 'excel',
 								className: "btn btn-success",
@@ -1278,8 +1278,8 @@
 				}).fail(function(jqXHR, textStatus, errorThrown){
 				});
 			});
-			
-			
+
+
 		});
 	</script>
 
@@ -1289,8 +1289,8 @@
 
 	{{-- <script>//usuarios
 		$(document).ready(function() {
-			
-			$("[name='idusuariodesh']").off().click(function(){// para deshabilitar usuario 
+
+			$("[name='idusuariodesh']").off().click(function(){// para deshabilitar usuario
 				var btndeshabilitar = $(this);
 				var modalconfirmuser = '<div class="modal fade" id="usuariomodal" tabindex="-1" role="dialog" aria-labelledby="usuariomodalLabel" aria-hidden="true">';
 					modalconfirmuser+='<div class="modal-dialog" role="document">';
@@ -1311,7 +1311,7 @@
 
 				$('#mdlusr').html(modalconfirmuser)
 
-				
+
 				$("#usuariomodal").modal('show');// abre el modal de desicion
 
 				$('#usuariomodal [data-btn="cpt"]').off().click(function(){//en caso de aceptar deshabilitar el usuario
@@ -1322,22 +1322,22 @@
 						data: {
 							"_token": "{{ csrf_token() }}"
 							},
-						success: function() {                            
+						success: function() {
 							btndeshabilitar.parent().parent().remove();
-							$("#usuariomodal").modal('hide');            
+							$("#usuariomodal").modal('hide');
 						}
 					});
 
-				});                            
+				});
 			});
 
 			var datatableuser = $('#usrtble').DataTable({ // datatable para tabla de usuarios
 							dom: 'frltpB',
-							pageLength: 10, 
+							pageLength: 10,
 							lengthMenu: [10,30,50],
 							sScrollY: '35em' ,
 							scrollCollapse: true,
-							
+
 							buttons: [
 										{
 											text: 'Registar Usuario',
@@ -1369,7 +1369,7 @@
 							}
 			});
 
-			
+
 
 			// $("#formularioedicionusuario").off().submit(function(e){
 			//     e.preventDefault();
@@ -1387,9 +1387,9 @@
 			//             $("[name='accion']").show();
 			//             $("[name='rel']").show();
 
-			//             setTimeout(function() { 
+			//             setTimeout(function() {
 			//                 $("#sccs").alert('close');
-			//             }, 3500);                        
+			//             }, 3500);
 			//         }
 			//     });
 
