@@ -12,6 +12,7 @@ use Auth;
 use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 
 class PeriodosController extends Controller
@@ -23,7 +24,7 @@ class PeriodosController extends Controller
                 return redirect('/');
             } else {
                  // DB::enableQueryLog();
-                $centrosdeentrega  = DB::table('c_centrosdeentrega') 
+                $centrosdeentrega  = DB::table('c_centrosdeentrega')
                     ->leftJoin('c_colonias', 'c_centrosdeentrega.id', '=', 'c_colonias.CentroEntregaId')
                     ->leftJoin('c_localidades', 'c_localidades.id', '=', 'c_colonias.LocalidadId')
                     ->leftJoin('c_municipios', 'c_municipios.id', '=', 'c_localidades.MunicipioId')
@@ -50,9 +51,21 @@ class PeriodosController extends Controller
             'centroe' => 'required',
         ])->validate();
 
-        $periodo = C_Periodo::where('id',$request->get('periodo'))->first();
-        $centroEntrega = C_CentroDeEntrega::where('id',$request->get('centroe'))->first();
-        session(['periodo' => $request->get('periodo'), 'periodoNombre' =>$periodo->Descripcion, 'centroEntrega' =>$request->get('centroe'), 'centroEntregaNombre' =>$centroEntrega->Descripcion]);
+        $idCentroEntrega = $request->get('centroe');
+        $idPeriodo = $request->get('periodo');
+
+        $periodo = C_Periodo::where('id',$idPeriodo)->first();
+        $centroEntrega = C_CentroDeEntrega::where('id',$idCentroEntrega)->first();
+
+        $now = Carbon::now();
+
+        $entregas = DB::table('entregas')
+        ->select('id')
+        ->where('idCentroEntrega', '=',$idCentroEntrega)
+        ->where('created_at','>=', $now->toDateString().' 05:00:00')
+        ->get();
+
+        session(['periodo' => $idPeriodo, 'periodoNombre' =>$periodo->Descripcion, 'centroEntrega' =>$idCentroEntrega, 'centroEntregaNombre' =>$centroEntrega->Descripcion, 'NumeroDeEntregas' => $entregas->count()]);
 
         return redirect('/');
     }

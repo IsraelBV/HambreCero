@@ -32,6 +32,8 @@ use Svg\Tag\Path;
 
 use function PHPUnit\Framework\isNull;
 
+use Carbon\Carbon;
+
 class CuestionarioController extends Controller
 {
 
@@ -46,17 +48,29 @@ class CuestionarioController extends Controller
     public function index(){
         if (Auth::check()) {
             if (session()->has('periodo')) {
-                return view('2021.cuestionario.index');        
+
+                $now = Carbon::now();
+
+                $entregas = DB::table('entregas')
+                ->select('id')
+                ->where('idCentroEntrega', '=',session('centroEntrega'))
+                ->where('created_at','>=', $now->toDateString().' 05:00:00')
+                ->get();
+                $entregasCount = $entregas->count();
+
+                session(['NumeroDeEntregas' => $entregasCount]);
+
+                return view('2021.cuestionario.index');
             } else {
                 return redirect('/periodo');
             }
         } else {
-            return view('2021.cuestionario.index');        
+            return view('2021.cuestionario.index');
         }
     }
 
     public function findPersona(Request $request){
-        
+
         $curp = $request->get('curp');
 
         $persona = DB::table('personas')
@@ -73,7 +87,7 @@ class CuestionarioController extends Controller
                             $pass = $request->get('pass');
 
                             if(is_null($persona[0]->password)){
-                                
+
                                 // if ($pass == $persona[0]->CURP) {
                                     return $this->editPasswordPersona($persona[0]->id);
                                     // //return redirect("/registro/pass/{$persona[0]->id}/edit");
@@ -133,7 +147,7 @@ class CuestionarioController extends Controller
     public function updatePasswordPersona(Request $request, $id){
 
         $persona = Persona::where('id',$id)->first();
-        
+
         if (is_null($persona->password)) {
 
             Validator::make($request->all(), [
@@ -156,13 +170,13 @@ class CuestionarioController extends Controller
 
     public function passwordRecover(Request $request){
         $curp = $request->get('persona');
-        
+
         $persona = Persona::where('CURP',$curp)->first();
 
         if ($persona->TelefonoCelular == $request->get('phone')|| $persona->TelefonoCasa == $request->get('phone')) {
             $persona->password = null;
             $persona->save();
-            
+
             return $this->editPasswordPersona($persona->id);
         } else {
             return view('2021.cuestionario.index',[
@@ -171,7 +185,7 @@ class CuestionarioController extends Controller
                 'errmsg'=> 'Informacion incorrecta, pongase en contacto con los encargados del programa.'
                 ]);
         }
-        
+
     }
 
     /**
@@ -179,10 +193,10 @@ class CuestionarioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($curp = NULL)    
-    {   
+    public function create($curp = NULL)
+    {
         // if (Auth::check()) {//cambio por beda electoral
-            // DB::enableQueryLog(); 
+            // DB::enableQueryLog();
 
             $colonias = null;
             // $colonias = DB::table('c_colonias')
@@ -201,8 +215,8 @@ class CuestionarioController extends Controller
             // ->where('c_localidades.status', '=',1)
             // ->orderBy('c_localidades.Descripcion', 'ASC')
             // ->get();
-            
-            // dd(DB::getQueryLog()); 
+
+            // dd(DB::getQueryLog());
 
             return view('2021.cuestionario.encuesta',[
                 'preguntas'=> C_Pregunta::all(),
@@ -211,7 +225,7 @@ class CuestionarioController extends Controller
                 // 'colonias'=> C_Colonia::all(),
                 'localidades'=> $localidades,
                 // 'localidades'=> C_Localidad::where('status', 1)->get(),
-                // 'localidades'=> C_Localidad::findMany([57,249]),   
+                // 'localidades'=> C_Localidad::findMany([57,249]),
                 'municipios'=> C_Municipio::where('status', 1)->get(),
                 // 'municipios'=> C_Municipio::findMany([5,4]),
                 'estadosCiviles' => C_EstadoCivil::all(),
@@ -220,7 +234,7 @@ class CuestionarioController extends Controller
                 'curp' => $curp
                 ]);
         // } else {
-        //     return view('2021.cuestionario.index');        
+        //     return view('2021.cuestionario.index');
         // }
     }
 
@@ -231,7 +245,7 @@ class CuestionarioController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {   
+    {
         $curpExiste = $this->findCurp($request->get('curp'));
 
         if($curpExiste->count() >= 2) {
@@ -277,8 +291,8 @@ class CuestionarioController extends Controller
         $persona->Intentos = 0;
         $persona->password = Hash::make($request->get('contraseña'));
         $persona->PeriodoId = 3;
-        
-        
+
+
         $encuesta = new Encuesta();
         $encuesta->Pregunta_33 = $request->get('cuantas_per_viven_casa');
         $encuesta->Pregunta_102 = $request->get('menores_sin_acta');
@@ -314,7 +328,7 @@ class CuestionarioController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {   
+    {
         // if (Auth::check()) {// cambio por beda electoral
 
             $personaCollection = DB::table('personas')
@@ -325,14 +339,14 @@ class CuestionarioController extends Controller
 
 
             if (Auth::check()) { // para diferenciar entra usuario y publico y proporcionarles la informacion correcta o que deben tener de colonias , localidades y municipios
-                
+
                 $colonias = DB::table('c_colonias')
                 ->select('*')
                 ->where('LocalidadId', '=',$personaCollection[0]->LocalidadId)
                 ->orWhere('id', '=', $personaCollection[0]->ColoniaId)
                 ->orderBy('Descripcion', 'ASC')
                 ->get();
-               
+
                 $localidades =  DB::table('c_localidades')
                 ->select('*')
                 ->whereIn('status', [1, 2])
@@ -340,15 +354,15 @@ class CuestionarioController extends Controller
                 ->orWhere('id', '=', $personaCollection[0]->LocalidadId)
                 ->orderBy('Descripcion', 'ASC')
                 ->get();
-                
+
                 $municipios = DB::table('c_municipios')
                 ->select('*')
                 ->orderBy('Descripcion', 'ASC')
                 ->get();
-                
+
                 $stock = StockDespensa::where('idCentroEntrega', session('centroEntrega'))->get();
             } else {
-                // DB::enableQueryLog(); 
+                // DB::enableQueryLog();
                 $colonias = DB::table('c_colonias')
                 ->select('*')
                 ->where('LocalidadId', '=',$personaCollection[0]->LocalidadId)
@@ -356,8 +370,8 @@ class CuestionarioController extends Controller
                 ->orWhere('id', '=', $personaCollection[0]->ColoniaId)
                 ->orderBy('Descripcion', 'ASC')
                 ->get();
-                // dd(DB::getQueryLog()); 
-                
+                // dd(DB::getQueryLog());
+
                 $localidades = DB::table('c_localidades')
                 ->select('*')
                 ->where('status', 1)
@@ -374,7 +388,7 @@ class CuestionarioController extends Controller
                 ->get();
 
                 $stock = null;
-            } 
+            }
 
             $personaCollection[0]->Intentos = 1;
 
@@ -406,14 +420,14 @@ class CuestionarioController extends Controller
             // $entrega = Entrega::where('DocumentacionId',$documentacion->id)->first();
             $listo = null;
             $entregacontroller = new EntregaController;
-            
+
             foreach($listaentregas as $entrega ) {
                if ($entrega->idEntrega == null) {
                     $listo = [
                         "completo" => $entregacontroller->verifyRequiredDocuments($entrega->idDocumentacion,$id),
                         "folio" => $entrega->idDocumentacion
                     ];
-               } 
+               }
             }
 
             return view('2021.cuestionario.encuestaUpdate',[
@@ -421,7 +435,7 @@ class CuestionarioController extends Controller
                 'estados'=> C_Estado::all(),
                 'colonias'=> $colonias,
                 // 'colonias'=> C_Colonia::all(),
-                'localidades'=> $localidades,   
+                'localidades'=> $localidades,
                 // 'localidades'=> C_Localidad::findMany([57,249]),
                 'municipios'=> $municipios,
                 // 'municipios'=> C_Municipio::findMany([5,4]),
@@ -435,7 +449,7 @@ class CuestionarioController extends Controller
                 // 'ultimadocumentacion'=>$documentacion
                 ]);
         // } else {
-        //     return view('2021.cuestionario.index');        
+        //     return view('2021.cuestionario.index');
         // }
     }
 
@@ -449,17 +463,17 @@ class CuestionarioController extends Controller
     public function update(Request $request, $id)
     {
         $curpExiste = $this->findCurp($request->get('curp'));
-        
+
         if($curpExiste->count() > 0){//si es mayor a cero quiere decir que la curp nueva que pusieron si existe dentro de la base
             if($curpExiste->count() >= 2) {
                 return [0,"Error: 101, El CURP que intenta actulizar tiene un inconveniente, favor de reportar ."];
             } else {
                 if ($curpExiste[0]->id != $id) {
                     return [0,"Error: 102, El CURP que intenta actulizar tiene un inconveniente, favor de reportar."];
-                } 
+                }
             }
         }
-        
+
         $persona = Persona::find($id);
 
         $persona->Nombre = $request->get('nombre');
@@ -490,17 +504,17 @@ class CuestionarioController extends Controller
         $persona->GrupoSocialId = $request->get('gruposocial');
         $persona->EstadoCivilId = $request->get('estadocivil');
         $persona->EncuestadorId = (Auth::check())?Auth::user()->id:0;
-        $persona->Intentos = 0;            
+        $persona->Intentos = 0;
 
         $encuesta = Encuesta::where('PersonaId',$id)->first();
-        
+
         $encuesta->Pregunta_33 = $request->get('cuantas_per_viven_casa');
         $encuesta->Pregunta_102 = $request->get('menores_sin_acta');
         $encuesta->Pregunta_103 = $request->get('considera_indigena');
         if ($request->has('benef_type')) {
             $encuesta->idTipoBeneficiario = $request->get('benef_type');
         }
-        
+
         $encuesta->EncuestadorId = (Auth::check())?Auth::user()->id:0;
 
         $persona->save();//actualiza los registros de persona
@@ -508,7 +522,7 @@ class CuestionarioController extends Controller
         $encuesta->save();//actualiza las encuestas
 
         return [1,'Datos Actualizados'];
-        
+
     }
 
     /**
@@ -537,13 +551,13 @@ class CuestionarioController extends Controller
                 ->select('personas.*', 'encuestas.*')
                 ->where("personas.id", $id)
                 ->get();
-    
+
             $pdf = \PDF::loadView('2020.cuestionario.formato2020bis', compact('preguntas','persona','estados','colonias','localidades','municipios','estadosCiviles','estudios'));
             $pdf->setPaper('letter', 'portrait');
-            return $pdf->stream("Cuestionario.pdf");//, array("Attachment" => 0)); 
+            return $pdf->stream("Cuestionario.pdf");//, array("Attachment" => 0));
             // return $pdf->download('Cuestionario.pdf');
-        
-       
+
+
     }
 
 
@@ -571,7 +585,7 @@ class CuestionarioController extends Controller
                 ->where('id', $idTipoBeneficiario)
                 ->get()[0]
                 ->despensasPorPeriodo;
-                
+
         $entregasEnElBimestreActual = DB::table('entregas') // busca si existe una entrega con ese id de persona y en ese periodo de entrega
             ->select('id')
             ->where('PersonaId', $id)
@@ -579,7 +593,7 @@ class CuestionarioController extends Controller
             ->get()
             ->count();
 
-            //compara las entregas que tenga de el bimestre activo y las despensas que le tocan por el tipo de beneficiario que es para saber si aun tiene disponibles, 
+            //compara las entregas que tenga de el bimestre activo y las despensas que le tocan por el tipo de beneficiario que es para saber si aun tiene disponibles,
             //si tiene mas (que deberia ser imposible) o igual cantidad de despensas entonces entra a una segunda validacion
         if ($entregasEnElBimestreActual >= $despensasCorrespondenEnElbimestre) {
             if ($idTipoBeneficiario == 1 || $idTipoBeneficiario == 3) {//valida si son los tipos de usuario que pueden reclamar una despensa que no hayan pedido en bimestres anteriores
@@ -593,7 +607,7 @@ class CuestionarioController extends Controller
                     ->get();
 
                 foreach ($listaPeriodosEntrega as $periodoEntrega) {//itera la lista de los bimestres para verificar uno a uno e ir sumando las entregas que deberian tener y las que les corresponden
-                    
+
                     $entregasxperiodo = DB::table('entregas') // obtiene las entregas correspondientes al bimestre de la iteracion
                     ->select('id','idTipoBeneficiario')
                     ->where('PersonaId', $id)
@@ -602,14 +616,14 @@ class CuestionarioController extends Controller
                     ->get();
 
                     $totalEntregasEstePeriodo = $entregasxperiodo->count(); //total de entregas en el bimestre
-                    
+
                     $hde += $totalEntregasEstePeriodo;//siempre se suma el total de entregas hechas en el bimestre parta al final tener el total de entregas hechas
                     if ($totalEntregasEstePeriodo < 1) {//si no tiene entregas
                         $hdc ++; //suma 1 a las que le corresponderian
                     } else {
                         $ecbeb = null; //entregas que corresponden al beneficiario en ese bimestre
-                       
-                        //para ahorrar el paso de consultar siempre las despensas correspondientes segun su tipo de beneficiario, 
+
+                        //para ahorrar el paso de consultar siempre las despensas correspondientes segun su tipo de beneficiario,
                         //se verifica si la ultima entrega de ese bimestre tiene el mismo tipo de beneficiario que la del bimestre activo
                         if ($entregasxperiodo[0]->idTipoBeneficiario == $idTipoBeneficiario) {//si lo tiene toma la consulta principal
                             $ecbeb = $despensasCorrespondenEnElbimestre;
@@ -620,16 +634,16 @@ class CuestionarioController extends Controller
                             ->get()[0];
                         }
 
-                        //si las entregas que le corresponden al usuario en ese bimestre son menos que las entregas hechas en ese periodo, se toma las que la correspondian en ese bimestre 
+                        //si las entregas que le corresponden al usuario en ese bimestre son menos que las entregas hechas en ese periodo, se toma las que la correspondian en ese bimestre
                         //(se descartan las que son extras en ese bimestre ya que pueden ser entregas que no fue a buscar en su momento y lo que estamos buscando es hacer la suma del total de despensas que le corresponderian hasta la fecha)
                         if ($ecbeb < $totalEntregasEstePeriodo) {
                             $hdc += $ecbeb;
-                        } else { //si son mas las entregas que le correspondian en ese bimestre se toman en cuenta las que fueron hechas ya que son las que tomo en ese bimestre, 
+                        } else { //si son mas las entregas que le correspondian en ese bimestre se toman en cuenta las que fueron hechas ya que son las que tomo en ese bimestre,
                                 //si tomamos en cuenta las que en teoria le correspondian se estaria agregando despensas extra.
                             $hdc += $totalEntregasEstePeriodo;
                         }
                     }
-                } 
+                }
                 if ($hde < $hdc) {//si las entregas totales son menos de las que le corresponden a la fecha entonces da ok a la entrega
                     $okEntrega = 1;
                 }
@@ -637,7 +651,7 @@ class CuestionarioController extends Controller
         } else {
             $okEntrega = 1;
         }
-        
+
 
         // $documentacionExistente = DB::table('documentacion') // busca si existe una documentacion con ese id de persona y en ese periodo de entrega
         // ->select('documentacion.id')
@@ -659,17 +673,17 @@ class CuestionarioController extends Controller
                     ->where('personas.id', $id)
                     ->get()[0]
                     ->CentroEntregaId;
-    
+
             $documentacion = new Documentacion();
-            
+
             $documentacion->PersonaId = $id;
             $documentacion->idCentroEntrega = $centroEntrega;
             $documentacion->idPeriodoEntrega = $idperiodoEntregaActual;
-    
+
             $documentacion->save();
-            
+
             $this->storeDocuments($request, $documentacion->id); // se utilza para actualizar los documentos pero su funcion es recibir los documentos y guardarlos
-            
+
             return $this->buildListaEntregas($id);
         }
     }
@@ -695,19 +709,22 @@ class CuestionarioController extends Controller
         $fechaEmpadronamiento = "$fechaEmpadArray[2]-$fechaEmpadArray[1]-$fechaEmpadArray[0]";
 
         if (count($listaentregas) > 0) {
-            $listaentregasstring = 
+            $listaentregasstring =
                 '<h5 class="card-title" align="center">LISTA DE ENTREGAS</h5>
                     <br>
                     <table class="table">';
                         if (count($listaentregas) > 1 || $listaentregas[0]->idEntrega !== null) {
-                            $listaentregasstring .='<tr>
-                                    <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>BIMESTRE</th><th>FECHA ENTREGA</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th><th>OBSERVACIÓN</th><th>FOTO</th>
-                                </tr>';
+                            $listaentregasstring .='<tr class="table-dark">
+                            <td colspan="10" style="text-align: center; padding-top: 2px; padding-bottom: 0; color: black;"><h4> FECHA DE EMPADRONAMIENTO: '.$fechaEmpadronamiento.'</h4></td>
+                        </tr>
+                        <tr>
+                            <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>BIMESTRE</th><th>FECHA ENTREGA</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th><th>OBSERVACIÓN</th><th>FOTO</th>
+                        </tr>';
                         }
 
                         $validatelastent = 1;
 
-                        foreach ($listaentregas as $entrega ) {                        
+                        foreach ($listaentregas as $entrega ) {
 
                             if ($entrega->idEntrega !== null){
                                 $listaentregasstring .='
@@ -723,12 +740,9 @@ class CuestionarioController extends Controller
                                     <td> '.($entrega->comentario != null ? $entrega->comentario : "N/D").'</td>
                                     <td> '.($entrega->periodo == 2021?'<a role="button" href="/documentacion/download/fotoentrega/'.$id.'/'.$entrega->idDocumentacion.'" class="btn btn-primary" target="_blank"><span style="font-size: 1.2em; color: white;" class="fa fa-eye"></span></a></td>':'N/D' ).'</td>
                                 </tr>';
-                                
+
                             }else{
                                 $listaentregasstring .='
-                                <tr class="table-dark">
-                                    <td colspan="10" style="text-align: center; padding-top: 2px; padding-bottom: 0; color: black;"><h4> FECHA DE EMPADRONAMIENTO: '.$fechaEmpadronamiento.'</h4></td>
-                                </tr>
                                 <tr>
                                     <td colspan="7">
                                         Folio: '.$entrega->idDocumentacion.'
@@ -746,7 +760,7 @@ class CuestionarioController extends Controller
                                                 // }
                                             }
                                         }
-                                    $listaentregasstring .='</td> 
+                                    $listaentregasstring .='</td>
                                 </tr>
                                 <tr class="table-dark">
                                     <td colspan="10"></td>
@@ -763,7 +777,7 @@ class CuestionarioController extends Controller
                                         Twitter <a href="https://twitter.com/sedeso_qroo">https://twitter.com/sedeso_qroo</a></p>
                                     </td>
                                 </tr>';
-                                // <p>Favor de estar pendiente de las fechas de entrega de despensas que serán publicadas en la página oficial del Programa Hambre Cero: <a href="https://qroo.gob.mx/sedeso/hambreceroquintanaroo">https://qroo.gob.mx/sedeso/hambreceroquintanaroo</a> y en las redes sociales oficiales de la Secretaría de Desarrollo Social de Quintana Roo: en Facebook <a href="https://www.facebook.com/SedesoQroo/">https://www.facebook.com/SedesoQroo/</a> y en Twitter <a href="https://twitter.com/sedeso_qroo">https://twitter.com/sedeso_qroo</a></p> 
+                                // <p>Favor de estar pendiente de las fechas de entrega de despensas que serán publicadas en la página oficial del Programa Hambre Cero: <a href="https://qroo.gob.mx/sedeso/hambreceroquintanaroo">https://qroo.gob.mx/sedeso/hambreceroquintanaroo</a> y en las redes sociales oficiales de la Secretaría de Desarrollo Social de Quintana Roo: en Facebook <a href="https://www.facebook.com/SedesoQroo/">https://www.facebook.com/SedesoQroo/</a> y en Twitter <a href="https://twitter.com/sedeso_qroo">https://twitter.com/sedeso_qroo</a></p>
                                 //         <p>Verifique en el portal oficial del Programa Hambre Cero, la ubicación del centro de entrega (PASO 4) que le corresponde y los datos bancarios de la cuenta donde deberá realizar el pago de la cuota de recuperación (PASO 3).</p>
                                 //         <p>Recuerde presentarse al centro de entrega asignado con los documentos que registró en original, únicamente para su cotejo de información. El recibo de pago de cuota de recuperación lo debe presentar también en original y se quedará en el centro de entrega.</p>
 
@@ -796,7 +810,7 @@ class CuestionarioController extends Controller
     ////dibuja el html de los documentos
     public function buildFormDocumentos(Request $request){
         $folio = $request->get('folio');
-       
+
         $documentacion = Documentacion::find($folio);
 
         $pathIdPersona = "documentacion/$documentacion->PersonaId";
@@ -875,7 +889,7 @@ class CuestionarioController extends Controller
                 //         <div class="col-md-1">
                 //             <button data-name="IdentificacionatrasFile" data-docname="identificacion_atras_oficial.jpg" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
                 //         </div>';
-            // } 
+            // }
             $docfind = $this->locateImg($pathIdPersona,'identificacion_atras_oficial');
             if ($docfind[0]) {
                 $htmlDocumentos .= '
@@ -920,7 +934,7 @@ class CuestionarioController extends Controller
                 //                 <button data-name="CompDomFile" data-docname="comprobantedomicilio.jpg" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
                 //             </div>';
             // }
-            $docfind = $this->locateImg($pathIdPersona,'comprobantedomicilio'); 
+            $docfind = $this->locateImg($pathIdPersona,'comprobantedomicilio');
             if ($docfind[0]) {
                     $htmlDocumentos .= '
                             <div class="col-md-11 pt-2">
@@ -1007,7 +1021,7 @@ class CuestionarioController extends Controller
                 //             <div class="col-md-1">
                 //                 <button data-name="ComPagFile" data-docname="comprobantepago.jpg" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
                 //             </div>';
-            // } 
+            // }
             $docfind = $this->locateImg($pathIdDocumentacion,'comprobantepago');
             if ($docfind[0]) {
                     $htmlDocumentos .= '
@@ -1031,7 +1045,7 @@ class CuestionarioController extends Controller
                         </div>';
                     }
             }
-            
+
             $htmlDocumentos .= '</div>
                                 <div class="form-row pb-2">';
 
@@ -1051,7 +1065,7 @@ class CuestionarioController extends Controller
                 //             <div class="col-md-1">
                 //                 <button data-name="ConstAutFiled" data-docname="constanciaautoridad.jpg" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
                 //             </div>';
-            // } 
+            // }
             $docfind = $this->locateImg($pathIdPersona,'constanciaautoridad');
             if ($docfind[0]) {
                     $htmlDocumentos .= '
@@ -1109,7 +1123,7 @@ class CuestionarioController extends Controller
             $extension = strtolower($request->file('IdentificacionFile')->getClientOriginalExtension());
             $request->file('IdentificacionFile')->storeAs($pathIdPersona,'identificacio_oficial'.'.'.$extension);
         } elseif ($request->has('IdentificacionFile')) {
-            $image = $request->get('IdentificacionFile'); 
+            $image = $request->get('IdentificacionFile');
             $image = str_replace('data:image/jpeg;base64,', '', $image);
             $image = str_replace(' ', '+', $image);
             $imageName = 'identificacio_oficial.jpg';
@@ -1120,7 +1134,7 @@ class CuestionarioController extends Controller
             $extension =  strtolower($request->file('IdentificacionatrasFile')->getClientOriginalExtension());
             $request->file('IdentificacionatrasFile')->storeAs($pathIdPersona,'identificacion_atras_oficial'.'.'.$extension);
         } elseif ($request->has('IdentificacionatrasFile')) {
-            $image = $request->get('IdentificacionatrasFile'); 
+            $image = $request->get('IdentificacionatrasFile');
             $image = str_replace('data:image/jpeg;base64,', '', $image);
             $image = str_replace(' ', '+', $image);
             $imageName = 'identificacion_atras_oficial.jpg';
@@ -1131,7 +1145,7 @@ class CuestionarioController extends Controller
             $extension =  strtolower($request->file('CompDomFile')->getClientOriginalExtension());
             $request->file('CompDomFile')->storeAs($pathIdPersona,'comprobantedomicilio'.'.'.$extension);
         } elseif ($request->has('CompDomFile')) {
-            $image = $request->get('CompDomFile'); 
+            $image = $request->get('CompDomFile');
             $image = str_replace('data:image/jpeg;base64,', '', $image);
             $image = str_replace(' ', '+', $image);
             $imageName = 'comprobantedomicilio.jpg';
@@ -1142,7 +1156,7 @@ class CuestionarioController extends Controller
             $extension =  strtolower($request->file('CURPFile')->getClientOriginalExtension());
             $request->file('CURPFile')->storeAs($pathIdPersona,'curp'.'.'.$extension);
         } elseif ($request->has('CURPFile')) {
-            $image = $request->get('CURPFile'); 
+            $image = $request->get('CURPFile');
             $image = str_replace('data:image/jpeg;base64,', '', $image);
             $image = str_replace(' ', '+', $image);
             $imageName = 'curp.jpg';
@@ -1153,7 +1167,7 @@ class CuestionarioController extends Controller
             $extension =  strtolower($request->file('ComPagFile')->getClientOriginalExtension());
             $request->file('ComPagFile')->storeAs($pathIdDocumentacion,'comprobantepago'.'.'.$extension);
         } elseif ($request->has('ComPagFile')) {
-            $image = $request->get('ComPagFile'); 
+            $image = $request->get('ComPagFile');
             $image = str_replace('data:image/jpeg;base64,', '', $image);
             $image = str_replace(' ', '+', $image);
             $imageName = 'comprobantepago.jpg';
@@ -1164,7 +1178,7 @@ class CuestionarioController extends Controller
             $extension =  strtolower($request->file('ConstAutFiled')->getClientOriginalExtension());
             $request->file('ConstAutFiled')->storeAs($pathIdPersona,'constanciaautoridad'.'.'.$extension);
         } elseif ($request->has('ConstAutFiled')) {
-            $image = $request->get('ConstAutFiled'); 
+            $image = $request->get('ConstAutFiled');
             $image = str_replace('data:image/jpeg;base64,', '', $image);
             $image = str_replace(' ', '+', $image);
             $imageName = 'constanciaautoridad.jpg';
@@ -1192,14 +1206,14 @@ class CuestionarioController extends Controller
     }
 
     public function deleteDocument(Request $request, $document){
-        
+
         $folio = $request->get('folio');
         $nameatribute = $request->get('nameatr');
         $nombreDocumento = '';
 
         $documentacion = Documentacion::find($folio);
         $pathDelete = "documentacion/$documentacion->PersonaId";
-        
+
         switch ($nameatribute) {
             case 'IdentificacionFile':
                 $nombreDocumento = "Identificacion (parte frontal)";
@@ -1231,7 +1245,7 @@ class CuestionarioController extends Controller
 
         $locate = $this->locateImg($pathDelete,$document);
         $document = $locate[1];
-        
+
         Storage::disk('public')->delete($pathDelete.'/'.$document);
 
         $htmlReturn='<div class="col-md-11">
@@ -1249,7 +1263,7 @@ class CuestionarioController extends Controller
         $respuesta = 'Se elimino exitosamente el documento: </br>'.$nombreDocumento;
 
         $entregacontroller = new EntregaController;
-        
+
         return [$htmlReturn,$respuesta,$entregacontroller->verifyRequiredDocuments($folio,$documentacion->PersonaId)];
     }
 
@@ -1259,19 +1273,19 @@ class CuestionarioController extends Controller
             Validator::make($request->all(), [
                 'IdentificacionFile' => ['mimes:jpg,jpeg,pdf',' required','max:2000'],
             ])->validate();
-        } 
+        }
 
         if ($request->hasFile('IdentificacionatrasFile')) {
             Validator::make($request->all(), [
                 'IdentificacionatrasFile' => ['mimes:jpg,jpeg,pdf',' required','max:2000'],
             ])->validate();
-        } 
+        }
 
         if ($request->hasFile('CompDomFile')) {
             Validator::make($request->all(), [
                 'CompDomFile' => ['mimes:jpg,jpeg,pdf',' required','max:2000'],
             ])->validate();
-        }    
+        }
 
         if ($request->hasFile('CURPFile')) {
             Validator::make($request->all(), [
@@ -1283,14 +1297,14 @@ class CuestionarioController extends Controller
             Validator::make($request->all(), [
                 'ComPagFile' => ['mimes:jpg,jpeg,pdf',' required','max:2000'],
             ])->validate();
-        } 
+        }
 
         if ($request->hasFile('ConstAutFiled')) {
             Validator::make($request->all(), [
                 'ConstAutFiled' => ['mimes:jpg,jpeg,pdf',' required','max:2000'],
             ])->validate();
-        } 
-        
+        }
+
     }
 
     public function locateImg($path,$archivo){ //pide el pad de la imagen y el nombre: busca si existe con alguno de los 3 formatos validos
@@ -1396,8 +1410,8 @@ class CuestionarioController extends Controller
                     ->whereIn('LocalidadId', $localidadesArray)
                     ->orderBy('Descripcion', 'ASC')
                     ->get();
-    
-                
+
+
             }
 
             foreach ($localidades as $localidad) {
@@ -1416,11 +1430,11 @@ class CuestionarioController extends Controller
                 }
             }
 
-            return [$localidadesString, $coloniasString];            
+            return [$localidadesString, $coloniasString];
         }
     }
 
-    public function findColonias(Request $Request){        
+    public function findColonias(Request $Request){
         if ($Request->get('from') == 0) {
             $coloniasString = '<option value="" selected>Seleccione una opcion</option>';
 
@@ -1430,7 +1444,7 @@ class CuestionarioController extends Controller
             ->where('LocalidadId', $Request->get('localidad'))
             ->orderBy('Descripcion', 'ASC')
             ->get();
-            
+
             foreach ($colonias as $colonia) {
                 if ($Request->get('colonia') == $colonia->id) {
                     $coloniasString .= '<option value="'.$colonia->id.'" selected>'.$colonia->Descripcion.'</option>';
@@ -1456,10 +1470,10 @@ class CuestionarioController extends Controller
                     ->where('status', '=',1)
                     ->where('LocalidadId', $Request->get('localidad'))
                     ->orderBy('Descripcion', 'ASC')
-                    ->get();                
+                    ->get();
             }
 
-            foreach ($colonias as $colonia) {                    
+            foreach ($colonias as $colonia) {
                 if ($Request->get('colonia') == $colonia->id) {
                     $coloniasString .= '<option value="'.$colonia->id.'" selected>'.$colonia->Descripcion.'</option>';
                 } else {
@@ -1494,9 +1508,9 @@ class CuestionarioController extends Controller
         }
         if ($Request->has('curpParcial') && !is_null($Request->get('curpParcial'))) {
             $whereraw .= "personas.CURP LIKE '%".$Request->get('curpParcial')."%' ";
-            
+
         }
-        
+
         $result = DB::table('personas')
             ->leftJoin('c_colonias', 'personas.ColoniaId', '=', 'c_colonias.id')
             ->leftJoin('c_municipios', 'personas.MunicipioId', '=', 'c_municipios.id')
@@ -1504,14 +1518,14 @@ class CuestionarioController extends Controller
             ->select('personas.id', 'personas.Nombre', 'personas.APaterno','personas.AMaterno','personas.CURP')
             ->WhereRaw($whereraw)
             ->get();
-            
-        
+
+
         $listastring = "<br/><br/><h3>No se encontraron registros con esta información.<h3>";
 
         if($result->count() > 0){
-            
+
             $listastring =  '<br/><table class="table table-hover" id="personasCoincidencia"><thead><tr class="table-info"><th>ID</th><th>NOMBRE</th><th>APELLIDO PATERNO</th><th>APELLIDO MATERNO</th><th>CURP</th></tr></thead><tbody>';
-                
+
             foreach ($result as $beneficiario) {
                 $listastring .='<tr>';
                     $listastring .='<td>'.($beneficiario->id != null? $beneficiario->id:"N/D").'</td>';
@@ -1522,9 +1536,10 @@ class CuestionarioController extends Controller
                 $listastring .='</tr>';
             }
             $listastring .='</tbody></table>';
-        } 
+        }
 
         return $listastring;
     }
-    
+
 }
+

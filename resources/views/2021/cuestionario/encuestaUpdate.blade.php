@@ -252,7 +252,7 @@
                                 @if ($persona[0]->Pregunta_102 == 1)
                                     <option selected value="{{$persona[0]->Pregunta_102}}">SI</option>
                                     <option value="0">NO</option>
-                                @else 
+                                @else
                                     <option value="1">SI</option>
                                     <option selected value="{{$persona[0]->Pregunta_102}}">NO</option>
                                 @endif
@@ -270,7 +270,7 @@
                                 @if ($persona[0]->Pregunta_103 == 1)
                                     <option selected value="{{$persona[0]->Pregunta_103}}">SI</option>
                                     <option value="0">NO</option>
-                                @else 
+                                @else
                                     <option value="1">SI</option>
                                     <option selected value="{{$persona[0]->Pregunta_103}}">NO</option>
                                 @endif
@@ -336,9 +336,12 @@
                     <table class="table">
 
                         @if (count($listaentregas) > 1 || $listaentregas[0]->idEntrega !== null)
-                            <tr>
-                                <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>BIMESTRE</th><th>FECHA ENTREGA</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th><th>OBSERVACIÓN</th><th>FOTO</th>
-                            </tr>
+                        <tr class="table-dark">
+                                <td colspan="10" style="text-align: center; padding-top: 2px; padding-bottom: 0; color: black;"><h4> FECHA DE EMPADRONAMIENTO: {{$persona[0]->created_at}}</h4></td>
+                        </tr>
+                        <tr>
+                            <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>BIMESTRE</th><th>FECHA ENTREGA</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th><th>OBSERVACIÓN</th><th>FOTO</th>
+                        </tr>
                         @endif
 
                         @php($validatelastent = 1)
@@ -356,13 +359,13 @@
                                     <td> {{$entrega->periodo != null ? $entrega->periodo : "N/D" }}</td>
                                     <td> {{$entrega->centroentregaentrega != null ? $entrega->centroentregaentrega : "N/D" }}</td>
                                     <td> {{$entrega->comentario != null ? $entrega->comentario : "N/D" }}</td>
-                                    <td>@if ($entrega->periodo == 2021)<a role="button" href="/documentacion/download/fotoentrega/{{$persona[0]->id}}/{{$entrega->idDocumentacion}}" class="btn btn-primary" target="_blank"><span style="font-size: 1.2em; color: white;" class="fa fa-eye"></span></a></td>@else N/D @endif 
+                                    <td>@if ($entrega->periodo == 2021)<a role="button" href="/documentacion/download/fotoentrega/{{$persona[0]->id}}/{{$entrega->idDocumentacion}}" class="btn btn-primary" target="_blank"><span style="font-size: 1.2em; color: white;" class="fa fa-eye"></span></a></td>@else N/D @endif
                                 </tr>
 
                             @else
-                                <tr class="table-dark">
+                                <!-- <tr class="table-dark">
                                     <td colspan="10" style="text-align: center; padding-top: 2px; padding-bottom: 0; color: black;"><h4> FECHA DE EMPADRONAMIENTO: {{$persona[0]->created_at}}</h4></td>
-                                </tr>
+                                </tr> -->
                                 <tr>
                                     <td colspan="7">
                                         <!-- Folio: {{$entrega->idDocumentacion}} - Centro de Entrega: <strong>{{$entrega->centroentrega}}</strong> - Direcccion: {{$entrega->direccioncentroentrega}} -->
@@ -380,7 +383,7 @@
                                                 <label>Algo anda mal favor de reportar los folios: {{$listo['folio']}} y {{$entrega->idDocumentacion}} </label>
                                             @endif
                                         @endif
-                                    </td> 
+                                    </td>
                                 </tr>
                                 <tr class="table-dark">
                                     <td colspan="10"></td>
@@ -396,7 +399,7 @@
                                         Facebook <a href="https://www.facebook.com/SedesoQroo/">https://www.facebook.com/SedesoQroo/</a>
                                         Twitter <a href="https://twitter.com/sedeso_qroo">https://twitter.com/sedeso_qroo</a></p>
 
-                                        <!-- <p>Favor de estar pendiente de las fechas de entrega de despensas que serán publicadas en la página oficial del Programa Hambre Cero: <a href="https://qroo.gob.mx/sedeso/hambreceroquintanaroo">https://qroo.gob.mx/sedeso/hambreceroquintanaroo</a> y en las redes sociales oficiales de la Secretaría de Desarrollo Social de Quintana Roo: en Facebook <a href="https://www.facebook.com/SedesoQroo/">https://www.facebook.com/SedesoQroo/</a> y en Twitter <a href="https://twitter.com/sedeso_qroo">https://twitter.com/sedeso_qroo</a></p> 
+                                        <!-- <p>Favor de estar pendiente de las fechas de entrega de despensas que serán publicadas en la página oficial del Programa Hambre Cero: <a href="https://qroo.gob.mx/sedeso/hambreceroquintanaroo">https://qroo.gob.mx/sedeso/hambreceroquintanaroo</a> y en las redes sociales oficiales de la Secretaría de Desarrollo Social de Quintana Roo: en Facebook <a href="https://www.facebook.com/SedesoQroo/">https://www.facebook.com/SedesoQroo/</a> y en Twitter <a href="https://twitter.com/sedeso_qroo">https://twitter.com/sedeso_qroo</a></p>
                                         <p>Verifique en el portal oficial del Programa Hambre Cero, la ubicación del centro de entrega (PASO 4) que le corresponde y los datos bancarios de la cuenta donde deberá realizar el pago de la cuota de recuperación (PASO 3).</p>
                                         <p>Recuerde presentarse al centro de entrega asignado con los documentos que registró en original, únicamente para su cotejo de información. El recibo de pago de cuota de recuperación lo debe presentar también en original y se quedará en el centro de entrega.</p> -->
                                     </td>
@@ -428,12 +431,12 @@
         <br><br>
         <div class="card" style="display: none">
             <div class="card-body" id="documentacionEdit">
-                
+
             </div>
         </div>
         <div class="card" style="display: none">
             <div class="card-body" id="entregaEnUpdate">
-                
+
             </div>
         </div>
         <br><br>

@@ -38,7 +38,7 @@ class EntregaController extends Controller
             return redirect('/');
         }
         if (session()->has('periodo')) {
-            return view('2021.entregas.index');       
+            return view('2021.entregas.index');
         } else {
             return redirect('/periodo');
         }
@@ -47,7 +47,7 @@ class EntregaController extends Controller
     ////dibuja el html de los documentos
     public function buildFormEntregaEnUpdate(){
         // $folio = $request->get('folio');
-       
+
         // $documentacion = Documentacion::find($folio);
 
         // $pathIdPersona = "documentacion/$documentacion->PersonaId";
@@ -55,12 +55,12 @@ class EntregaController extends Controller
 
         $htmlFoto = '
             <h5 class="card-title" align="center">ENTREGA</h5>';
-            
+
                 $htmlFoto .= '<div id="camara" style="display:block;margin:auto;"></div>
-                                <button id="tomar_foto" class="btn btn-info btn-block mt-2 mb-2" type=button>Tomar foto de entrega</button>                               
+                                <button id="tomar_foto" class="btn btn-info btn-block mt-2 mb-2" type=button>Tomar foto de entrega</button>
                                 <div id="foto" style="display: block; margin: auto;"></div>
                             ';
-            
+
 
             $htmlFoto .= '
                 </br>
@@ -92,15 +92,15 @@ class EntregaController extends Controller
         $idback = 0;
         $compdom = 0;
         $compag = 0;
-        
+
 
         // if (Storage::disk('public')->exists($pathIdPersona."/identificacio_oficial.pdf") || Storage::disk('public')->exists($pathIdPersona."/identificacio_oficial.jpg")) {
         //     $idfront = 1;
-        // } 
+        // }
         $imgloc = $this->locateImg($pathIdPersona,'identificacio_oficial');
         if ($imgloc[0]) {
             $idfront = 1;
-        } 
+        }
 
         // if (Storage::disk('public')->exists("$pathIdPersona/identificacion_atras_oficial.pdf") || Storage::disk('public')->exists("$pathIdPersona/identificacion_atras_oficial.jpg")) {
         //     $idback = 1;
@@ -117,9 +117,9 @@ class EntregaController extends Controller
         if ($imgloc[0]) {
             $compdom = 1;
         }
-        
+
         // if (Storage::disk('public')->exists("$pathIdPersona/curp.pdf") || Storage::disk('public')->exists("$pathIdPersona/curp.jpg")) {// por si se llega a necesitar
-            
+
         // }
 
         // if (Storage::disk('public')->exists("$pathIdDocumentacion/comprobantepago.pdf") || Storage::disk('public')->exists("$pathIdDocumentacion/comprobantepago.jpg")) {
@@ -144,7 +144,7 @@ class EntregaController extends Controller
          $comp = $this->verifyRequiredDocuments($idDocumentacion);
          if ($comp == 1) {
 
-            
+
             $entrega = Entrega::where('DocumentacionId',$idDocumentacion)->first();
 
             if ($entrega !== null) {
@@ -152,7 +152,7 @@ class EntregaController extends Controller
             } else {
                 $documentacion = Documentacion::find($idDocumentacion);
                 $personaId = $documentacion->PersonaId;
-                
+
                 $persona  = DB::table('personas') //se busca a la persona para sacar la direccion
                     ->join('encuestas', 'personas.id', '=', 'encuestas.personaId')
                     ->leftJoin('c_colonias', 'personas.ColoniaId', '=', 'c_colonias.id')
@@ -181,7 +181,7 @@ class EntregaController extends Controller
                     } else {
                         return [0,"Algo anda mal tu centro de entrega no tiene despensas asignadas."];
                     }
-                    
+
                     if ($request->hasFile('fotoentrega')) {
                         Validator::make($request->all(), [
                             'fotoentrega' => ['mimes:jpg,jpeg,pdf',' required','max:2000'],
@@ -191,7 +191,7 @@ class EntregaController extends Controller
                         $request->file('fotoentrega')->storeAs("documentacion/$personaId/$idDocumentacion/",'fotoentrega'.'.'.$extension);
 
                     } elseif($request->has('fotoentrega')) {
-                        $image = $request->get('fotoentrega'); 
+                        $image = $request->get('fotoentrega');
                         $image = str_replace('data:image/jpeg;base64,', '', $image);
                         $image = str_replace(' ', '+', $image);
                         $imageName = 'fotoentrega.jpg';
@@ -208,7 +208,7 @@ class EntregaController extends Controller
 
                     $entrega = null; //se vacia la variable
                     $entrega = new Entrega();//nueva entrega
-                    
+
                     $entrega->PersonaId = $personaId;
                     $entrega->DocumentacionId = $documentacion->id;
                     $entrega->EntregadorId = Auth::user()->id;
@@ -334,7 +334,7 @@ class EntregaController extends Controller
                     $stock->save();
 
                 return [1,"Se realizo la entrega con folio: $idDocumentacion", $this->buildListaEntregas($personaId),StockDespensa::where('idCentroEntrega', session('centroEntrega'))->get()];
-            }            
+            }
          } else {
             return [0,"Documentacion incompleta, la entrega no se realizo"];
          }
@@ -359,21 +359,24 @@ class EntregaController extends Controller
         $fechaEmpaDisor = explode(" ",$persona->created_at);
         $fechaEmpadArray = explode("-",$fechaEmpaDisor[0]);
         $fechaEmpadronamiento = "$fechaEmpadArray[2]-$fechaEmpadArray[1]-$fechaEmpadArray[0]";
-                
+
         if (count($listaentregas) > 0) {
-            $listaentregasstring = 
+            $listaentregasstring =
                 '<h5 class="card-title" align="center">LISTA DE ENTREGAS</h5>
                     <br>
                     <table class="table">';
                         if (count($listaentregas) > 1 || $listaentregas[0]->idEntrega !== null) {
-                            $listaentregasstring .='<tr>
-                                    <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>BIMESTRE</th><th>FECHA ENTREGA</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th><th>OBSERVACIÓN</th><th>FOTO</th>
-                                </tr>';
+                            $listaentregasstring .='<tr class="table-dark">
+                            <td colspan="10" style="text-align: center; padding-top: 2px; padding-bottom: 0; color: black;"><h4> FECHA DE EMPADRONAMIENTO: '.$fechaEmpadronamiento.'</h4></td>
+                        </tr>
+                        <tr>
+                            <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>BIMESTRE</th><th>FECHA ENTREGA</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th><th>OBSERVACIÓN</th><th>FOTO</th>
+                        </tr>';
                         }
 
                         $validatelastent = 1;
 
-                        foreach ($listaentregas as $entrega ) {                        
+                        foreach ($listaentregas as $entrega ) {
 
                             if ($entrega->idEntrega !== null){
                                 $listaentregasstring .='
@@ -389,12 +392,10 @@ class EntregaController extends Controller
                                     <td> '.($entrega->comentario != null ? $entrega->comentario : "N/D").'</td>
                                     <td> '.($entrega->periodo == 2021?'<a role="button" href="/documentacion/download/fotoentrega/'.$id.'/'.$entrega->idDocumentacion.'" class="btn btn-primary" target="_blank"><span style="font-size: 1.2em; color: white;" class="fa fa-eye"></span></a></td>':'N/D' ).'</td>
                                 </tr>';
-                                
+
                             }else{
                                 $listaentregasstring .='
-                                <tr class="table-dark">
-                                    <td colspan="10" style="text-align: center; padding-top: 2px; padding-bottom: 0; color: black;"><h4> FECHA DE EMPADRONAMIENTO: '.$fechaEmpadronamiento.'</h4></td>
-                                </tr>
+
                                 <tr>
                                     <td colspan="7">
                                         Folio: '.$entrega->idDocumentacion.'
@@ -411,7 +412,7 @@ class EntregaController extends Controller
                                                 // }
                                             }
                                         }
-                                    $listaentregasstring .='</td> 
+                                    $listaentregasstring .='</td>
                                 </tr>
                                 <tr class="table-dark">
                                     <td colspan="10"></td>
@@ -428,7 +429,7 @@ class EntregaController extends Controller
                                         Twitter <a href="https://twitter.com/sedeso_qroo">https://twitter.com/sedeso_qroo</a></p>
                                     </td>
                                 </tr>';
-                                // <p>Favor de estar pendiente de las fechas de entrega de despensas que serán publicadas en la página oficial del Programa Hambre Cero: <a href="https://qroo.gob.mx/sedeso/hambreceroquintanaroo">https://qroo.gob.mx/sedeso/hambreceroquintanaroo</a> y en las redes sociales oficiales de la Secretaría de Desarrollo Social de Quintana Roo: en Facebook <a href="https://www.facebook.com/SedesoQroo/">https://www.facebook.com/SedesoQroo/</a> y en Twitter <a href="https://twitter.com/sedeso_qroo">https://twitter.com/sedeso_qroo</a></p> 
+                                // <p>Favor de estar pendiente de las fechas de entrega de despensas que serán publicadas en la página oficial del Programa Hambre Cero: <a href="https://qroo.gob.mx/sedeso/hambreceroquintanaroo">https://qroo.gob.mx/sedeso/hambreceroquintanaroo</a> y en las redes sociales oficiales de la Secretaría de Desarrollo Social de Quintana Roo: en Facebook <a href="https://www.facebook.com/SedesoQroo/">https://www.facebook.com/SedesoQroo/</a> y en Twitter <a href="https://twitter.com/sedeso_qroo">https://twitter.com/sedeso_qroo</a></p>
                                 //         <p>Verifique en el portal oficial del Programa Hambre Cero, la ubicación del centro de entrega (PASO 4) que le corresponde y los datos bancarios de la cuenta donde deberá realizar el pago de la cuota de recuperación (PASO 3).</p>
                                 //         <p>Recuerde presentarse al centro de entrega asignado con los documentos que registró en original, únicamente para su cotejo de información. El recibo de pago de cuota de recuperación lo debe presentar también en original y se quedará en el centro de entrega.</p>
 
@@ -451,7 +452,7 @@ class EntregaController extends Controller
     }
 
     public function buildFormPostEntregaEnUpdate(){
-        
+
         $htmlFoto = '
             <h5 class="card-title" align="center">ENTREGA</h5>
                 </br>
@@ -469,7 +470,7 @@ class EntregaController extends Controller
                         <label class="contador">250</label>
                     </div>
                 </div>
-                
+
                 </br>
                 <button id="guardarPostEntrega" type="submit" class="btn btn-success">Hacer entrega</button>
             </form>';
@@ -504,7 +505,7 @@ class EntregaController extends Controller
                 ->orWhere('id', '=', $bitacoraCollection[0]->ColoniaId)
                 ->orderBy('Descripcion', 'ASC')
                 ->get();
-               
+
                 $localidades =  DB::table('c_localidades')
                 ->select('*')
                 ->whereIn('status', [1, 2])
@@ -512,7 +513,7 @@ class EntregaController extends Controller
                 ->orWhere('id', '=', $bitacoraCollection[0]->LocalidadId)
                 ->orderBy('Descripcion', 'ASC')
                 ->get();
-                
+
                 $municipios = DB::table('c_municipios')
                 ->select('*')
                 ->orderBy('Descripcion', 'ASC')
@@ -522,7 +523,7 @@ class EntregaController extends Controller
             'preguntas'=> C_Pregunta::all(),
             'estados'=> C_Estado::all(),
             'colonias'=> $colonias,
-            'localidades'=> $localidades,  
+            'localidades'=> $localidades,
             'municipios'=> $municipios,
             'estadosCiviles' => C_EstadoCivil::all(),
             // 'estudios'=> C_GradoDeEstudio::all(),
@@ -577,7 +578,7 @@ class EntregaController extends Controller
 
         $entrega->save();//actualiza la entrega
 
-        return 'Datos Actualizados. <br>La ventana se cerrara automaticamente';           
+        return 'Datos Actualizados. <br>La ventana se cerrara automaticamente';
     }
     //-----------------------------------------------
     //esta parte luego se cambiara a un controlador de administracion de bd
@@ -616,8 +617,8 @@ class EntregaController extends Controller
             ->where('status','1')
             ->get();
         }
-        
-        return[$centrosEntrega,$stock]; 
+
+        return[$centrosEntrega,$stock];
     }
 
     public function stockTransferencia(Request $request){
