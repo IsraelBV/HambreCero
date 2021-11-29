@@ -28,7 +28,7 @@
                     </div>
                     <div class="form-group col-md-4">
                         <label for="apellido_m">{{ $preguntas[2]['Descripcion'] }}</label>
-                        <input type="text" class="form-control" id="apellido_m" name="apellido_m" onkeyup="mayusculas(this);" required="">
+                        <input type="text" class="form-control" id="apellido_m" name="apellido_m" onkeyup="mayusculas(this);" {{--required=""--}}>
                     </div>
                 </div>
                 <!--Fin de Fila 1-->
@@ -37,12 +37,12 @@
                     <div class="form-group col-md-4">
                         <label for="curp">{{ $preguntas[3]['Descripcion'] }}</label>
                         <input type="tex" class="form-control" id="curp" name="curp" onkeyup="mayusculas(this);" required="" @if($curp) value="{{$curp}}"  readonly @endif>
-                        
+
                     </div>
                     <div class="form-group col-md-4">
                         <label for="estadocivil">Estado Civil</label>
                         <br>
-                        <select id="estadocivil" class="form-control" name="estadocivil" required="">
+                        <select id="estadocivil" class="form-control" name="estadocivil" {{--required=""--}}>
                             <option value="" selected>Seleccione una opcion</option>
                             @foreach ($estadosCiviles as $estadocivil)
                                 <option value="{{$estadocivil->id}}">{{$estadocivil->Descripcion}}</option>
@@ -72,7 +72,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-3">
                         <label for="estado_nac">{{ $preguntas[9]['Descripcion'] }}</label>
-                        <select id="estado_nac" class="form-control" name="estado_nac" required="">
+                        <select id="estado_nac" class="form-control" name="estado_nac" {{--required=""--}}>
                             <option value="" selected>Seleccione una opcion</option>
                             @foreach ($estados as $estado)
                                 <option value="{{$estado->id}}">{{$estado->Descripcion}}</option>
@@ -81,11 +81,11 @@
                     </div>
                     <div class="form-group col-md-3">
                         <label for="ciudad_nac">{{ $preguntas[8]['Descripcion'] }}</label>
-                        <input type="text" class="form-control" id="ciudad_nac" name="ciudad_nac" onkeyup="mayusculas(this);" required="">
+                        <input type="text" class="form-control" id="ciudad_nac" name="ciudad_nac" onkeyup="mayusculas(this);" {{--required=""--}}>
                     </div>
                     <div class="form-group col-md-3">
                         <label for="fecha_na">{{ $preguntas[10]['Descripcion'] }}</label><br>
-                        <input type="date" class="form-control" id="fecha_na" name="fecha_na" required=""><br>
+                        <input type="date" class="form-control" id="fecha_na" name="fecha_na" {{--required=""--}}><br>
                     </div>
                     <div class="form-group col-md-3">
                         <label for="cod_postal">{{ $preguntas[21]['Descripcion'] }}</label>
@@ -96,7 +96,7 @@
                         <!--fila4-->
                         {{-- <div class="form-row"> --}}
 
-                            
+
                             {{-- <div class="form-group col-md-4">
                                 <label for="grado_estudios">{{ $preguntas[11]['Descripcion'] }}</label>
                                 <select value="" id="grado_estudios" class="form-control" name="grado_estudios">
@@ -106,7 +106,7 @@
                                     @endforeach
                                 </select>
                             </div> --}}
-                            
+
                         {{-- </div> --}}
                         <!--fin fila 4-->
                         <!--fila5-->
@@ -114,19 +114,19 @@
 
                     <div class="form-group col-md-4">
                         <label for="calle">{{ $preguntas[13]['Descripcion'] }}</label><br>
-                        <input id="calle" type="text" name="calle" class="form-control" onkeyup="mayusculas(this);" required="" /><br>
+                        <input id="calle" type="text" name="calle" class="form-control" onkeyup="mayusculas(this);" {{--required=""--}} /><br>
                     </div>
                     <div class="form-group col-md-2">
                         <label for="manzana">{{ $preguntas[14]['Descripcion'] }}</label><br>
-                        <input id="manzana" type="number" name="manzana" class="form-control" onkeyup="mayusculas(this);" required="" /><br>
+                        <input id="manzana" type="number" name="manzana" class="form-control" onkeyup="mayusculas(this);" {{--required=""--}} /><br>
                     </div>
                     <div class="form-group col-md-2">
                         <label for="lote">{{ $preguntas[15]['Descripcion'] }}</label><br>
-                        <input id="lote" type="tex" name="lote" class="form-control" onkeyup="mayusculas(this);" required=""/><br>
+                        <input id="lote" type="tex" name="lote" class="form-control" onkeyup="mayusculas(this);" {{--required=""--}}/><br>
                     </div>
                     <div class="form-group col-md-2">
                         <label for="num_exterior">{{ $preguntas[16]['Descripcion'] }}</label><br>
-                        <input id="num_exterior" type="text" name="num_exterior" class="form-control" onkeyup="mayusculas(this);" required=""/><br>
+                        <input id="num_exterior" type="text" name="num_exterior" class="form-control" onkeyup="mayusculas(this);" {{--required=""--}}/><br>
                     </div>
                     <div class="form-group col-md-2">
                         <label for="num_interior">{{ $preguntas[17]['Descripcion'] }}</label><br>
@@ -144,7 +144,7 @@
                     <div class="form-group col-md-3">
                         <label for="municipio">{{ $preguntas[19]['Descripcion'] }}</label>
                         {{-- <input type="text" class="form-control" name="municipio"> --}}
-                        <select id="municipio" class="form-control" name="municipio" required="">
+                        <select id="municipio" class="form-control" name="municipio" {{--required=""--}}>
                             <option value="" selected>Seleccione una opcion</option>
                             @foreach ($municipios as $municipio)
                                 <option value="{{$municipio->id}}">{{$municipio->Descripcion}}</option>
@@ -154,7 +154,7 @@
                     <div class="form-group col-md-3">
                         <label for="localidad">{{ $preguntas[20]['Descripcion'] }}</label>
                         {{-- <input type="text" class="form-control" name="localidad"> --}}
-                        <select id="localidad" class="form-control" name="localidad" required="">
+                        <select id="localidad" class="form-control" name="localidad" {{--required=""--}}>
                             <option value="" selected>Seleccione una opcion</option>
                             @if ($localidades)
                                 @foreach ($localidades as $localidad)
@@ -165,7 +165,7 @@
                     </div>
                     <div class="form-group col-md-3">
                         <label for="colonia">{{ $preguntas[12]['Descripcion'] }}</label><br>
-                        <select for id="colonia" class="form-control" name="colonia" required="">
+                        <select for id="colonia" class="form-control" name="colonia" {{--required=""--}>
                             <option value="" selected>Seleccione una opcion</option>
                             @if ($colonias)
                                 @foreach ($colonias as $colonia)
@@ -225,7 +225,7 @@
                     <!-- <label for="password">Ingrese una contraseña por favor.</label> -->
 
                     <input id="password" type="password" class="form-control " name="contraseña" autocomplete="new-password">
-                    
+
                 </div>
                 @if (Auth::check() && Auth::user()->tipoUsuarioId == 0)
                     <div class="form-row">
@@ -247,7 +247,7 @@
                 @endif
 
                 <!-- <div class="form-row">
-                    
+
                     <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirmar contraseña') }}</label>
 
                     <div class="col-md-6">
@@ -294,7 +294,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-btn="cpt">Guardar</button>
@@ -304,6 +304,6 @@
         </div>
     </div>
 
-    
+
 
 @endsection
