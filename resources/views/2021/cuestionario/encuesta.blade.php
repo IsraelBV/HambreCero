@@ -165,7 +165,7 @@
                     </div>
                     <div class="form-group col-md-3">
                         <label for="colonia">{{ $preguntas[12]['Descripcion'] }}</label><br>
-                        <select for id="colonia" class="form-control" name="colonia" {{--required=""--}>
+                        <select for id="colonia" class="form-control" name="colonia" {{--required=""--}}>
                             <option value="" selected>Seleccione una opcion</option>
                             @if ($colonias)
                                 @foreach ($colonias as $colonia)
