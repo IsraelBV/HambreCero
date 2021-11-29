@@ -20,7 +20,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-4">
                         <label for="nombre">{{ $preguntas[0]['Descripcion'] }}</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" onkeyup="mayusculas(this);"required="">
+                        <input type="text" class="form-control" id="nombre" name="nombre" onkeyup="mayusculas(this);" required="">
                     </div>
                     <div class="form-group col-md-4">
                         <label for="apellido_p">{{ $preguntas[1]['Descripcion'] }}</label>
@@ -181,7 +181,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-4">
                         <label for="tel_cel">{{ $preguntas[22]['Descripcion'] }}</label>
-                        <input id="tel_cel" type="number" class="form-control" name="tel_cel"  required="">
+                        <input id="tel_cel" type="number" class="form-control" name="tel_cel"  {{--required=""--}}>
                     </div>
                     <div class="form-group col-md-4">
                         <label for="tel_casa">{{ $preguntas[23]['Descripcion'] }}</label>
@@ -231,7 +231,7 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="benef_type">Tipo Beneficiario</label>
-                            <select id="benef_type" class="form-control" name="benef_type" required="">
+                            <select id="benef_type" class="form-control" name="benef_type" {{--required=""--}}>
                                 @if ($tiposbeneficiario)
                                     @foreach ($tiposbeneficiario as $tipobeneficiario)
                                         @if ($tipobeneficiario->id == 1)
