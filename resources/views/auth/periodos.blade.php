@@ -1,11 +1,11 @@
 @extends('layoutlogin')
 
 @section('contentlogin')
- 
+
     <form action="/redirectPeriodo" method="POST">
         @csrf
         <div class="form-row">
-            
+
             <div class="form-group col-md-4">
 
                 <h1>DATOS</h1>
@@ -21,13 +21,14 @@
                         <strong>{{ $message }}</strong>
                     </span>
                 @enderror --}}
-                
+
                 <br>
 
                 <select class="form-control" name="centroe" class="form-control" required> {{--@error('centroe') is-invalid @enderror --}}
                     <option value="" selected>Seleccione un centro de entrega</option>
                     @foreach ($centros as $centro)
-                        <option value="{{$centro->id}}">{{$centro->municipio}} - {{$centro->Descripcion}}</option>
+                        <option value="{{$centro->id}}">{{$centro->Descripcion}}</option>
+                        {{-- <option value="{{$centro->id}}">{{$centro->municipio}} - {{$centro->Descripcion}}</option> --}}
                     @endforeach
                 </select>
                 {{-- @error('centroe')
@@ -36,10 +37,10 @@
                     </span>
                 @enderror  --}}
             </div>
-                
-                
+
+
         </div>
-        
+
         <button type="submit" class="btn btn-info"><strong>Aceptar</strong></button>
     </form>
 

@@ -37,7 +37,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-4">
                         <label for="curp">{{ $preguntas[3]['Descripcion'] }}</label>
-                        <input type="tex" class="form-control" id="curp" name="curp" onkeyup="mayusculas(this);" required="" value="{{ $persona[0]->CURP != null?$persona[0]->CURP:'' }}">
+                        <input type="tex" class="form-control" id="curp" name="curp" onkeyup="mayusculas(this);" required="" value="{{ $persona[0]->CURP != null?$persona[0]->CURP:'' }}" @guest readonly @endguest>
                     </div>
                     <div class="form-group col-md-4">
                         <label for="estadocivil">Estado Civil</label>

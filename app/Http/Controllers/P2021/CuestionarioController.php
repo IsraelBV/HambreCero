@@ -129,7 +129,14 @@ class CuestionarioController extends Controller
                 //     'errmsg'=> 'Esta curp no se encuentra registrada dentro del padron.',
                 //     'curp'=> $curp
                 //     ]);
-                return $this->create($curp);//redirecciona a crate pero con la curp
+                if (Auth::check()) {
+                    return $this->create($curp);//redirecciona a crate pero con la curp
+                } else {
+                    return view('2021.cuestionario.index',[
+                        'errmsg'=> 'Esta curp no se encuentra registrada dentro del padron.',
+                        'curp'=> $curp
+                    ]);
+                }
             }
     }
 

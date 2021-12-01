@@ -25,12 +25,13 @@ class PeriodosController extends Controller
             } else {
                  // DB::enableQueryLog();
                 $centrosdeentrega  = DB::table('c_centrosdeentrega')
-                    ->leftJoin('c_colonias', 'c_centrosdeentrega.id', '=', 'c_colonias.CentroEntregaId')
-                    ->leftJoin('c_localidades', 'c_localidades.id', '=', 'c_colonias.LocalidadId')
-                    ->leftJoin('c_municipios', 'c_municipios.id', '=', 'c_localidades.MunicipioId')
+                    // ->leftJoin('c_colonias', 'c_centrosdeentrega.id', '=', 'c_colonias.CentroEntregaId')
+                    // ->leftJoin('c_localidades', 'c_localidades.id', '=', 'c_colonias.LocalidadId')
+                    // ->leftJoin('c_municipios', 'c_municipios.id', '=', 'c_localidades.MunicipioId')
                     ->where('c_centrosdeentrega.status', 1)
-                    ->select('c_centrosdeentrega.id','c_centrosdeentrega.Descripcion','c_municipios.Descripcion as municipio')
-                    ->groupBy('c_centrosdeentrega.id','c_centrosdeentrega.Descripcion','c_municipios.Descripcion')
+                    ->select('c_centrosdeentrega.id','c_centrosdeentrega.Descripcion')
+                    // ->select('c_centrosdeentrega.id','c_centrosdeentrega.Descripcion','c_municipios.Descripcion as municipio')
+                    // ->groupBy('c_centrosdeentrega.id','c_centrosdeentrega.Descripcion','c_municipios.Descripcion')
                     ->orderBy('c_centrosdeentrega.Descripcion','asc')
                     ->get();
                 // dd(DB::getQueryLog());
