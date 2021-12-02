@@ -91,7 +91,8 @@ class EntregaController extends Controller
         $idfront = 0;
         $idback = 0;
         $compdom = 0;
-        $compag = 0;
+        //$compag = 0;//<<=================================cambios entregas navideñas 02-12-2021
+        $compag = 1;//<<=================================cambios entregas navideñas 02-12-2021
 
 
         // if (Storage::disk('public')->exists($pathIdPersona."/identificacio_oficial.pdf") || Storage::disk('public')->exists($pathIdPersona."/identificacio_oficial.jpg")) {
