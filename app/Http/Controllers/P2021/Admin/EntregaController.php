@@ -355,12 +355,13 @@ class EntregaController extends Controller
         ->where('documentacion.PersonaId',$id)
         ->get();
 
-        $persona = Persona::find($id);
+        // $persona = Persona::find($id);
 
-        $fechaEmpaDisor = explode(" ",$persona->created_at);
-        $fechaEmpadArray = explode("-",$fechaEmpaDisor[0]);
-        $fechaEmpadronamiento = "$fechaEmpadArray[2]-$fechaEmpadArray[1]-$fechaEmpadArray[0]";
+        // $fechaEmpaDisor = explode(" ",$persona->created_at);
+        // $fechaEmpadArray = explode("-",$fechaEmpaDisor[0]);
+        // $fechaEmpadronamiento = "$fechaEmpadArray[2]-$fechaEmpadArray[1]-$fechaEmpadArray[0]";
 
+        // <td colspan="10" style="text-align: center; padding-top: 2px; padding-bottom: 0; color: black;"><h4> FECHA DE EMPADRONAMIENTO: '.$fechaEmpadronamiento.'</h4></td>
         if (count($listaentregas) > 0) {
             $listaentregasstring =
                 '<h5 class="card-title" align="center">LISTA DE ENTREGAS</h5>
@@ -368,7 +369,6 @@ class EntregaController extends Controller
                     <table class="table">';
                         if (count($listaentregas) > 1 || $listaentregas[0]->idEntrega !== null) {
                             $listaentregasstring .='<tr class="table-dark">
-                            <td colspan="10" style="text-align: center; padding-top: 2px; padding-bottom: 0; color: black;"><h4> FECHA DE EMPADRONAMIENTO: '.$fechaEmpadronamiento.'</h4></td>
                         </tr>
                         <tr>
                             <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>BIMESTRE</th><th>FECHA ENTREGA</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th><th>OBSERVACIÓN</th><th>FOTO</th>
