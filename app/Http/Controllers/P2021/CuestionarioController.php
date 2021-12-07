@@ -129,7 +129,7 @@ class CuestionarioController extends Controller
                 //     'errmsg'=> 'Esta curp no se encuentra registrada dentro del padron.',
                 //     'curp'=> $curp
                 //     ]);
-                if (Auth::check()) {
+                if (Auth::check() && ( Auth::user()->tipoUsuarioId == 0 || Auth::user()->id >= 100 )) {
                     return $this->create($curp);//redirecciona a crate pero con la curp
                 } else {
                     return view('2021.cuestionario.index',[
@@ -202,8 +202,7 @@ class CuestionarioController extends Controller
      */
     public function create($curp = NULL)
     {
-        // if (Auth::check()) {//cambio por beda electoral
-            // DB::enableQueryLog();
+        if (Auth::check() && ( Auth::user()->tipoUsuarioId == 0 || Auth::user()->id >= 100 )) {//cambio por entregas navideñas
 
             $colonias = null;
             // $colonias = DB::table('c_colonias')
@@ -240,9 +239,12 @@ class CuestionarioController extends Controller
                 'tiposbeneficiario'=> c_tipo_beneficiario::all(),
                 'curp' => $curp
                 ]);
-        // } else {
-        //     return view('2021.cuestionario.index');
-        // }
+        } else {
+            return view('2021.cuestionario.index',[
+                'errmsg'=> 'Esta curp no se encuentra registrada dentro del padron.',
+                'curp'=> $curp
+            ]);
+        }
     }
 
     /**
@@ -255,66 +257,76 @@ class CuestionarioController extends Controller
     {
         $curpExiste = $this->findCurp($request->get('curp'));
 
-        if($curpExiste->count() >= 2) {
-            return [0,"Error: 101, El CURP que intenta actulizar tiene un inconveniente, favor de reportar ."];
-        } else {
-            if ($curpExiste->count() > 0) {
-                return [0,"Error: 102, La persona que intenta registrar ya existe. </br> Por Favor regrese a la vista principal o espere la redireccion."];
+        if(Auth::check() && ( Auth::user()->tipoUsuarioId == 0 || Auth::user()->id >= 100 )) {
+
+            if($curpExiste->count() >= 2) {
+                return [0,"Error: 101, El CURP que intenta actualizar tiene un inconveniente, favor de reportar ."];
+            } else {
+                if ($curpExiste->count() > 0) {
+                    return [0,"Error: 102, La persona que intenta registrar ya existe. </br> Por Favor regrese a la vista principal o espere la redireccion."];
+                }
             }
+
+            Validator::make($request->all(), [
+                'contraseña' => ['required', 'string', 'min:8'],
+            ])->validate();
+
+            $persona = new Persona();
+            $persona->Nombre = $request->get('nombre');
+            $persona->APaterno = $request->get('apellido_p');
+            $persona->AMaterno = $request->get('apellido_m');
+            $persona->CURP = $request->get('curp');
+            $persona->RFC = $request->get('rfc');
+            $persona->ClaveElector = $request->get('clave_elector');
+            $persona->IdentificacionMigratoria = $request->get('extranjero');
+            $persona->Sexo = $request->get('sexo');
+            $persona->EstadoNacimientoId = $request->get('estado_nac');
+            $persona->CiudadNacimiento = $request->get('ciudad_nac');
+            $persona->FechaNacimiento = $request->get('fecha_na');
+            $persona->GradoEstudiosId = $request->get('grado_estudios');
+            $persona->ColoniaId = $request->get('colonia');
+            $persona->Calle = $request->get('calle');
+            $persona->Manzana = $request->get('manzana');
+            $persona->Lote = $request->get('lote');
+            $persona->NoExt = $request->get('num_exterior');
+            $persona->NoInt = $request->get('num_interior');
+            $persona->EstadoId = $request->get('estado');
+            $persona->MunicipioId = $request->get('municipio');
+            $persona->LocalidadId = $request->get('localidad');
+            $persona->CP = $request->get('cod_postal');
+            $persona->TelefonoCelular = $request->get('tel_cel');
+            $persona->TelefonoCasa = $request->get('tel_casa');
+            $persona->Email = $request->get('correo_ele');
+            $persona->EstadoCivilId = $request->get('estadocivil');
+            $persona->EncuestadorId = (Auth::check())?Auth::user()->id:0;
+            $persona->Intentos = 0;
+            $persona->password = Hash::make($request->get('contraseña'));
+            $persona->PeriodoId = 3;
+
+
+            $encuesta = new Encuesta();
+            $encuesta->Pregunta_33 = $request->get('cuantas_per_viven_casa');
+            $encuesta->Pregunta_102 = $request->get('menores_sin_acta');
+            $encuesta->Pregunta_103 = $request->get('considera_indigena');
+            $encuesta->idTipoBeneficiario = ($request->has('benef_type'))?$request->get('benef_type'):1;
+            $encuesta->EncuestadorId = (Auth::check())?Auth::user()->id:0;
+
+            $persona->save();// guarda los datos de la persona
+
+            $idpersona = $persona::latest('id')->first(); //busca el id del ultimo registro persona guardado
+            $encuesta->PersonaId =  $idpersona["id"];
+
+            $encuesta->save(); // guarda las encuestas
+
+            return [1,$idpersona["id"]];
+
+        } else {
+            return view('2021.cuestionario.index',[
+                'errmsg'=> 'Esta curp no se encuentra registrada dentro del padron.',
+                'curp'=> $request->get('curp')
+            ]);
         }
 
-        Validator::make($request->all(), [
-            'contraseña' => ['required', 'string', 'min:8'],
-        ])->validate();
-
-        $persona = new Persona();
-        $persona->Nombre = $request->get('nombre');
-        $persona->APaterno = $request->get('apellido_p');
-        $persona->AMaterno = $request->get('apellido_m');
-        $persona->CURP = $request->get('curp');
-        $persona->RFC = $request->get('rfc');
-        $persona->ClaveElector = $request->get('clave_elector');
-        $persona->IdentificacionMigratoria = $request->get('extranjero');
-        $persona->Sexo = $request->get('sexo');
-        $persona->EstadoNacimientoId = $request->get('estado_nac');
-        $persona->CiudadNacimiento = $request->get('ciudad_nac');
-        $persona->FechaNacimiento = $request->get('fecha_na');
-        $persona->GradoEstudiosId = $request->get('grado_estudios');
-        $persona->ColoniaId = $request->get('colonia');
-        $persona->Calle = $request->get('calle');
-        $persona->Manzana = $request->get('manzana');
-        $persona->Lote = $request->get('lote');
-        $persona->NoExt = $request->get('num_exterior');
-        $persona->NoInt = $request->get('num_interior');
-        $persona->EstadoId = $request->get('estado');
-        $persona->MunicipioId = $request->get('municipio');
-        $persona->LocalidadId = $request->get('localidad');
-        $persona->CP = $request->get('cod_postal');
-        $persona->TelefonoCelular = $request->get('tel_cel');
-        $persona->TelefonoCasa = $request->get('tel_casa');
-        $persona->Email = $request->get('correo_ele');
-        $persona->EstadoCivilId = $request->get('estadocivil');
-        $persona->EncuestadorId = (Auth::check())?Auth::user()->id:0;
-        $persona->Intentos = 0;
-        $persona->password = Hash::make($request->get('contraseña'));
-        $persona->PeriodoId = 3;
-
-
-        $encuesta = new Encuesta();
-        $encuesta->Pregunta_33 = $request->get('cuantas_per_viven_casa');
-        $encuesta->Pregunta_102 = $request->get('menores_sin_acta');
-        $encuesta->Pregunta_103 = $request->get('considera_indigena');
-        $encuesta->idTipoBeneficiario = ($request->has('benef_type'))?$request->get('benef_type'):1;
-        $encuesta->EncuestadorId = (Auth::check())?Auth::user()->id:0;
-
-        $persona->save();// guarda los datos de la persona
-
-        $idpersona = $persona::latest('id')->first(); //busca el id del ultimo registro persona guardado
-        $encuesta->PersonaId =  $idpersona["id"];
-
-        $encuesta->save(); // guarda las encuestas
-
-        return [1,$idpersona["id"]];
     }
 
     /**
@@ -416,7 +428,7 @@ class CuestionarioController extends Controller
             ->leftJoin('c_centrosdeentrega', 'documentacion.idCentroEntrega', '=', 'c_centrosdeentrega.id')
             ->leftJoin('c_centrosdeentrega AS ce', 'entregas.idCentroEntrega', '=', 'ce.id')
             ->leftJoin('c_periodosdeentrega', 'entregas.idPeriodoEntrega', '=', 'c_periodosdeentrega.id')
-            ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega','ce.Descripcion as centroentregaentrega','c_centrosdeentrega.Direccion as direccioncentroentrega','entregas.comentarioEntrega as comentario',DB::raw('DATE_SUB(entregas.created_at, INTERVAL 5 HOUR) as fechaEntrega'),'c_periodosdeentrega.Descripcion as periodoEntrega')
+            ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega','ce.Descripcion as centroentregaentrega','c_centrosdeentrega.Direccion as direccioncentroentrega','entregas.comentarioEntrega as comentario',DB::raw('DATE_SUB(entregas.created_at, INTERVAL 5 HOUR) as fechaEntrega'),'c_periodosdeentrega.Descripcion as periodoEntrega','entregas.Donado as donado')
             ->where('documentacion.PersonaId',$id)
             ->get();
 
@@ -705,7 +717,7 @@ class CuestionarioController extends Controller
         ->leftJoin('c_centrosdeentrega', 'documentacion.idCentroEntrega', '=', 'c_centrosdeentrega.id')
         ->leftJoin('c_centrosdeentrega AS ce', 'entregas.idCentroEntrega', '=', 'ce.id')
         ->leftJoin('c_periodosdeentrega', 'entregas.idPeriodoEntrega', '=', 'c_periodosdeentrega.id')
-        ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega','ce.Descripcion as centroentregaentrega','c_centrosdeentrega.Direccion as direccioncentroentrega','entregas.comentarioEntrega as comentario',DB::raw('DATE_SUB(entregas.created_at, INTERVAL 5 HOUR) as fechaEntrega'),'c_periodosdeentrega.Descripcion as periodoEntrega')
+        ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega','ce.Descripcion as centroentregaentrega','c_centrosdeentrega.Direccion as direccioncentroentrega','entregas.comentarioEntrega as comentario',DB::raw('DATE_SUB(entregas.created_at, INTERVAL 5 HOUR) as fechaEntrega'),'c_periodosdeentrega.Descripcion as periodoEntrega','entregas.Donado as donado')
         ->where('documentacion.PersonaId',$id)
         ->get();
 
@@ -725,7 +737,7 @@ class CuestionarioController extends Controller
                             $listaentregasstring .='<tr class="table-dark">
                         </tr>
                         <tr>
-                            <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>BIMESTRE</th><th>FECHA ENTREGA</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th><th>OBSERVACIÓN</th><th>FOTO</th>
+                            <th>FOLIO</th><th>MUNICIPIO - LOCALIDAD</th><th>DIRECCION</th><th>DONADA</th><th>BIMESTRE</th><th>FECHA ENTREGA</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th><th>OBSERVACIÓN</th><th>FOTO</th>
                         </tr>';
                         }
 
@@ -737,9 +749,9 @@ class CuestionarioController extends Controller
                                 $listaentregasstring .='
                                 <tr>
                                     <td> '.($entrega->idDocumentacion != null ? $entrega->idDocumentacion : "N/D").' </td>
-                                    <td> '.($entrega->municipio != null ? $entrega->municipio : "N/D").' </td>
-                                    <td> '.($entrega->localidad != null ? $entrega->localidad : "N/D").' </td>
+                                    <td> '.($entrega->municipio != null ? $entrega->municipio : "N/D").' - '.($entrega->localidad != null ? $entrega->localidad : "N/D").' </td>
                                     <td> '.($entrega->Direccion != null? $entrega->Direccion : "N/D").'</td>
+                                    <td> '.($entrega->donado == 1 ? 'Donado' : 'Pagado').' </td>
                                     <td> '.($entrega->periodoEntrega != null ? $entrega->periodoEntrega : "N/D").'</td>
                                     <td> '.($entrega->fechaEntrega != null ? $entrega->fechaEntrega : "N/D").'</td>
                                     <td> '.($entrega->periodo != null ? $entrega->periodo : "N/D").'</td>

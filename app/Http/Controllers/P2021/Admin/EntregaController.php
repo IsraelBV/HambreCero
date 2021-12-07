@@ -351,7 +351,7 @@ class EntregaController extends Controller
         ->leftJoin('c_centrosdeentrega', 'documentacion.idCentroEntrega', '=', 'c_centrosdeentrega.id')
         ->leftJoin('c_centrosdeentrega AS ce', 'entregas.idCentroEntrega', '=', 'ce.id')
         ->leftJoin('c_periodosdeentrega', 'entregas.idPeriodoEntrega', '=', 'c_periodosdeentrega.id')
-        ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega','ce.Descripcion as centroentregaentrega','c_centrosdeentrega.Direccion as direccioncentroentrega','entregas.comentarioEntrega as comentario',DB::raw('DATE_SUB(entregas.created_at, INTERVAL 5 HOUR) as fechaEntrega'),'c_periodosdeentrega.Descripcion as periodoEntrega')
+        ->select('entregas.id as idEntrega','documentacion.id as idDocumentacion','c_periodos.Descripcion as periodo','entregas.Direccion', 'c_municipios.Descripcion as municipio','c_localidades.Descripcion as localidad','c_centrosdeentrega.Descripcion as centroentrega','ce.Descripcion as centroentregaentrega','c_centrosdeentrega.Direccion as direccioncentroentrega','entregas.comentarioEntrega as comentario',DB::raw('DATE_SUB(entregas.created_at, INTERVAL 5 HOUR) as fechaEntrega'),'c_periodosdeentrega.Descripcion as periodoEntrega','entregas.Donado as donado')
         ->where('documentacion.PersonaId',$id)
         ->get();
 
@@ -371,7 +371,7 @@ class EntregaController extends Controller
                             $listaentregasstring .='<tr class="table-dark">
                         </tr>
                         <tr>
-                            <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>BIMESTRE</th><th>FECHA ENTREGA</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th><th>OBSERVACIÓN</th><th>FOTO</th>
+                            <th>FOLIO</th><th>MUNICIPIO - LOCALIDAD</th><th>DIRECCION</th><th>DONADA</th><th>BIMESTRE</th><th>FECHA ENTREGA</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th><th>OBSERVACIÓN</th><th>FOTO</th>
                         </tr>';
                         }
 
@@ -383,9 +383,9 @@ class EntregaController extends Controller
                                 $listaentregasstring .='
                                 <tr>
                                     <td> '.($entrega->idDocumentacion != null ? $entrega->idDocumentacion : "N/D").' </td>
-                                    <td> '.($entrega->municipio != null ? $entrega->municipio : "N/D").' </td>
-                                    <td> '.($entrega->localidad != null ? $entrega->localidad : "N/D").' </td>
+                                    <td> '.($entrega->municipio != null ? $entrega->municipio : "N/D").' - '.($entrega->localidad != null ? $entrega->localidad : "N/D").' </td>
                                     <td> '.($entrega->Direccion != null? $entrega->Direccion : "N/D").'</td>
+                                    <td> '.($entrega->donado == 1 ? 'Donado' : 'Pagado').' </td>
                                     <td> '.($entrega->periodoEntrega != null ? $entrega->periodoEntrega : "N/D").'</td>
                                     <td> '.($entrega->fechaEntrega != null ? $entrega->fechaEntrega : "N/D").'</td>
                                     <td> '.($entrega->periodo != null ? $entrega->periodo : "N/D").'</td>

@@ -340,7 +340,7 @@
                                 {{-- <td colspan="10" style="text-align: center; padding-top: 2px; padding-bottom: 0; color: black;"><h4> FECHA DE EMPADRONAMIENTO: {{$persona[0]->created_at}}</h4></td> se quito el dato el dia03-12-2021--}}
                         </tr>
                         <tr>
-                            <th>FOLIO</th><th>MUNICIPIO</th><th>LOCALIDAD</th><th>DIRECCION</th><th>BIMESTRE</th><th>FECHA ENTREGA</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th><th>OBSERVACIÓN</th><th>FOTO</th>
+                            <th>FOLIO</th><th>MUNICIPIO - LOCALIDAD</th><th>DIRECCION</th><th>DONADA</th><th>BIMESTRE</th><th>FECHA ENTREGA</th><th>PERIODO</th><th>CENTRO DE ENTREGA</th><th>OBSERVACIÓN</th><th>FOTO</th>
                         </tr>
                         @endif
 
@@ -351,9 +351,9 @@
                             @if ($entrega->idEntrega !== null)
                                 <tr>
                                     <td> {{$entrega->idDocumentacion != null ? $entrega->idDocumentacion : "N/D"}} </td>
-                                    <td> {{$entrega->municipio != null ? $entrega->municipio : "N/D" }} </td>
-                                    <td> {{$entrega->localidad != null ? $entrega->localidad : "N/D" }} </td>
+                                    <td> {{$entrega->municipio != null ? $entrega->municipio : "N/D" }} - {{$entrega->localidad != null ? $entrega->localidad : "N/D" }} </td>
                                     <td> {{$entrega->Direccion != null? $entrega->Direccion : "N/D" }}</td>
+                                    <td> {{$entrega->donado == 1?'Donado':'Pagado'}} </td>
                                     <td> {{$entrega->periodoEntrega != null ? $entrega->periodoEntrega : "N/D" }}</td>
                                     <td> {{$entrega->fechaEntrega != null ? $entrega->fechaEntrega : "N/D" }}</td>
                                     <td> {{$entrega->periodo != null ? $entrega->periodo : "N/D" }}</td>
