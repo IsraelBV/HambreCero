@@ -129,7 +129,7 @@ class CuestionarioController extends Controller
                 //     'errmsg'=> 'Esta curp no se encuentra registrada dentro del padron.',
                 //     'curp'=> $curp
                 //     ]);
-                if (Auth::check() && ( Auth::user()->tipoUsuarioId == 0 || (Auth::user()->id >= 174 && Auth::user()->id <= 374))) {
+                if (Auth::check() && Auth::user()->tipoUsuarioId == 0) {
                     return $this->create($curp);//redirecciona a crate pero con la curp
                 } else {
                     return view('2021.cuestionario.index',[
@@ -202,7 +202,7 @@ class CuestionarioController extends Controller
      */
     public function create($curp = NULL)
     {
-        if (Auth::check() && ( Auth::user()->tipoUsuarioId == 0 || (Auth::user()->id >= 174 && Auth::user()->id <= 374))) {//cambio por entregas navideñas
+        if (Auth::check() && Auth::user()->tipoUsuarioId == 0) {//cambio por entregas navideñas
 
             $colonias = null;
             // $colonias = DB::table('c_colonias')
@@ -257,7 +257,7 @@ class CuestionarioController extends Controller
     {
         $curpExiste = $this->findCurp($request->get('curp'));
 
-        if(Auth::check() && ( Auth::user()->tipoUsuarioId == 0 || (Auth::user()->id >= 174 && Auth::user()->id <= 374))) {
+        if(Auth::check() && Auth::user()->tipoUsuarioId == 0) {
 
             if($curpExiste->count() >= 2) {
                 return [0,"Error: 101, El CURP que intenta actualizar tiene un inconveniente, favor de reportar ."];
