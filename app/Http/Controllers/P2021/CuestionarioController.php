@@ -130,14 +130,16 @@ class CuestionarioController extends Controller
                 //     'curp'=> $curp
                 //     ]);
                 // if (Auth::check() && Auth::user()->tipoUsuarioId == 0) {
-                if (Auth::check()) {
+
+                //// se abrio registro 28-01-2022
+                // if (Auth::check()) {
                     return $this->create($curp);//redirecciona a crate pero con la curp
-                } else {
-                    return view('2021.cuestionario.index',[
-                        'errmsg'=> 'Esta curp no se encuentra registrada dentro del padron.',
-                        'curp'=> $curp
-                    ]);
-                }
+                // } else {
+                //     return view('2021.cuestionario.index',[
+                //         'errmsg'=> 'Esta curp no se encuentra registrada dentro del padron.',
+                //         'curp'=> $curp
+                //     ]);
+                // }
             }
     }
 
@@ -204,7 +206,7 @@ class CuestionarioController extends Controller
     public function create($curp = NULL)
     {
         // if (Auth::check() && Auth::user()->tipoUsuarioId == 0) {//cambio por entregas navideñas
-        if (Auth::check()) {//cambio por entregas navideñas
+        // if (Auth::check()) {//cambio por entregas navideñas
 
             $colonias = null;
             // $colonias = DB::table('c_colonias')
@@ -241,12 +243,12 @@ class CuestionarioController extends Controller
                 'tiposbeneficiario'=> c_tipo_beneficiario::all(),
                 'curp' => $curp
                 ]);
-        } else {
-            return view('2021.cuestionario.index',[
-                'errmsg'=> 'Esta curp no se encuentra registrada dentro del padron.',
-                'curp'=> $curp
-            ]);
-        }
+        // } else {
+        //     return view('2021.cuestionario.index',[
+        //         'errmsg'=> 'Esta curp no se encuentra registrada dentro del padron.',
+        //         'curp'=> $curp
+        //     ]);
+        // }
     }
 
     /**
@@ -260,7 +262,7 @@ class CuestionarioController extends Controller
         $curpExiste = $this->findCurp($request->get('curp'));
 
         // if(Auth::check() && Auth::user()->tipoUsuarioId == 0) {
-        if(Auth::check()) {
+        // if(Auth::check()) {
 
             if($curpExiste->count() >= 2) {
                 return [0,"Error: 101, El CURP que intenta actualizar tiene un inconveniente, favor de reportar ."];
@@ -304,7 +306,7 @@ class CuestionarioController extends Controller
             $persona->EncuestadorId = (Auth::check())?Auth::user()->id:0;
             $persona->Intentos = 0;
             $persona->password = Hash::make($request->get('contraseña'));
-            $persona->PeriodoId = 3;
+            $persona->PeriodoId = 4;//<-- AQUI HAY QUE REGRESARLO A PERIODO 3 CUANDO SE SUBA LA ACTUALIZACION
 
 
             $encuesta = new Encuesta();
@@ -323,12 +325,12 @@ class CuestionarioController extends Controller
 
             return [1,$idpersona["id"]];
 
-        } else {
-            return view('2021.cuestionario.index',[
-                'errmsg'=> 'Esta curp no se encuentra registrada dentro del padron.',
-                'curp'=> $request->get('curp')
-            ]);
-        }
+        // } else {
+        //     return view('2021.cuestionario.index',[
+        //         'errmsg'=> 'Esta curp no se encuentra registrada dentro del padron.',
+        //         'curp'=> $request->get('curp')
+        //     ]);
+        // }
 
     }
 
