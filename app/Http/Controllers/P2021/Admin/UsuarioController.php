@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\P2020\Admin;
+namespace App\Http\Controllers\P2021\Admin;
 
 use App\Http\Controllers\Controller;
 
@@ -23,20 +23,20 @@ class UsuarioController extends Controller
     public  function index(){
         if (Auth::user()->tipoUsuarioId != 0){
             return redirect('home');
-        } 
+        }
         // dd(User::all());
-        return view('2020.usuarios.index',['users'=>User::where('status',1)->get()]);
+        return view('2021.usuarios.index',['users'=>User::where('status',1)->get()]);
     }
 
     public function deshabilitarUsuario($id){
         $usuario = User::where('id',$id)->first();
-        
+
         $usuario->status = 0;
         $usuario->save();
     }
 
     public function editarUsuario($id){
-        return view('2020.usuarios.editarUsuario',[
+        return view('2021.usuarios.editarUsuario',[
             'usuario'=>  $usuario = User::where('id',$id)->first()
             ]);
     }
@@ -48,7 +48,7 @@ class UsuarioController extends Controller
         ])->validate();
 
         $usuario = User::where('id',$id)->first();
-        
+
         $usuario->name = $request->get('name');
         $usuario->email = $request->get('email');
         $usuario->tipoUsuarioId = $request->get('usertype');
@@ -59,8 +59,8 @@ class UsuarioController extends Controller
     }
 
     public function editarContraseña($id){
-       
-        return view('2020.usuarios.editarPassword',[
+
+        return view('2021.usuarios.editarPassword',[
             'usuario'=>  $usuario = User::where('id',$id)->first()
             ]);
     }
@@ -71,9 +71,9 @@ class UsuarioController extends Controller
         ])->validate();
 
         $usuario = User::where('id',$id)->first();
-        
+
         $usuario->password =  Hash::make($request->get('password'));
-        
+
         $usuario->save();
         return view('auth.registersuccess',[
             'msg'=>  'Se ha cambiado la contraseña del usuario'

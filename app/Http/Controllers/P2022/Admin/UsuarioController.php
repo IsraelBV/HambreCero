@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\P2020\Admin;
+namespace App\Http\Controllers\P2022\Admin;
 
 use App\Http\Controllers\Controller;
 
@@ -25,7 +25,7 @@ class UsuarioController extends Controller
             return redirect('home');
         }
         // dd(User::all());
-        return view('2020.usuarios.index',['users'=>User::where('status',1)->get()]);
+        return view('2022.usuarios.index',['users'=>User::where('status',1)->get()]);
     }
 
     public function deshabilitarUsuario($id){
@@ -36,7 +36,7 @@ class UsuarioController extends Controller
     }
 
     public function editarUsuario($id){
-        return view('2020.usuarios.editarUsuario',[
+        return view('2022.usuarios.editarUsuario',[
             'usuario'=>  $usuario = User::where('id',$id)->first()
             ]);
     }
@@ -60,7 +60,7 @@ class UsuarioController extends Controller
 
     public function editarContraseña($id){
 
-        return view('2020.usuarios.editarPassword',[
+        return view('2022.usuarios.editarPassword',[
             'usuario'=>  $usuario = User::where('id',$id)->first()
             ]);
     }

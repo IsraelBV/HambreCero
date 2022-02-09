@@ -29,14 +29,16 @@ Route::post('/redirectPeriodo', 'Auth\PeriodosController@redirectPeriodos');
 //ENCUESTAS-----------------------------------------------------------------------------------------------------------------------------------------
 Route::get('/', function () {
      if (session()->has('periodo')) {
-          
-          if (session('periodo') != 3) {
+
+          if (session('periodo') <= 2) {
                return redirect('/registro2020');
+          } elseif(session('periodo') == 3) {
+              return redirect('/registro');
           } else {
-               return redirect('/registro');
+            return redirect('/2022/registro');
           }
      } else {
-          return redirect('/registro');
+          return redirect('/2022/registro');
      }
 });
 
@@ -50,7 +52,7 @@ Route::get('/imprimir2020/{imprimir}', 'P2020\CuestionarioController@imprimir');
 
 //LOGIN/REGISTRO-------------------------------------------------------------------------------------------------------------------------------------
 Auth::routes();
-Route::get('/home', [App\Http\Controllers\P2021\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\P2022\HomeController::class, 'index'])->name('home');
 Route::get('/register/success', 'Auth\RegisterController@success');
 
 // Auth::routes();
@@ -165,3 +167,69 @@ Route::post('/admin2021/reporte/findReporte','P2021\Admin\ReporteController@find
 Route::get('/admin2021/entrega','P2021\Admin\EntregaController@index')->name('buscar2021');
 Route::get('/admin2021/entrega/edit','P2021\Admin\EntregaController@editarEntrega');
 Route::put('/admin2021/entrega/{entrega}','P2021\Admin\EntregaController@actualizarEntrega');
+
+/////2022/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////2022/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////2022/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+Route::resource('/2022/registro', 'P2022\CuestionarioController');
+
+Route::post('/2022/findPersona', 'P2022\CuestionarioController@findPersona');
+
+Route::post('/2022/registro/pass/{user}/edit','P2022\CuestionarioController@editPasswordPersona');
+Route::put('/2022/registro/pass/{user}', 'P2022\CuestionarioController@updatePasswordPersona');
+
+Route::post('/2022/registro/passlost','P2022\CuestionarioController@passwordRecover');//recuperacion de contraseña
+
+Route::post('/2022/registro/Entrega/solicitar/{user}', 'P2022\CuestionarioController@storeDocumentacion');
+
+/////especial/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////especial/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     Route::get('/2022/especial/import', function () {
+          return view('2022.layouts.import');
+     });
+     Route::post('/2022/especial/importepersonas', 'P2022\CuestionarioController@importePersonas');
+/////especial/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Route::post('/2022/documentacion/edit','P2022\CuestionarioController@buildFormDocumentos');
+
+Route::get('/2022/documentacion/download/{documento}/{idpersona}','P2022\CuestionarioController@downloadDocument');
+Route::get('/2022/documentacion/download/{documento}/{idpersona}/{iddocumentacion}','P2022\CuestionarioController@downloadDocument');
+
+Route::post('/2022/documentacion/update/{iddocumentacion}', 'P2022\CuestionarioController@updateDocumentacion');
+
+Route::post('/2022/documentacion/delete/{documento}', 'P2022\CuestionarioController@deleteDocument');
+
+
+Route::get('/2022/entrega/enUpdate','P2022\Admin\EntregaController@buildFormEntregaEnUpdate');
+
+Route::post('/2022/entrega/enUpdate/{entrega}', 'P2022\Admin\EntregaController@EntregaEnUpdate');
+
+
+Route::get('/2022/entrega/enUpdatePost','P2022\Admin\EntregaController@buildFormPostEntregaEnUpdate');
+
+/////Administracion de catalogos y stock
+Route::post('/2022/catalogo/stock/update', 'P2022\Admin\EntregaController@stockUpdate');// hay que cambiar el controlador cuando de haga la parte de administracion de catalogo
+Route::get('/2022/catalogo/stock/update/centrose/{ce}', 'P2022\Admin\EntregaController@stockGetCentros');// obtiene los centros de entrega para listarlos
+Route::post('/2022/catalogo/stock/update/transferencia', 'P2022\Admin\EntregaController@stockTransferencia');// hace la transferencia de despensas
+
+///// Utilidad
+Route::get('/2022/utils/localidad','P2022\CuestionarioController@findLocalidades');
+Route::get('/2022/utils/colonia','P2022\CuestionarioController@findColonias');
+Route::get('/2022/utils/buscarBeneficiario', function () { return view('2022.cuestionario.buscarbeneficiario');});
+Route::get('/2022/utils/buscarBeneficiario/coincidencia','P2022\CuestionarioController@findPersonasPorCoincidencia');//<==================================================
+
+// Route::get('/utils/buscarBeneficiario','P2022\CuestionarioController@findPersonasPorCoincidencia');
+
+
+//REPORTES------------------------------------------------------------------------------------------------------------------------------------------------
+Route::get('admin2022/reporte','P2022\Admin\ReporteController@index')->name('reporte2022');
+Route::post('admin2022/reporte/findReporte','P2022\Admin\ReporteController@findReporte');
+// Route::get('/admin2022/reporte/downloadReporte','P2022\Admin\ReporteController@downloadReporte');
+
+
+//Modulo entregas------------------------------------------------------------------------------------------------------------------------------------------------
+Route::get('admin2022/entrega','P2022\Admin\EntregaController@index')->name('buscar2022');
+Route::get('admin2022/entrega/edit','P2022\Admin\EntregaController@editarEntrega');
+Route::put('admin2022/entrega/{entrega}','P2022\Admin\EntregaController@actualizarEntrega');

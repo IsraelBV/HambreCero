@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\P2021;
+namespace App\Http\Controllers\P2022;
 
 use App\Http\Controllers\Controller;
 
@@ -19,7 +19,7 @@ use Auth;
 class LayoutController extends Controller
 {
     public function index() {
-        return view('2021.layouts.base');
+        return view('2022.layouts.base');
     }
 
     public function direccion(){

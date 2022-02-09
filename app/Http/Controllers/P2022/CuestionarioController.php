@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\P2021;
+namespace App\Http\Controllers\P2022;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -16,7 +16,7 @@ use App\Models\C_EstadoCivil;
 use App\Models\C_PeriodosDeEntrega;
 use App\Models\StockDespensa;
 
-use App\Http\Controllers\P2021\Admin\EntregaController;
+use App\Http\Controllers\P2022\Admin\EntregaController;
 use App\Models\c_tipo_beneficiario;
 use App\Models\Documentacion;
 
@@ -60,12 +60,12 @@ class CuestionarioController extends Controller
 
                 session(['NumeroDeEntregas' => $entregasCount]);
 
-                return view('2021.cuestionario.index');
+                return view('2022.cuestionario.index');
             } else {
                 return redirect('/periodo');
             }
         } else {
-            return view('2021.cuestionario.index');
+            return view('2022.cuestionario.index');
         }
     }
 
@@ -90,9 +90,9 @@ class CuestionarioController extends Controller
 
                                 // if ($pass == $persona[0]->CURP) {
                                     return $this->editPasswordPersona($persona[0]->id);
-                                    // //return redirect("/registro/pass/{$persona[0]->id}/edit");
+                                    // //return redirect("/2022/registro/pass/{$persona[0]->id}/edit");
                                 // } else {
-                                //     return view('2021.cuestionario.index',[
+                                //     return view('2022.cuestionario.index',[
                                 //         'errmsg'=> 'CURP o Contraseña incorrectos',
                                 //         'curp'=> $curp
                                 //         ]);
@@ -100,9 +100,9 @@ class CuestionarioController extends Controller
                             } else {
                                 if (Hash::check($pass, $persona[0]->password)) {// verificar que sea la contraseña
                                     return $this->edit($persona[0]->id);
-                                    //return redirect("/registro/{$persona[0]->id}/edit");
+                                    //return redirect("/2022/registro/{$persona[0]->id}/edit");
                                 } else {
-                                    return view('2021.cuestionario.index',[
+                                    return view('2022.cuestionario.index',[
                                         'errmsg'=> 'CURP o Contraseña incorrectos',
                                         'verify'=> 1,
                                         'curp'=> $curp
@@ -110,7 +110,7 @@ class CuestionarioController extends Controller
                                 }
                             }
                         } else {
-                            return view('2021.cuestionario.index',[
+                            return view('2022.cuestionario.index',[
                                 'curp'=> $curp,
                                 'verify'=> 1,
                                 'scssmsg'=> 'Verificado, ingrese su contraseña'
@@ -118,14 +118,14 @@ class CuestionarioController extends Controller
                         }
                     }
                 } else {
-                    return view('2021.cuestionario.index',[
+                    return view('2022.cuestionario.index',[
                         'errmsg'=>  "La persona registrada con este CURP presenta un inconveniente, favor de reportarlo",
                         'curp'=> $curp
                     ]);
                 }
             } else {
                 //BLOQUEDO POR VEDA ELECTORAL
-                // return view('2021.cuestionario.index',[
+                // return view('2022.cuestionario.index',[
                 //     'errmsg'=> 'Esta curp no se encuentra registrada dentro del padron.',
                 //     'curp'=> $curp
                 //     ]);
@@ -135,7 +135,7 @@ class CuestionarioController extends Controller
                 // if (Auth::check()) {
                     return $this->create($curp);//redirecciona a crate pero con la curp
                 // } else {
-                //     return view('2021.cuestionario.index',[
+                //     return view('2022.cuestionario.index',[
                 //         'errmsg'=> 'Esta curp no se encuentra registrada dentro del padron.',
                 //         'curp'=> $curp
                 //     ]);
@@ -147,9 +147,9 @@ class CuestionarioController extends Controller
 
             $persona = Persona::find($id);
             if (is_null($persona->password)) {
-                return view('2021.cuestionario.editPasswordPersona',['usuario'=> $id]);
+                return view('2022.cuestionario.editPasswordPersona',['usuario'=> $id]);
             } else {
-                return redirect('/registro');
+                return redirect('/2022/registro');
             }
 
     }
@@ -167,14 +167,14 @@ class CuestionarioController extends Controller
             $persona->password = Hash::make($request->get('contraseña'));
             $persona->save();
 
-            return view('2021.cuestionario.index',[
+            return view('2022.cuestionario.index',[
                 'scssmsg'=>  'Se ha cambiado la contraseña del usuario, vuelva a ingresar.',
                 'curp'=> $persona->CURP,
                 'verify'=> 1
                 ]);
 
         } else {
-            return redirect('/registro');
+            return redirect('/2022/registro');
         }
     }
 
@@ -189,7 +189,7 @@ class CuestionarioController extends Controller
 
             return $this->editPasswordPersona($persona->id);
         } else {
-            return view('2021.cuestionario.index',[
+            return view('2022.cuestionario.index',[
                 'curp'=> $curp,
                 'verify'=> 1,
                 'errmsg'=> 'Informacion incorrecta, pongase en contacto con los encargados del programa.'
@@ -228,7 +228,7 @@ class CuestionarioController extends Controller
 
             // dd(DB::getQueryLog());
 
-            return view('2021.cuestionario.encuesta',[
+            return view('2022.cuestionario.encuesta',[
                 'preguntas'=> C_Pregunta::all(),
                 'estados'=> C_Estado::all(),
                 'colonias'=> $colonias,
@@ -244,7 +244,7 @@ class CuestionarioController extends Controller
                 'curp' => $curp
                 ]);
         // } else {
-        //     return view('2021.cuestionario.index',[
+        //     return view('2022.cuestionario.index',[
         //         'errmsg'=> 'Esta curp no se encuentra registrada dentro del padron.',
         //         'curp'=> $curp
         //     ]);
@@ -326,7 +326,7 @@ class CuestionarioController extends Controller
             return [1,$idpersona["id"]];
 
         // } else {
-        //     return view('2021.cuestionario.index',[
+        //     return view('2022.cuestionario.index',[
         //         'errmsg'=> 'Esta curp no se encuentra registrada dentro del padron.',
         //         'curp'=> $request->get('curp')
         //     ]);
@@ -454,7 +454,7 @@ class CuestionarioController extends Controller
                }
             }
 
-            return view('2021.cuestionario.encuestaUpdate',[
+            return view('2022.cuestionario.encuestaUpdate',[
                 'preguntas'=> C_Pregunta::all(),
                 'estados'=> C_Estado::all(),
                 'colonias'=> $colonias,
@@ -473,7 +473,7 @@ class CuestionarioController extends Controller
                 // 'ultimadocumentacion'=>$documentacion
                 ]);
         // } else {
-        //     return view('2021.cuestionario.index');
+        //     return view('2022.cuestionario.index');
         // }
     }
 
@@ -576,7 +576,7 @@ class CuestionarioController extends Controller
                 ->where("personas.id", $id)
                 ->get();
 
-            $pdf = \PDF::loadView('2021.cuestionario.formato', compact('preguntas','persona','estados','colonias','localidades','municipios','estadosCiviles','estudios'));
+            $pdf = \PDF::loadView('2022.cuestionario.formato', compact('preguntas','persona','estados','colonias','localidades','municipios','estadosCiviles','estudios'));
             $pdf->setPaper('letter', 'portrait');
             return $pdf->stream("Cuestionario.pdf");//, array("Attachment" => 0));
             // return $pdf->download('Cuestionario.pdf');
@@ -762,7 +762,7 @@ class CuestionarioController extends Controller
                                     <td> '.($entrega->periodo != null ? $entrega->periodo : "N/D").'</td>
                                     <td> '.($entrega->centroentregaentrega != null ? $entrega->centroentregaentrega : "N/D").'</td>
                                     <td> '.($entrega->comentario != null ? $entrega->comentario : "N/D").'</td>
-                                    <td> '.($entrega->periodo == 2021?'<a role="button" href="/documentacion/download/fotoentrega/'.$id.'/'.$entrega->idDocumentacion.'" class="btn btn-primary" target="_blank"><span style="font-size: 1.2em; color: white;" class="fa fa-eye"></span></a></td>':'N/D' ).'</td>
+                                    <td> '.($entrega->periodo == 2021?'<a role="button" href="/2022/documentacion/download/fotoentrega/'.$id.'/'.$entrega->idDocumentacion.'" class="btn btn-primary" target="_blank"><span style="font-size: 1.2em; color: white;" class="fa fa-eye"></span></a></td>':'N/D' ).'</td>
                                 </tr>';
 
                             }else{
@@ -860,14 +860,14 @@ class CuestionarioController extends Controller
             // if (Storage::disk('public')->exists($pathIdPersona."/identificacio_oficial.pdf")) {
                 //     $htmlDocumentos .= '
                 //         <div class="col-md-11 pt-2">
-                //             <a href="/documentacion/download/identificacio_oficial.pdf/'.$documentacion->PersonaId.'" class="link-info" target="_blank">identificacion frente</a>
+                //             <a href="/2022/documentacion/download/identificacio_oficial.pdf/'.$documentacion->PersonaId.'" class="link-info" target="_blank">identificacion frente</a>
                 //         </div><div class="col-md-1">
                 //             <button data-name="IdentificacionFile" data-docname="identificacio_oficial.pdf" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
                 //         </div>';
                 // } elseif (Storage::disk('public')->exists($pathIdPersona."/identificacio_oficial.jpg")) {
                 //     $htmlDocumentos .= '
                 //         <div class="col-md-11 pt-2">
-                //             <a href="/documentacion/download/identificacio_oficial.jpg/'.$documentacion->PersonaId.'" class="link-info" target="_blank">Identificacion frente</a>
+                //             <a href="/2022/documentacion/download/identificacio_oficial.jpg/'.$documentacion->PersonaId.'" class="link-info" target="_blank">Identificacion frente</a>
                 //         </div>
                 //         <div class="col-md-1">
                 //             <button data-name="IdentificacionFile" data-docname="identificacio_oficial.jpg" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
@@ -876,7 +876,7 @@ class CuestionarioController extends Controller
             if ($docfind[0]) {
                     $htmlDocumentos .= '
                         <div class="col-md-11 pt-2">
-                            <a href="/documentacion/download/identificacio_oficial/'.$documentacion->PersonaId.'" class="link-info" target="_blank">identificacion frente</a>
+                            <a href="/2022/documentacion/download/identificacio_oficial/'.$documentacion->PersonaId.'" class="link-info" target="_blank">identificacion frente</a>
                         </div><div class="col-md-1">
                             <button data-name="IdentificacionFile" data-docname="identificacio_oficial" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
                         </div>';
@@ -900,7 +900,7 @@ class CuestionarioController extends Controller
             // if (Storage::disk('public')->exists("$pathIdPersona/identificacion_atras_oficial.pdf")) {
                 //     $htmlDocumentos .= '
                 //         <div class="col-md-11 pt-2">
-                //             <a href="/documentacion/download/identificacion_atras_oficial.pdf/'.$documentacion->PersonaId.'" class="link-info" target="_blank">Identificacion atras</a>
+                //             <a href="/2022/documentacion/download/identificacion_atras_oficial.pdf/'.$documentacion->PersonaId.'" class="link-info" target="_blank">Identificacion atras</a>
                 //         </div>
                 //         <div class="col-md-1">
                 //             <button data-name="IdentificacionatrasFile" data-docname="identificacion_atras_oficial.pdf" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
@@ -908,7 +908,7 @@ class CuestionarioController extends Controller
                 // } elseif (Storage::disk('public')->exists("$pathIdPersona/identificacion_atras_oficial.jpg")) {
                 //     $htmlDocumentos .= '
                 //         <div class="col-md-11 pt-2">
-                //             <a href="/documentacion/download/identificacion_atras_oficial.jpg/'.$documentacion->PersonaId.'" class="link-info" target="_blank">Identificacion atras</a>
+                //             <a href="/2022/documentacion/download/identificacion_atras_oficial.jpg/'.$documentacion->PersonaId.'" class="link-info" target="_blank">Identificacion atras</a>
                 //         </div>
                 //         <div class="col-md-1">
                 //             <button data-name="IdentificacionatrasFile" data-docname="identificacion_atras_oficial.jpg" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
@@ -918,7 +918,7 @@ class CuestionarioController extends Controller
             if ($docfind[0]) {
                 $htmlDocumentos .= '
                     <div class="col-md-11 pt-2">
-                        <a href="/documentacion/download/identificacion_atras_oficial/'.$documentacion->PersonaId.'" class="link-info" target="_blank">Identificacion atras</a>
+                        <a href="/2022/documentacion/download/identificacion_atras_oficial/'.$documentacion->PersonaId.'" class="link-info" target="_blank">Identificacion atras</a>
                     </div>
                     <div class="col-md-1">
                         <button data-name="IdentificacionatrasFile" data-docname="identificacion_atras_oficial" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
@@ -944,7 +944,7 @@ class CuestionarioController extends Controller
             // if (Storage::disk('public')->exists("$pathIdPersona/comprobantedomicilio.pdf")) {
                 //     $htmlDocumentos .= '
                 //             <div class="col-md-11 pt-2">
-                //                 <a href="/documentacion/download/comprobantedomicilio.pdf/'.$documentacion->PersonaId.'" class="link-info" target="_blank">Comprobante de domicilio</a>
+                //                 <a href="/2022/documentacion/download/comprobantedomicilio.pdf/'.$documentacion->PersonaId.'" class="link-info" target="_blank">Comprobante de domicilio</a>
                 //             </div>
                 //             <div class="col-md-1">
                 //                 <button data-name="CompDomFile" data-docname="comprobantedomicilio.pdf" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
@@ -952,7 +952,7 @@ class CuestionarioController extends Controller
                 // } elseif (Storage::disk('public')->exists("$pathIdPersona/comprobantedomicilio.jpg")) {
                 //     $htmlDocumentos .= '
                 //             <div class="col-md-11 pt-2">
-                //                 <a href="/documentacion/download/comprobantedomicilio.jpg/'.$documentacion->PersonaId.'" class="link-info" target="_blank">Comprobante de domicilio</a>
+                //                 <a href="/2022/documentacion/download/comprobantedomicilio.jpg/'.$documentacion->PersonaId.'" class="link-info" target="_blank">Comprobante de domicilio</a>
                 //             </div>
                 //             <div class="col-md-1">
                 //                 <button data-name="CompDomFile" data-docname="comprobantedomicilio.jpg" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
@@ -962,7 +962,7 @@ class CuestionarioController extends Controller
             if ($docfind[0]) {
                     $htmlDocumentos .= '
                             <div class="col-md-11 pt-2">
-                                <a href="/documentacion/download/comprobantedomicilio/'.$documentacion->PersonaId.'" class="link-info" target="_blank">Comprobante de domicilio</a>
+                                <a href="/2022/documentacion/download/comprobantedomicilio/'.$documentacion->PersonaId.'" class="link-info" target="_blank">Comprobante de domicilio</a>
                             </div>
                             <div class="col-md-1">
                                 <button data-name="CompDomFile" data-docname="comprobantedomicilio" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
@@ -988,7 +988,7 @@ class CuestionarioController extends Controller
             // if (Storage::disk('public')->exists("$pathIdPersona/curp.pdf")) {
                 //     $htmlDocumentos .= '
                 //             <div class="col-md-11 pt-2">
-                //                 <a href="/documentacion/download/curp.pdf/'.$documentacion->PersonaId.'" class="link-info" target="_blank">CURP</a>
+                //                 <a href="/2022/documentacion/download/curp.pdf/'.$documentacion->PersonaId.'" class="link-info" target="_blank">CURP</a>
                 //             </div>
                 //             <div class="col-md-1">
                 //                 <button data-name="CURPFile" data-docname="curp.pdf" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
@@ -996,7 +996,7 @@ class CuestionarioController extends Controller
                 // } elseif (Storage::disk('public')->exists("$pathIdPersona/curp.jpg")) {
                 //     $htmlDocumentos .= '
                 //             <div class="col-md-11 pt-2">
-                //                 <a href="/documentacion/download/curp.jpg/'.$documentacion->PersonaId.'" class="link-info" target="_blank">CURP</a>
+                //                 <a href="/2022/documentacion/download/curp.jpg/'.$documentacion->PersonaId.'" class="link-info" target="_blank">CURP</a>
                 //             </div>
                 //             <div class="col-md-1">
                 //                 <button data-name="CURPFile" data-docname="curp.jpg" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
@@ -1006,7 +1006,7 @@ class CuestionarioController extends Controller
             if ($docfind[0]) {
                     $htmlDocumentos .= '
                             <div class="col-md-11 pt-2">
-                                <a href="/documentacion/download/curp/'.$documentacion->PersonaId.'" class="link-info" target="_blank">CURP</a>
+                                <a href="/2022/documentacion/download/curp/'.$documentacion->PersonaId.'" class="link-info" target="_blank">CURP</a>
                             </div>
                             <div class="col-md-1">
                                 <button data-name="CURPFile" data-docname="curp" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
@@ -1032,7 +1032,7 @@ class CuestionarioController extends Controller
             // if (Storage::disk('public')->exists("$pathIdDocumentacion/comprobantepago.pdf")) {
                 //     $htmlDocumentos .= '
                 //             <div class="col-md-11 pt-2">
-                //                 <a href="/documentacion/download/comprobantepago.pdf/'.$documentacion->PersonaId.'/'.$folio.'" class="link-info" target="_blank">comprobante de pago</a>
+                //                 <a href="/2022/documentacion/download/comprobantepago.pdf/'.$documentacion->PersonaId.'/'.$folio.'" class="link-info" target="_blank">comprobante de pago</a>
                 //             </div>
                 //             <div class="col-md-1">
                 //                 <button data-name="ComPagFile" data-docname="comprobantepago.pdf" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
@@ -1040,7 +1040,7 @@ class CuestionarioController extends Controller
                 // } elseif (Storage::disk('public')->exists("$pathIdDocumentacion/comprobantepago.jpg")) {
                 //     $htmlDocumentos .= '
                 //             <div class="col-md-11 pt-2">
-                //                 <a href="/documentacion/download/comprobantepago.jpg/'.$documentacion->PersonaId.'/'.$folio.'" class="link-info" target="_blank">comprobante de pago</a>
+                //                 <a href="/2022/documentacion/download/comprobantepago.jpg/'.$documentacion->PersonaId.'/'.$folio.'" class="link-info" target="_blank">comprobante de pago</a>
                 //             </div>
                 //             <div class="col-md-1">
                 //                 <button data-name="ComPagFile" data-docname="comprobantepago.jpg" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
@@ -1050,7 +1050,7 @@ class CuestionarioController extends Controller
             if ($docfind[0]) {
                     $htmlDocumentos .= '
                             <div class="col-md-11 pt-2">
-                                <a href="/documentacion/download/comprobantepago/'.$documentacion->PersonaId.'/'.$folio.'" class="link-info" target="_blank">comprobante de pago</a>
+                                <a href="/2022/documentacion/download/comprobantepago/'.$documentacion->PersonaId.'/'.$folio.'" class="link-info" target="_blank">comprobante de pago</a>
                             </div>
                             <div class="col-md-1">
                                 <button data-name="ComPagFile" data-docname="comprobantepago" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
@@ -1076,7 +1076,7 @@ class CuestionarioController extends Controller
             // if (Storage::disk('public')->exists("$pathIdPersona/constanciaautoridad.pdf")) {
                 //     $htmlDocumentos .= '
                 //             <div class="col-md-11 pt-2">
-                //                 <a href="/documentacion/download/constanciaautoridad.pdf/'.$documentacion->PersonaId.'" class="link-info" target="_blank">constancia de autoridad local</a>
+                //                 <a href="/2022/documentacion/download/constanciaautoridad.pdf/'.$documentacion->PersonaId.'" class="link-info" target="_blank">constancia de autoridad local</a>
                 //             </div>
                 //             <div class="col-md-1">
                 //                 <button data-name="ConstAutFiled" data-docname="constanciaautoridad.pdf" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
@@ -1084,7 +1084,7 @@ class CuestionarioController extends Controller
                 // } elseif (Storage::disk('public')->exists("$pathIdPersona/constanciaautoridad.jpg")) {
                 //     $htmlDocumentos .= '
                 //             <div class="col-md-11 pt-2">
-                //                 <a href="/documentacion/download/constanciaautoridad.jpg/'.$documentacion->PersonaId.'" class="link-info" target="_blank">constancia de autoridad local</a>
+                //                 <a href="/2022/documentacion/download/constanciaautoridad.jpg/'.$documentacion->PersonaId.'" class="link-info" target="_blank">constancia de autoridad local</a>
                 //             </div>
                 //             <div class="col-md-1">
                 //                 <button data-name="ConstAutFiled" data-docname="constanciaautoridad.jpg" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>
@@ -1094,7 +1094,7 @@ class CuestionarioController extends Controller
             if ($docfind[0]) {
                     $htmlDocumentos .= '
                             <div class="col-md-11 pt-2">
-                                <a href="/documentacion/download/constanciaautoridad/'.$documentacion->PersonaId.'" class="link-info" target="_blank">constancia de autoridad local</a>
+                                <a href="/2022/documentacion/download/constanciaautoridad/'.$documentacion->PersonaId.'" class="link-info" target="_blank">constancia de autoridad local</a>
                             </div>
                             <div class="col-md-1">
                                 <button data-name="ConstAutFiled" data-docname="constanciaautoridad" class="btn btn-danger btndelfile" type="button" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-trash-alt"></span></button>

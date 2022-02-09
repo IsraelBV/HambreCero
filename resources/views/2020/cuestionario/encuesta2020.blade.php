@@ -1279,7 +1279,7 @@
         <!--fin de instrumentos de factores de riesgo-->
         <br><br>
             <div class="container">
-                
+
                 <button type="submit" name="send" class="btn btn-success"><strong>Guardar</strong></button>
                 <div class="row justify-content-around">
                     <a style="display: none;" href="" name="accion" class="btn btn-primary col-2" id="action" role="button" aria-pressed="true" target="_blank">Descargar Formato</a>
@@ -1305,7 +1305,7 @@
                 <div class="modal-body">
                     <img src="{{asset('img/ventana emergente.png')}}" class="img-fluid img-thumbnail">
                 </div>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> 
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div> --}}
