@@ -63,7 +63,7 @@ class ReporteController extends Controller
         $colonia = $request->get('colonia');
 
         $whereraw = 'personas.id IS NOT NULL';
-        $whereraw .= $periodoent?' AND entregas.idPeriodoEntrega = "'.$periodoent.'"':' AND entregas.PeriodoId = "3"';
+        $whereraw .= $periodoent?' AND entregas.idPeriodoEntrega = "'.$periodoent.'"':' AND entregas.PeriodoId = "4"';
         $whereraw .= $donado?' AND entregas.Donado = "'.$donado.'"':'';
 
         if ($centroent) {

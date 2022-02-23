@@ -359,7 +359,7 @@
                                     <td> {{$entrega->periodo != null ? $entrega->periodo : "N/D" }}</td>
                                     <td> {{$entrega->centroentregaentrega != null ? $entrega->centroentregaentrega : "N/D" }}</td>
                                     <td> {{$entrega->comentario != null ? $entrega->comentario : "N/D" }}</td>
-                                    <td>@if ($entrega->periodo == 2021)<a role="button" href="/2022/documentacion/download/fotoentrega/{{$persona[0]->id}}/{{$entrega->idDocumentacion}}" class="btn btn-primary" target="_blank"><span style="font-size: 1.2em; color: white;" class="fa fa-eye"></span></a></td>@else N/D @endif
+                                    <td>@if ($entrega->periodo == 2021 || $entrega->periodo == 2022)<a role="button" href="/2022/documentacion/download/fotoentrega/{{$persona[0]->id}}/{{$entrega->idDocumentacion}}" class="btn btn-primary" target="_blank"><span style="font-size: 1.2em; color: white;" class="fa fa-eye"></span></a></td>@else N/D @endif
                                 </tr>
 
                             @else

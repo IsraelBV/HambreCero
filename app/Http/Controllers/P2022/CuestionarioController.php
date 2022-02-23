@@ -762,7 +762,7 @@ class CuestionarioController extends Controller
                                     <td> '.($entrega->periodo != null ? $entrega->periodo : "N/D").'</td>
                                     <td> '.($entrega->centroentregaentrega != null ? $entrega->centroentregaentrega : "N/D").'</td>
                                     <td> '.($entrega->comentario != null ? $entrega->comentario : "N/D").'</td>
-                                    <td> '.($entrega->periodo == 2021?'<a role="button" href="/2022/documentacion/download/fotoentrega/'.$id.'/'.$entrega->idDocumentacion.'" class="btn btn-primary" target="_blank"><span style="font-size: 1.2em; color: white;" class="fa fa-eye"></span></a></td>':'N/D' ).'</td>
+                                    <td> '.(($entrega->periodo == 2021 || $entrega->periodo == 2022) ?'<a role="button" href="/2022/documentacion/download/fotoentrega/'.$id.'/'.$entrega->idDocumentacion.'" class="btn btn-primary" target="_blank"><span style="font-size: 1.2em; color: white;" class="fa fa-eye"></span></a></td>':'N/D' ).'</td>
                                 </tr>';
 
                             }else{
