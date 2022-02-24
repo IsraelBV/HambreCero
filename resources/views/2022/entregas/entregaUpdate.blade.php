@@ -12,7 +12,7 @@
     <!--Datos Personales-->
      <br>
     {{--<br> --}}
-    <form id="entregaupdate2021" action="" method="">
+    <form id="entregaupdate2022" action="" method="">
         @csrf
         @method('put')
         <div class="card">

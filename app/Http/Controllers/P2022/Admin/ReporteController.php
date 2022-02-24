@@ -23,6 +23,7 @@ class ReporteController extends Controller
 
         $periodos = DB::table('c_periodosdeentrega')
         ->select('id','Descripcion as periodo')
+        ->where('idPeriodoPrograma',session('periodo'))
         ->orderBy('id', 'ASC')
         ->get();
 
@@ -63,7 +64,7 @@ class ReporteController extends Controller
         $colonia = $request->get('colonia');
 
         $whereraw = 'personas.id IS NOT NULL';
-        $whereraw .= $periodoent?' AND entregas.idPeriodoEntrega = "'.$periodoent.'"':' AND entregas.PeriodoId = "4"';
+        $whereraw .= $periodoent?' AND entregas.idPeriodoEntrega = "'.$periodoent.'"':' AND entregas.PeriodoId = "'.session('periodo').'"';
         $whereraw .= $donado?' AND entregas.Donado = "'.$donado.'"':'';
 
         if ($centroent) {

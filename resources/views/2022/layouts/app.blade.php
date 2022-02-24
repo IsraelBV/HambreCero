@@ -102,7 +102,7 @@
 							@if (Auth::user()->tipoUsuarioId == 0)
 								@if (Route::has('register'))
 									{{-- <li class="nav-item">
-										<a class="nav-link" href="{{ route('usuarios2021') }}">{{ __('Usuarios') }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
+										<a class="nav-link" href="{{ route('usuarios2022') }}">{{ __('Usuarios') }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
 									</li> --}}
 									<li class="nav-item">
 										<a class="nav-link" href="{{ route('buscar2022') }}">{{ __('Entregas') }}&nbsp;&nbsp;&nbsp;&nbsp;</a>
@@ -1106,7 +1106,7 @@
 	 <script> //se utiliza para entregas
 		$(document).ready(function() {
 
-			$("#entregaupdate2021").off().submit(function(e) { //envia los datos para actualizar una entrega abierta en la lista de entregas
+			$("#entregaupdate2022").off().submit(function(e) { //envia los datos para actualizar una entrega abierta en la lista de entregas
 				e.preventDefault();
 
 				var identrega = $("#hid").data('entrega');
@@ -1114,7 +1114,7 @@
 				$.ajax({
 					type: "PUT",
 					url: "/admin2022/entrega/"+identrega,
-					data: $("#entregaupdate2021").serialize()
+					data: $("#entregaupdate2022").serialize()
 				}).done(function(data) {
 					$("[name='sendUpdateEntrega']").hide();
 						$("body").append('<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">'+data+'</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>');
@@ -1164,7 +1164,7 @@
 
 				$.ajax({
 					type: "POST",
-					url: "/2022/admin2021/reporte/findReporte",
+					url: "/admin2022/reporte/findReporte",
 					data:{"_token": "{{ csrf_token() }}",
 						"localidad":$('#localidad').val(),
 						"colonia":$('#colonia').val(),
